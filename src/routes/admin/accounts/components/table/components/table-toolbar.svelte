@@ -8,14 +8,14 @@
   import { TableViewOptions } from './index.js';
   import Button from '$lib/components/ui/button/button.svelte';
   import { Input } from '$lib/components/ui/input/index';
-  import type { ItemsPageTable } from '../data/schemas.js';
+  import type { AccountsPageTable } from '../data/schemas.js';
   import AddItem from '../../add-account/add-account.svelte';
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
   import type { AddAccountSchema } from '../../add-account/schema.js';
 
   interface Props {
     addAccountForm: SuperValidated<Infer<AddAccountSchema>>;
-    table: Table<ItemsPageTable>;
+    table: Table<AccountsPageTable>;
   }
 
   let { addAccountForm, table }: Props = $props();

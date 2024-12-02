@@ -93,7 +93,7 @@
           <Form.Field {form} name="lastname">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Middle Name</Form.Label>
+                <Form.Label>Last Name</Form.Label>
                 <Input {...props} bind:value={$formData.lastname} placeholder="Enter Last Name" />
               {/snippet}
             </Form.Control>

@@ -43,22 +43,29 @@ export const actions: Actions = {
 
     return { form, msg: 'Account added successfully' };
   },
-  updateAccountEvent: async ({ request, locals: { supabase } }) => {
+  updateAccountEvent: async ({ request, locals: { supabaseAdmin } }) => {
     const form = await superValidate(request, zod(updateAccountSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    const { error } = await supabase
-      .from('items_tb')
-      .update({
-        ...form.data
-      })
-      .eq('id', form.data.id);
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(form.data.user_id, {
+      email: form.data.email,
+      password: form.data.password,
+      user_metadata: {
+        email: form.data.email,
+        teacher_id: form.data.teacher_id,
+        firstname: form.data.firstname,
+        middlename: form.data.middlename,
+        lastname: form.data.lastname,
+        phone: form.data.phone,
+        department: form.data.department
+      }
+    });
 
     if (error) return fail(401, { form, msg: error.message });
 
-    return { form, msg: 'Item updated successfully' };
+    return { form, msg: 'Account updated successfully' };
   },
   removeAccountEvent: async ({ request, locals: { supabase } }) => {
     const form = await superValidate(request, zod(deleteAccountSchema));

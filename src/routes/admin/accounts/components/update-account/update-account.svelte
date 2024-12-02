@@ -1,14 +1,17 @@
 <script lang="ts">
+  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
   import { updateAccountSchema, type UpdateAccountSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
+  import Plus from 'lucide-svelte/icons/plus';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import SelectPicker from '$lib/components/general/select-picker.svelte';
   import { categoriesMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import { useTableState } from '../table/tableState.svelte';
 
@@ -19,7 +22,6 @@
   const { updateAccountForm }: Props = $props();
 
   const tableState = useTableState();
-
   const form = superForm(updateAccountForm, {
     validators: zodClient(updateAccountSchema),
     id: 'update-account-form',
@@ -44,30 +46,24 @@
 
   $effect(() => {
     if (tableState.getShowUpdate()) {
-      $formData.id = tableState.getActiveRow()?.id ?? 0;
-      $formData.device_id = tableState.getActiveRow()?.device_id ?? '';
-      $formData.model = tableState.getActiveRow()?.model ?? '';
-      $formData.category = tableState.getActiveRow()?.category ?? '';
-      $formData.type = tableState.getActiveRow()?.type ?? '';
-      $formData.status = tableState.getActiveRow()?.status ?? '';
-      $formData.mr = tableState.getActiveRow()?.mr ?? '';
-      $formData.brand = tableState.getActiveRow()?.brand ?? '';
-      $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
-      $formData.price = tableState.getActiveRow()?.price ?? 0;
-      $formData.description = tableState.getActiveRow()?.description ?? '';
+      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
+      $formData.teacher_id = tableState.getActiveRow()?.teacher_id ?? '';
+      $formData.department = tableState.getActiveRow()?.department ?? '';
+      $formData.email = tableState.getActiveRow()?.email ?? '';
+      $formData.phone = tableState.getActiveRow()?.phone ?? '';
+      $formData.firstname = tableState.getActiveRow()?.firstname ?? '';
+      $formData.middlename = tableState.getActiveRow()?.middlename ?? '';
+      $formData.lastname = tableState.getActiveRow()?.lastname ?? '';
 
       return () => {
-        $formData.id = 0;
-        $formData.device_id = '';
-        $formData.model = '';
-        $formData.category = '';
-        $formData.type = '';
-        $formData.status = '';
-        $formData.mr = '';
-        $formData.brand = tableState.getActiveRow()?.brand ?? '';
-        $formData.quantity = 0;
-        $formData.price = 0;
-        $formData.description = '';
+        $formData.user_id = '';
+        $formData.teacher_id = '';
+        $formData.department = '';
+        $formData.email = '';
+        $formData.phone = '';
+        $formData.firstname = '';
+        $formData.middlename = '';
+        $formData.lastname = '';
         tableState.setActiveRow(null);
         tableState.setShowUpdate(false);
         reset();
@@ -85,45 +81,44 @@
 >
   <Dialog.Content class="max-h-[80dvh] max-w-4xl overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Add Item</Dialog.Title>
+      <Dialog.Title>Update Account</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" action="?/updateItemEvent" use:enhance>
-      <input type="hidden" name="id" bind:value={$formData.id} />
+    <form method="POST" action="?/updateAccountEvent" use:enhance>
+      <input type="hidden" name="user_id" bind:value={$formData.user_id} />
       <section class="grid grid-cols-3 gap-2.5">
         <div class="">
-          <Form.Field {form} name="device_id">
+          <Form.Field {form} name="firstname">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Device ID</Form.Label>
-                <Input {...props} bind:value={$formData.device_id} placeholder="Enter Device ID" />
+                <Form.Label>First Name</Form.Label>
+                <Input {...props} bind:value={$formData.firstname} placeholder="Enter First Name" />
               {/snippet}
             </Form.Control>
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
 
-          <Form.Field {form} name="model">
+          <Form.Field {form} name="middlename">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Model</Form.Label>
-                <Input {...props} bind:value={$formData.model} placeholder="Enter Model" />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
-          <Form.Field {form} name="category">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Category</Form.Label>
-                <SelectPicker
-                  placeholder="Select Category"
-                  selections={categoriesMeta}
-                  bind:selected={$formData.category}
+                <Form.Label>Middle Name</Form.Label>
+                <Input
+                  {...props}
+                  bind:value={$formData.middlename}
+                  placeholder="Enter Middle Name"
                 />
-                <input type="hidden" {...props} bind:value={$formData.category} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+
+          <Form.Field {form} name="lastname">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Last Name</Form.Label>
+                <Input {...props} bind:value={$formData.lastname} placeholder="Enter Last Name" />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -132,38 +127,36 @@
         </div>
 
         <div class="">
-          <Form.Field {form} name="type">
+          <Form.Field {form} name="teacher_id">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Type</Form.Label>
-                <SelectPicker
-                  placeholder="Select Type"
-                  selections={typeMeta}
-                  bind:selected={$formData.type}
+                <Form.Label>Teacher ID</Form.Label>
+                <Input
+                  {...props}
+                  bind:value={$formData.teacher_id}
+                  placeholder="Enter Teacher ID"
                 />
-                <input type="hidden" {...props} bind:value={$formData.type} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+          <Form.Field {form} name="email">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Email</Form.Label>
+                <Input {...props} bind:value={$formData.email} placeholder="Enter Email" />
               {/snippet}
             </Form.Control>
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
 
-          <Form.Field {form} name="status">
+          <Form.Field {form} name="phone">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Status</Form.Label>
-                <Input {...props} bind:value={$formData.status} placeholder="Enter Status" />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
-          <Form.Field {form} name="mr">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>MR</Form.Label>
-                <Input {...props} bind:value={$formData.mr} placeholder="Enter MR" />
+                <Form.Label>Phone</Form.Label>
+                <Input {...props} bind:value={$formData.phone} placeholder="Enter Phone" />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -172,26 +165,14 @@
         </div>
 
         <div class="">
-          <Form.Field {form} name="brand">
+          <Form.Field {form} name="department">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Brand</Form.Label>
-                <Input {...props} bind:value={$formData.brand} placeholder="Enter Brand" />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
-          <Form.Field {form} name="quantity">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Quantity</Form.Label>
+                <Form.Label>Department</Form.Label>
                 <Input
-                  type="number"
                   {...props}
-                  bind:value={$formData.quantity}
-                  placeholder="Enter Quantity"
+                  bind:value={$formData.department}
+                  placeholder="Enter Department"
                 />
               {/snippet}
             </Form.Control>
@@ -199,15 +180,31 @@
             <Form.FieldErrors />
           </Form.Field>
 
-          <Form.Field {form} name="price">
+          <Form.Field {form} name="password">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Price</Form.Label>
+                <Form.Label>Password</Form.Label>
                 <Input
-                  type="number"
+                  type="password"
                   {...props}
-                  bind:value={$formData.price}
-                  placeholder="Enter Price"
+                  bind:value={$formData.password}
+                  placeholder="Enter Password"
+                />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+
+          <Form.Field {form} name="confirm_password">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Password</Form.Label>
+                <Input
+                  type="password"
+                  {...props}
+                  bind:value={$formData.confirm_password}
+                  placeholder="Enter Confirm Password"
                 />
               {/snippet}
             </Form.Control>
@@ -215,22 +212,6 @@
             <Form.FieldErrors />
           </Form.Field>
         </div>
-
-        <Form.Field {form} name="description">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Description</Form.Label>
-              <Textarea
-                rows={10}
-                {...props}
-                bind:value={$formData.description}
-                placeholder="Enter Description"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.Description />
-          <Form.FieldErrors />
-        </Form.Field>
       </section>
 
       <section class="flex justify-end">
