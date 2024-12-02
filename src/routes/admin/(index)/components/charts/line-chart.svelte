@@ -2,25 +2,17 @@
   import { onMount } from 'svelte';
   import Chart from 'chart.js/auto';
 
-  interface Props {
-    accepted: GraphCountsType['accepted'];
-    canceled: GraphCountsType['canceled'];
-    pending: GraphCountsType['pending'];
-  }
-
-  let { accepted, canceled, pending }: Props = $props();
-
   let chartCanvas: HTMLCanvasElement | undefined = $state(undefined);
   let chartInstance: Chart | null = $state(null);
 
-  const pendingValues: number[] = pending.map((item) => item.count);
-  const pendingLabels: string[] = pending.map((item) => item.day);
+  const pendingValues: number[] = [1, 2, 3, 4, 5, 6];
+  const pendingLabels: string[] = ['1', '2', '3', '4', '5', '6'];
 
-  const acceptedValues: number[] = accepted.map((item) => item.count);
-  const acceptedLabels: string[] = accepted.map((item) => item.day);
+  const acceptedValues: number[] = [1, 2, 3, 4, 5, 6];
+  const acceptedLabels: string[] = ['1', '2', '3', '4', '5', '6'];
 
-  const canceledValues: number[] = canceled.map((item) => item.count);
-  const canceledLabels: string[] = canceled.map((item) => item.day);
+  const canceledValues: number[] = [1, 2, 3, 4, 5, 6];
+  const canceledLabels: string[] = ['1', '2', '3', '4', '5', '6'];
 
   onMount(async () => {
     if (typeof window !== 'undefined') {

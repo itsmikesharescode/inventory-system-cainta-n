@@ -1,20 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Chart from 'chart.js/auto';
-  import type { GraphCountsType } from '../../../../types';
-
-  interface Props {
-    reservations: GraphCountsType['reservations'];
-  }
-
-  let { reservations }: Props = $props();
 
   let chartCanvas: HTMLCanvasElement | undefined = $state(undefined);
   let chartInstance: Chart | null = $state(null);
 
   // needs optimize for now lets cohers this sht
-  const reservationValues: number[] = reservations.map((item) => item.count);
-  const reservationLabels: string[] = reservations.map((item) => item.day);
+  const reservationValues: number[] = [1, 2, 3, 4, 5, 6];
+  const reservationLabels: string[] = ['1', '2', '3', '4', '5', '6'];
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
