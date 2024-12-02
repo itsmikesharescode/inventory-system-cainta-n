@@ -64,9 +64,7 @@
 
     <Form.Button disabled={$submitting} class="relative">
       {#if $submitting}
-        <div
-          class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center gap-1.5 rounded-lg bg-primary"
-        >
+        <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-primary">
           <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
         </div>
       {/if}
