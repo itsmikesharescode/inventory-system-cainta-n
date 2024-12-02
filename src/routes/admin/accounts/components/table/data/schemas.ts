@@ -1,17 +1,16 @@
 import { z } from 'zod';
 
-export const addAccountSchema = z.object({
-  id: z.number(),
-  device_id: z.string().min(1, { message: 'Device ID is required' }),
-  model: z.string().min(1, { message: 'Model is required' }),
-  category: z.string().min(1, { message: 'Category is required' }),
-  type: z.string().min(1, { message: 'Type is required' }),
-  status: z.string().min(1, { message: 'Status is required' }),
-  mr: z.string().min(1, { message: 'MR is required' }),
-  brand: z.string().min(1, { message: 'Brand is required' }),
-  quantity: z.number().min(1, { message: 'Quantity is required' }),
-  price: z.number().min(1, { message: 'Price is required' }),
-  description: z.string().min(1, { message: 'Description is required' })
+export const accountSchema = z.object({
+  user_id: z.string(),
+  created_at: z.string(),
+  teacher_id: z.string(),
+  fullname: z.string(),
+  firstname: z.string(),
+  middlename: z.string(),
+  lastname: z.string(),
+  email: z.string(),
+  phone: z.string(),
+  department: z.string()
 });
 
-export type AccountsPageTable = z.output<typeof addAccountSchema>;
+export type AccountsPageTable = z.output<typeof accountSchema>;

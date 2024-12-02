@@ -4,16 +4,13 @@ export type Result<T> = {
   error: string;
 };
 
-export type Teacher = {
-  sub: string;
-  role: 'teacher' | 'admin';
+export type UserMetaData = {
+  role: string;
   email: string;
   phone: string;
-  lastName: string;
-  firstName: string;
-  teacherId: string;
+  lastname: string;
+  firstname: string;
   department: string;
-  middleName: string;
-  email_verified: boolean;
-  phone_verified: boolean;
+  middlename: string;
+  teacher_id: string;
 };

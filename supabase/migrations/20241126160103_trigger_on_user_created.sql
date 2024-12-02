@@ -6,7 +6,7 @@ begin
   role = new.raw_user_meta_data ->> 'role'; 
 
   insert into public.users_tb (user_id, user_meta_data) values (new.id, new.raw_user_meta_data);
-  insert into public.teachers_tb (teacher_id, user_meta_data) values ( new.id, new.raw_user_meta_data);
+  insert into public.teachers_tb (user_id, user_meta_data) values ( new.id, new.raw_user_meta_data);
   insert into public.roles_tb (user_id, role) values(new.id, role);
   return new;
 

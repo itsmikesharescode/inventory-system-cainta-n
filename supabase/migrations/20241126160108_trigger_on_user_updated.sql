@@ -5,7 +5,7 @@ begin
 
   update public.teachers_tb
   set user_meta_data = new.raw_user_meta_data
-  where teacher_id = new.id;
+  where user_id = new.id;
 
   update public.users_tb
   set user_meta_data = new.raw_user_meta_data

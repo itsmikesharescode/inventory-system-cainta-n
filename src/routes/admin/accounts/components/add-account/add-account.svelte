@@ -61,7 +61,7 @@
       <Dialog.Title>Add Account</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" action="?/addItemEvent" use:enhance>
+    <form method="POST" action="?/addAccountEvent" use:enhance>
       <section class="grid grid-cols-3 gap-2.5">
         <div class="">
           <Form.Field {form} name="firstname">

@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addItemSchema } from './components/add-item/schema';
 import { fail } from '@sveltejs/kit';
-import { streamItems } from '$lib/db-calls/streamItems';
+import streamItems from '$lib/db-calls/streamItems';
 import { updateItemSchema } from './components/update-item/schema';
 import { deleteItemSchema } from './components/delete-item/schema';
 
