@@ -224,6 +224,7 @@
             {#snippet children({ props })}
               <Form.Label>Description</Form.Label>
               <Textarea
+                rows={10}
                 {...props}
                 bind:value={$formData.description}
                 placeholder="Enter Description"

@@ -4,6 +4,7 @@
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateItem from './components/update-item/update-item.svelte';
+  import DeleteItem from './components/delete-item/delete-item.svelte';
   const { data } = $props();
 
   initTableState();
@@ -29,3 +30,4 @@
 </main>
 
 <UpdateItem updateItemForm={data.updateItemForm} />
+<DeleteItem deleteItemForm={data.deleteItemForm} />
