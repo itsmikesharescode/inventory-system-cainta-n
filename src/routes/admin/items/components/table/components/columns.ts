@@ -105,11 +105,11 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     cell: ({ row }) => {
       const statusSnippet = createRawSnippet<[boolean]>((getStatus) => {
         return {
-          render: () => `<div class="w-full">${getStatus() ? 'Active' : 'Inactive'}</div>`
+          render: () => `<div class="w-full">${getStatus()}</div>`
         };
       });
 
-      return renderSnippet(statusSnippet, row.getValue('approved'));
+      return renderSnippet(statusSnippet, row.getValue('status'));
     },
     enableSorting: true,
     enableHiding: true
@@ -171,7 +171,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     cell: ({ row }) => {
       const quantitySnippet = createRawSnippet<[number]>((getQuantity) => {
         return {
-          render: () => `<div class="w-full">${getQuantity()}</div>`
+          render: () => `<div class="w-full">${getQuantity().toLocaleString()}</div>`
         };
       });
 
@@ -193,7 +193,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     cell: ({ row }) => {
       const priceSnippet = createRawSnippet<[number]>((getPrice) => {
         return {
-          render: () => `<div class="w-full">${getPrice()}</div>`
+          render: () => `<div class="w-full">₱ ${getPrice().toLocaleString()}</div>`
         };
       });
 

@@ -34,6 +34,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      items_tb: {
+        Row: {
+          brand: string
+          category: string
+          created_at: string
+          description: string
+          device_id: string
+          id: number
+          model: string
+          mr: string
+          price: number
+          quantity: number
+          status: string
+          type: string
+        }
+        Insert: {
+          brand: string
+          category: string
+          created_at?: string
+          description: string
+          device_id: string
+          id?: number
+          model: string
+          mr: string
+          price: number
+          quantity: number
+          status: string
+          type: string
+        }
+        Update: {
+          brand?: string
+          category?: string
+          created_at?: string
+          description?: string
+          device_id?: string
+          id?: number
+          model?: string
+          mr?: string
+          price?: number
+          quantity?: number
+          status?: string
+          type?: string
+        }
+        Relationships: []
+      }
       roles_tb: {
         Row: {
           created_at: string
@@ -50,15 +95,7 @@ export type Database = {
           role?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "roles_tb_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users_tb"
-            referencedColumns: ["user_id"]
-          },
-        ]
+        Relationships: []
       }
       teachers_tb: {
         Row: {
@@ -109,7 +146,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_teacher: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

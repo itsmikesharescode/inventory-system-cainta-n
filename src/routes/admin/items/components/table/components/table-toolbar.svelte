@@ -29,13 +29,13 @@
   <div class="flex items-center gap-2">
     <div class="flex items-center space-x-2">
       <Input
-        placeholder="Search by model"
-        value={(table.getColumn('model')?.getFilterValue() as string) ?? ''}
+        placeholder="Search by device ID"
+        value={(table.getColumn('device_id')?.getFilterValue() as string) ?? ''}
         oninput={(e) => {
-          table.getColumn('model')?.setFilterValue(e.currentTarget.value);
+          table.getColumn('device_id')?.setFilterValue(e.currentTarget.value);
         }}
         onchange={(e) => {
-          table.getColumn('model')?.setFilterValue(e.currentTarget.value);
+          table.getColumn('device_id')?.setFilterValue(e.currentTarget.value);
         }}
         class="h-8 w-[150px] lg:w-[250px]"
       />

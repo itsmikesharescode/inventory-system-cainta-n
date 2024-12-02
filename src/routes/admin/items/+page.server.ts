@@ -3,10 +3,12 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addItemSchema } from './components/add-item/schema';
 import { fail } from '@sveltejs/kit';
+import { streamItems } from '$lib/db-calls/streamItems';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
-    addItemForm: await superValidate(zod(addItemSchema))
+    addItemForm: await superValidate(zod(addItemSchema)),
+    getItems: streamItems(supabase)
   };
 };
 
