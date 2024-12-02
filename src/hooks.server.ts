@@ -66,7 +66,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
   if (!user && path.startsWith('/admin')) redirect(303, '/?msg=not-logged-in');
   if (!user && path.startsWith('/teacher')) redirect(303, '/?msg=not-logged-in');
 
-  if (user && path === '/auth') {
+  if (user && (path === '/auth' || path === '/')) {
     const { role } = user.user_metadata;
     if (role === 'admin') redirect(303, '/admin');
     if (role === 'teacher') redirect(303, '/teacher');
