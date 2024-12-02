@@ -8,7 +8,11 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import { resetMode } from 'mode-watcher';
+  import SelectPicker from '$lib/components/general/select-picker.svelte';
+  import { categoriesMeta, typeMeta } from '$lib';
+  import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+  import { generateRefId } from '$lib';
+  import { toast } from 'svelte-sonner';
 
   interface Props {
     addItemForm: SuperValidated<Infer<AddItemSchema>>;
@@ -26,8 +30,12 @@
 
       switch (status) {
         case 200:
+          toast.success(data.msg);
+          reset();
+          open = false;
           break;
         case 401:
+          toast.error(data.msg);
           break;
       }
     }
@@ -36,8 +44,12 @@
   const { form: formData, enhance, submitting, reset } = form;
 
   $effect(() => {
-    if (!open) {
-      reset();
+    if (open) {
+      $formData.device_id = generateRefId();
+
+      return () => {
+        reset();
+      };
     }
   });
 </script>
@@ -49,7 +61,7 @@
       <Dialog.Title>Add Item</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" use:enhance>
+    <form method="POST" action="?/addItemEvent" use:enhance>
       <section class="grid grid-cols-3 gap-2.5">
         <div class="">
           <Form.Field {form} name="device_id">
@@ -78,7 +90,12 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Category</Form.Label>
-                <Input {...props} bind:value={$formData.category} placeholder="Enter Category" />
+                <SelectPicker
+                  placeholder="Select Category"
+                  selections={categoriesMeta}
+                  bind:selected={$formData.category}
+                />
+                <input type="hidden" {...props} bind:value={$formData.category} />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -91,7 +108,12 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Type</Form.Label>
-                <Input {...props} bind:value={$formData.type} placeholder="Enter Type" />
+                <SelectPicker
+                  placeholder="Select Type"
+                  selections={typeMeta}
+                  bind:selected={$formData.type}
+                />
+                <input type="hidden" {...props} bind:value={$formData.type} />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -126,7 +148,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Brand</Form.Label>
-                <Input {...props} bind:value={$formData.brand} />
+                <Input {...props} bind:value={$formData.brand} placeholder="Enter Brand" />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -137,7 +159,12 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Quantity</Form.Label>
-                <Input type="number" {...props} bind:value={$formData.quantity} />
+                <Input
+                  type="number"
+                  {...props}
+                  bind:value={$formData.quantity}
+                  placeholder="Enter Quantity"
+                />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -148,7 +175,12 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Price</Form.Label>
-                <Input type="number" {...props} bind:value={$formData.price} />
+                <Input
+                  type="number"
+                  {...props}
+                  bind:value={$formData.price}
+                  placeholder="Enter Price"
+                />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -172,7 +204,16 @@
         </Form.Field>
       </section>
 
-      <Form.Button>Create</Form.Button>
+      <section class="flex justify-end">
+        <Form.Button disabled={$submitting} class="relative">
+          {#if $submitting}
+            <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-primary">
+              <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
+            </div>
+          {/if}
+          Create
+        </Form.Button>
+      </section>
     </form>
   </Dialog.Content>
 </Dialog.Root>
