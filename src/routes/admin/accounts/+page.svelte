@@ -3,8 +3,8 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
-  import UpdateItem from './components/update-account/update-account.svelte';
-  import DeleteItem from './components/delete-account/delete-account.svelte';
+  import UpdateAccount from './components/update-account/update-account.svelte';
+  import DeleteAccount from './components/delete-account/delete-account.svelte';
   const { data } = $props();
 
   initTableState();
@@ -44,5 +44,5 @@
   {/await}
 </main>
 
-<UpdateItem updateAccountForm={data.updateAccountForm} />
-<DeleteItem deleteAccountForm={data.deleteAccountForm} />
+<UpdateAccount updateAccountForm={data.updateAccountForm} />
+<DeleteAccount deleteAccountForm={data.deleteAccountForm} />

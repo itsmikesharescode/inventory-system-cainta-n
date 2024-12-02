@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const deleteAccountSchema = z.object({
-  id: z.number()
+  user_id: z.string()
 });
 
 export type DeleteAccountSchema = typeof deleteAccountSchema;

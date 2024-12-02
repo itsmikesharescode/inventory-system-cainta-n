@@ -67,16 +67,16 @@ export const actions: Actions = {
 
     return { form, msg: 'Account updated successfully' };
   },
-  removeAccountEvent: async ({ request, locals: { supabase } }) => {
+  removeAccountEvent: async ({ request, locals: { supabaseAdmin } }) => {
     const form = await superValidate(request, zod(deleteAccountSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('items_tb').delete().eq('id', form.data.id);
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(form.data.user_id);
 
     if (error) return fail(401, { form, msg: error.message });
 
-    return { form, msg: 'Item deleted successfully' };
+    return { form, msg: 'Account deleted successfully' };
   }
 };

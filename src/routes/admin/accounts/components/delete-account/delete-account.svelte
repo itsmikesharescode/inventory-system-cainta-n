@@ -40,10 +40,10 @@
 
   $effect(() => {
     if (tableState.getShowDelete()) {
-      $formData.id = tableState.getActiveRow()?.id ?? 0;
+      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
 
       return () => {
-        $formData.id = 0;
+        $formData.user_id = '';
         tableState.setActiveRow(null);
         tableState.setShowDelete(false);
         reset();
@@ -61,16 +61,16 @@
 >
   <Dialog.Content class=" overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Delete Item</Dialog.Title>
+      <Dialog.Title>Delete Account</Dialog.Title>
       <Dialog.Description>
-        You are about to delete <strong>{tableState.getActiveRow()?.model}</strong> with device id
-        of
-        <strong>{tableState.getActiveRow()?.device_id}</strong>
+        You are about to delete <strong>{tableState.getActiveRow()?.fullname}</strong> with teacher
+        id of
+        <strong>{tableState.getActiveRow()?.teacher_id}</strong>
       </Dialog.Description>
     </Dialog.Header>
 
-    <form method="POST" action="?/removeItemEvent" use:enhance>
-      <input type="hidden" name="id" bind:value={$formData.id} />
+    <form method="POST" action="?/removeAccountEvent" use:enhance>
+      <input type="hidden" name="user_id" bind:value={$formData.user_id} />
 
       <section class="flex justify-end">
         <Form.Button disabled={$submitting} class="relative">
