@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const addItemSchema = z.object({
-  deviceId: z.string().min(1, { message: 'Device ID is required' }),
+  device_id: z.string().min(1, { message: 'Device ID is required' }),
   model: z.string().min(1, { message: 'Model is required' }),
   category: z.string().min(1, { message: 'Category is required' }),
   type: z.string().min(1, { message: 'Type is required' }),

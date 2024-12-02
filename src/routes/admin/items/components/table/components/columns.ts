@@ -160,6 +160,72 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
   },
 
   {
+    accessorKey: 'quantity',
+    id: 'quantity',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+        column,
+        title: 'Quantity'
+      });
+    },
+    cell: ({ row }) => {
+      const quantitySnippet = createRawSnippet<[number]>((getQuantity) => {
+        return {
+          render: () => `<div class="w-full">${getQuantity()}</div>`
+        };
+      });
+
+      return renderSnippet(quantitySnippet, row.getValue('quantity'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
+    accessorKey: 'price',
+    id: 'price',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+        column,
+        title: 'Price'
+      });
+    },
+    cell: ({ row }) => {
+      const priceSnippet = createRawSnippet<[number]>((getPrice) => {
+        return {
+          render: () => `<div class="w-full">${getPrice()}</div>`
+        };
+      });
+
+      return renderSnippet(priceSnippet, row.getValue('price'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
+    accessorKey: 'description',
+    id: 'description',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+        column,
+        title: 'Description'
+      });
+    },
+    cell: ({ row }) => {
+      const descriptionSnippet = createRawSnippet<[string]>((getDescription) => {
+        return {
+          render: () => `<div class="w-full">${getDescription()}</div>`
+        };
+      });
+
+      return renderSnippet(descriptionSnippet, row.getValue('description'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
     accessorKey: 'created_at',
     id: 'created_at',
     header: ({ column }) => {

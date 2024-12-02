@@ -5,11 +5,11 @@
 </script>
 
 <main class="container mt-5 flex flex-col gap-10">
-  <section class="grid h-[30dvh] grid-cols-2 gap-4">
-    <div class="">
+  <section class="grid gap-4 md:grid-cols-2">
+    <div class="h-[30dvh]">
       <LineChart />
     </div>
-    <div class="">
+    <div class="h-[30dvh]">
       <BarChart />
     </div>
   </section>

@@ -21,7 +21,7 @@
     })}
   >
     <Settings2 />
-    View
+    Controls
   </DropdownMenu.Trigger>
   <DropdownMenu.Content align="end">
     <DropdownMenu.Group>

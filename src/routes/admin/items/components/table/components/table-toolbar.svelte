@@ -9,34 +9,46 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import { Input } from '$lib/components/ui/input/index';
   import type { ItemsPageTable } from '../data/schemas.js';
+  import AddItem from '../../add-item/add-item.svelte';
+  import type { Infer, SuperValidated } from 'sveltekit-superforms';
+  import type { AddItemSchema } from '../../add-item/schema.js';
 
-  let { table }: { table: Table<ItemsPageTable> } = $props();
+  interface Props {
+    addItemForm: SuperValidated<Infer<AddItemSchema>>;
+    table: Table<ItemsPageTable>;
+  }
+
+  let { addItemForm, table }: Props = $props();
 
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
-  const statusCol = $derived(table.getColumn('status'));
-  const priorityCol = $derived(table.getColumn('priority'));
 </script>
 
-<div class="flex items-center justify-between">
-  <div class="flex flex-1 items-center space-x-2">
-    <Input
-      placeholder="Search by full name"
-      value={(table.getColumn('firstName')?.getFilterValue() as string) ?? ''}
-      oninput={(e) => {
-        table.getColumn('firstName')?.setFilterValue(e.currentTarget.value);
-      }}
-      onchange={(e) => {
-        table.getColumn('firstName')?.setFilterValue(e.currentTarget.value);
-      }}
-      class="h-8 w-[150px] lg:w-[250px]"
-    />
+<div class="flex items-center justify-between gap-2">
+  <AddItem {addItemForm} />
 
-    {#if isFiltered}
-      <Button variant="ghost" onclick={() => table.resetColumnFilters()} class="h-8 px-2 lg:px-3">
-        Reset
-        <X />
-      </Button>
-    {/if}
+  <div class="flex items-center gap-2">
+    <div class="flex items-center space-x-2">
+      <Input
+        placeholder="Search by model"
+        value={(table.getColumn('model')?.getFilterValue() as string) ?? ''}
+        oninput={(e) => {
+          table.getColumn('model')?.setFilterValue(e.currentTarget.value);
+        }}
+        onchange={(e) => {
+          table.getColumn('model')?.setFilterValue(e.currentTarget.value);
+        }}
+        class="h-8 w-[150px] lg:w-[250px]"
+      />
+
+      {#if isFiltered}
+        <Button variant="ghost" onclick={() => table.resetColumnFilters()} class="h-8 px-2 lg:px-3">
+          Clear
+          <X />
+        </Button>
+      {/if}
+    </div>
+    <div class="">
+      <TableViewOptions {table} />
+    </div>
   </div>
-  <TableViewOptions {table} />
 </div>

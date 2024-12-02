@@ -24,9 +24,16 @@
   import FlexRender from '$lib/components/ui/data-table/flex-render.svelte';
   import * as Table from '$lib/components/ui/table/index';
   import type { ItemsPageTable } from '../data/schemas';
+  import type { AddItemSchema } from '../../add-item/schema';
+  import type { Infer, SuperValidated } from 'sveltekit-superforms';
 
-  let { columns, data }: { columns: ColumnDef<ItemsPageTable, unknown>[]; data: ItemsPageTable[] } =
-    $props();
+  interface Props {
+    addItemForm: SuperValidated<Infer<AddItemSchema>>;
+    columns: ColumnDef<ItemsPageTable, unknown>[];
+    data: ItemsPageTable[];
+  }
+
+  let { addItemForm, columns, data }: Props = $props();
 
   let rowSelection = $state<RowSelectionState>({});
   let columnVisibility = $state<VisibilityState>({});
@@ -102,7 +109,7 @@
 </script>
 
 <div class="space-y-4">
-  <TableToolbar {table} />
+  <TableToolbar {addItemForm} {table} />
 
   <TablePagination {table} />
 
