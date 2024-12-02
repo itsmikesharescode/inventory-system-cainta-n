@@ -7,43 +7,15 @@
   import ChevronLeft from 'lucide-svelte/icons/chevron-left';
   import ChevronsRight from 'lucide-svelte/icons/chevrons-right';
   import ChevronsLeft from 'lucide-svelte/icons/chevrons-left';
-  import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import type { Table } from '@tanstack/table-core';
   import * as Select from '$lib/components/ui/select/index';
   import { Button } from '$lib/components/ui/button/index';
   import type { ItemsPageTable } from '../data/schemas';
-  import { fly } from 'svelte/transition';
-  import { cubicInOut } from 'svelte/easing';
-  import { toast } from 'svelte-sonner';
 
   let { table }: { table: Table<ItemsPageTable> } = $props();
-
-  let deleteLoader = $state(false);
 </script>
 
-<div class="flex items-center justify-between px-2">
-  <div class="flex items-center gap-2.5 text-sm text-muted-foreground">
-    {table.getFilteredSelectedRowModel().rows.length} of
-    {table.getFilteredRowModel().rows.length} row(s) selected.
-
-    <div class="overflow-hidden">
-      {#if table.getFilteredSelectedRowModel().rows.length > 2}
-        <div transition:fly={{ x: -100, duration: 400, easing: cubicInOut }}>
-          <Button disabled={deleteLoader} variant="destructive" size="sm" class="relative">
-            {#if deleteLoader}
-              <div
-                class="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-lg bg-primary"
-              >
-                <LoaderCircle class="size-4 animate-spin" />
-              </div>
-            {/if}
-
-            Delete Selected
-          </Button>
-        </div>
-      {/if}
-    </div>
-  </div>
+<div class="flex items-center justify-end px-2">
   <div class="flex items-center space-x-6 lg:space-x-8">
     <div class="flex items-center space-x-2">
       <p class="text-sm font-medium">Rows per page</p>

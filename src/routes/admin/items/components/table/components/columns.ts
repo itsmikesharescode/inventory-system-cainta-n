@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { ItemsPageTable } from '../data/schemas';
-import { TableColumnHeader, TableRowActions } from './index.js';
+import { TableColumnHeader, TableDescriptionRow, TableRowActions } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
 export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
@@ -212,15 +212,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
         title: 'Description'
       });
     },
-    cell: ({ row }) => {
-      const descriptionSnippet = createRawSnippet<[string]>((getDescription) => {
-        return {
-          render: () => `<div class="w-full">${getDescription()}</div>`
-        };
-      });
-
-      return renderSnippet(descriptionSnippet, row.getValue('description'));
-    },
+    cell: ({ row }) => renderComponent(TableDescriptionRow, { row }),
     enableSorting: true,
     enableHiding: true
   },
