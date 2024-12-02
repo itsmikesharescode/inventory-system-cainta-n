@@ -19,6 +19,6 @@
 </script>
 
 <Toaster />
-<main class="bg-[#F5F5DC] font-roboto">
+<main class=" font-roboto">
   {@render children()}
 </main>
