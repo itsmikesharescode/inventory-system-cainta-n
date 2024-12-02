@@ -13,7 +13,7 @@
 </script>
 
 {#if screen.matches}
-  <Menubar.Root class="rounded-none border-none bg-transparent">
+  <Menubar.Root class="rounded-none border-none bg-white">
     <section class="container flex items-center justify-between gap-2.5 rounded-none border-none">
       <div class="flex items-center gap-2.5">
         <a
@@ -25,7 +25,7 @@
           <Menubar.Trigger class="cursor-pointer gap-1.5 transition-all hover:bg-accent">
             Transactions <ChevronDown class="size-4" />
           </Menubar.Trigger>
-          <Menubar.Content class="bg-transparent">
+          <Menubar.Content class="bg-white">
             <a href="/admin/reservations">
               <Menubar.Item class="cursor-pointer font-roboto text-sm font-medium">
                 Reservations
