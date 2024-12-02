@@ -52,10 +52,6 @@ const supabase: Handle = async ({ event, resolve }) => {
 
   return resolve(event, {
     filterSerializedResponseHeaders(name) {
-      /**
-       * Supabase libraries use the `content-range` and `x-supabase-api-version`
-       * headers, so we need to tell SvelteKit to pass it through.
-       */
       return name === 'content-range' || name === 'x-supabase-api-version';
     }
   });
@@ -65,13 +61,24 @@ const authGuard: Handle = async ({ event, resolve }) => {
   const { session, user } = await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
+  const path = event.url.pathname;
 
-  if (!event.locals.session && event.url.pathname.startsWith('/private')) {
-    redirect(303, '/auth');
+  if (!user && path.startsWith('/admin')) redirect(303, '/?msg=not-logged-in');
+  if (!user && path.startsWith('/teacher')) redirect(303, '/?msg=not-logged-in');
+
+  if (user && path === '/auth') {
+    const { role } = user.user_metadata;
+    if (role === 'admin') redirect(303, '/admin');
+    if (role === 'teacher') redirect(303, '/teacher');
   }
 
-  if (event.locals.session && event.url.pathname === '/auth') {
-    redirect(303, '/private');
+  if (user && path.startsWith('/admin')) {
+    const { role } = user.user_metadata;
+    if (role !== 'admin') redirect(303, '/?msg=not-authorized');
+  }
+  if (user && path.startsWith('/teacher')) {
+    const { role } = user.user_metadata;
+    if (role !== 'teacher') redirect(303, '/?msg=not-authorized');
   }
 
   return resolve(event);
