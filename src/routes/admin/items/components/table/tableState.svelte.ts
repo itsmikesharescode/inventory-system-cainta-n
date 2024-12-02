@@ -1,10 +1,10 @@
 import { getContext, setContext } from 'svelte';
-import type { AccountPageTable } from './data/schemas';
+import type { ItemsPageTable } from './data/schemas';
 
 class TableState {
-  #activeRow = $state<AccountPageTable | null>(null);
+  #activeRow = $state<ItemsPageTable | null>(null);
 
-  setActiveRow(row: AccountPageTable | null) {
+  setActiveRow(row: ItemsPageTable | null) {
     this.#activeRow = row;
   }
 
@@ -43,7 +43,7 @@ class TableState {
   }
 }
 
-const TableKey = Symbol('TableState');
+const TableKey = Symbol('ItemsTableState');
 
 export const initTableState = () => {
   return setContext(TableKey, new TableState());

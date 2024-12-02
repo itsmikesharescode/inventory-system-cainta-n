@@ -5,6 +5,8 @@
 <script lang="ts" generics="TData">
   import Ellipsis from 'lucide-svelte/icons/ellipsis';
   import FileMinus from 'lucide-svelte/icons/file-minus';
+  import Delete from 'lucide-svelte/icons/delete';
+  import NotebookPen from 'lucide-svelte/icons/notebook-pen';
   import Pen from 'lucide-svelte/icons/pen';
   import Check from 'lucide-svelte/icons/check';
   import type { Row } from '@tanstack/table-core';
@@ -27,24 +29,15 @@
       </Button>
     {/snippet}
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content class="w-[160px]" align="end">
-    <DropdownMenu.Item
-      onclick={() => {
-        tableState.setActiveRow(row.original);
-        tableState.setShowUpdateStatus(true);
-      }}
-    >
-      <Check />
-      Update Status
-    </DropdownMenu.Item>
+  <DropdownMenu.Content class="w-fit" align="end">
     <DropdownMenu.Item
       onclick={() => {
         tableState.setActiveRow(row.original);
         tableState.setShowUpdate(true);
       }}
     >
-      <Pen />
-      Update
+      <NotebookPen />
+      Modify
     </DropdownMenu.Item>
     <DropdownMenu.Item
       onclick={() => {
@@ -52,8 +45,8 @@
         tableState.setShowDelete(true);
       }}
     >
-      <FileMinus />
-      Delete
+      <Delete />
+      Remove
     </DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>

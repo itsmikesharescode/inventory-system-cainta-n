@@ -2,8 +2,11 @@
   import Table from './components/table/components/table.svelte';
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { columns } from './components/table/components/columns';
-
+  import { initTableState } from './components/table/tableState.svelte';
+  import UpdateItem from './components/update-item/update-item.svelte';
   const { data } = $props();
+
+  initTableState();
 </script>
 
 <main class="container mt-10 flex flex-col gap-5">
@@ -24,3 +27,5 @@
     <Table addItemForm={data.addItemForm} data={items ?? []} {columns} />
   {/await}
 </main>
+
+<UpdateItem updateItemForm={data.updateItemForm} />

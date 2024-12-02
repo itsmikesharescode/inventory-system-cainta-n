@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { ItemsPageTable } from '../data/schemas';
-import { TableColumnHeader, TableRowActions, TableInterestRow } from './index.js';
+import { TableColumnHeader, TableRowActions } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
 export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
