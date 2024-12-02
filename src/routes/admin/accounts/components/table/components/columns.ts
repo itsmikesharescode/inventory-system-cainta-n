@@ -1,15 +1,15 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
-import type { ItemsPageTable } from '../data/schemas';
+import type { AccountsPageTable } from '../data/schemas';
 import { TableColumnHeader, TableDescriptionRow, TableRowActions } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
-export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
+export const columns: ColumnDef<AccountsPageTable, unknown>[] = [
   {
     accessorKey: 'device_id',
     id: 'device_id',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Device ID'
       });
@@ -31,7 +31,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'model',
     id: 'model',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Model'
       });
@@ -53,7 +53,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'category',
     id: 'category',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Category'
       });
@@ -75,7 +75,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'type',
     id: 'type',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Type'
       });
@@ -97,7 +97,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'status',
     id: 'status',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Status'
       });
@@ -119,7 +119,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'mr',
     id: 'mr',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'MR'
       });
@@ -141,7 +141,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'brand',
     id: 'brand',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Brand'
       });
@@ -163,7 +163,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'quantity',
     id: 'quantity',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Quantity'
       });
@@ -185,7 +185,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'price',
     id: 'price',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Price'
       });
@@ -207,7 +207,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'description',
     id: 'description',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Description'
       });
@@ -221,7 +221,7 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
     accessorKey: 'created_at',
     id: 'created_at',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Created At'
       });
@@ -241,6 +241,6 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => renderComponent(TableRowActions<ItemsPageTable>, { row })
+    cell: ({ row }) => renderComponent(TableRowActions<AccountsPageTable>, { row })
   }
 ];

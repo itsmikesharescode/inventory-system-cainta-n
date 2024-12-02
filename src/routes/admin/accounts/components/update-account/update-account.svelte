@@ -1,31 +1,28 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { updateItemSchema, type UpdateItemSchema } from './schema';
+  import { updateAccountSchema, type UpdateAccountSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import Plus from 'lucide-svelte/icons/plus';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import SelectPicker from '$lib/components/general/select-picker.svelte';
   import { categoriesMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    updateItemForm: SuperValidated<Infer<UpdateItemSchema>>;
+    updateAccountForm: SuperValidated<Infer<UpdateAccountSchema>>;
   }
 
-  const { updateItemForm }: Props = $props();
+  const { updateAccountForm }: Props = $props();
 
   const tableState = useTableState();
 
-  const form = superForm(updateItemForm, {
-    validators: zodClient(updateItemSchema),
-    id: 'update-item-form',
+  const form = superForm(updateAccountForm, {
+    validators: zodClient(updateAccountSchema),
+    id: 'update-account-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 

@@ -23,17 +23,17 @@
   import { createSvelteTable } from '$lib/components/ui/data-table/data-table.svelte';
   import FlexRender from '$lib/components/ui/data-table/flex-render.svelte';
   import * as Table from '$lib/components/ui/table/index';
-  import type { ItemsPageTable } from '../data/schemas';
-  import type { AddItemSchema } from '../../add-item/schema';
+  import type { AccountsPageTable } from '../data/schemas';
+  import type { AddAccountSchema } from '../../add-account/schema';
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
 
   interface Props {
-    addItemForm: SuperValidated<Infer<AddItemSchema>>;
-    columns: ColumnDef<ItemsPageTable, unknown>[];
-    data: ItemsPageTable[];
+    addAccountForm: SuperValidated<Infer<AddAccountSchema>>;
+    columns: ColumnDef<AccountsPageTable, unknown>[];
+    data: AccountsPageTable[];
   }
 
-  let { addItemForm, columns, data }: Props = $props();
+  let { addAccountForm, columns, data }: Props = $props();
 
   let rowSelection = $state<RowSelectionState>({});
   let columnVisibility = $state<VisibilityState>({});
@@ -109,7 +109,7 @@
 </script>
 
 <div class="space-y-4">
-  <TableToolbar {addItemForm} {table} />
+  <TableToolbar {addAccountForm} {table} />
 
   <TablePagination {table} />
 

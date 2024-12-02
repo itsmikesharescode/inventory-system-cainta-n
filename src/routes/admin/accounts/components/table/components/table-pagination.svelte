@@ -10,9 +10,9 @@
   import type { Table } from '@tanstack/table-core';
   import * as Select from '$lib/components/ui/select/index';
   import { Button } from '$lib/components/ui/button/index';
-  import type { ItemsPageTable } from '../data/schemas';
+  import type { AccountsPageTable } from '../data/schemas';
 
-  let { table }: { table: Table<ItemsPageTable> } = $props();
+  let { table }: { table: Table<AccountsPageTable> } = $props();
 </script>
 
 <div class="flex items-center justify-end px-2">

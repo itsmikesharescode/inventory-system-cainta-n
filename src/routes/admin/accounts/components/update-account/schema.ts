@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const updateItemSchema = z.object({
+export const updateAccountSchema = z.object({
   id: z.number(),
   device_id: z.string().min(1, { message: 'Device ID is required' }),
   model: z.string().min(1, { message: 'Model is required' }),
@@ -14,4 +14,4 @@ export const updateItemSchema = z.object({
   description: z.string().min(1, { message: 'Description is required' })
 });
 
-export type UpdateItemSchema = typeof updateItemSchema;
+export type UpdateAccountSchema = typeof updateAccountSchema;

@@ -1,24 +1,24 @@
 import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { addItemSchema } from './components/add-account/schema';
+import { addAccountSchema } from './components/add-account/schema';
 import { fail } from '@sveltejs/kit';
 import { streamItems } from '$lib/db-calls/streamItems';
-import { updateItemSchema } from './components/update-item/schema';
-import { deleteItemSchema } from './components/delete-account/schema';
+import { updateAccountSchema } from './components/update-account/schema';
+import { deleteAccountSchema } from './components/delete-account/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
-    addItemForm: await superValidate(zod(addItemSchema)),
-    updateItemForm: await superValidate(zod(updateItemSchema)),
-    deleteItemForm: await superValidate(zod(deleteItemSchema)),
+    addAccountForm: await superValidate(zod(addAccountSchema)),
+    updateAccountForm: await superValidate(zod(updateAccountSchema)),
+    deleteAccountForm: await superValidate(zod(deleteAccountSchema)),
     getItems: streamItems(supabase)
   };
 };
 
 export const actions: Actions = {
-  addItemEvent: async ({ request, locals: { supabase } }) => {
-    const form = await superValidate(request, zod(addItemSchema));
+  addAccountEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(addAccountSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
@@ -31,8 +31,8 @@ export const actions: Actions = {
 
     return { form, msg: 'Item added successfully' };
   },
-  updateItemEvent: async ({ request, locals: { supabase } }) => {
-    const form = await superValidate(request, zod(updateItemSchema));
+  updateAccountEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(updateAccountSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
@@ -48,8 +48,8 @@ export const actions: Actions = {
 
     return { form, msg: 'Item updated successfully' };
   },
-  removeItemEvent: async ({ request, locals: { supabase } }) => {
-    const form = await superValidate(request, zod(deleteItemSchema));
+  removeAccountEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(deleteAccountSchema));
     if (!form.valid) {
       return fail(400, { form });
     }

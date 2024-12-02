@@ -1,31 +1,24 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { deleteItemSchema, type DeleteItemSchema } from './schema';
+  import { deleteAccountSchema, type DeleteAccountSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
-  import { Input } from '$lib/components/ui/input/index.js';
-  import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    deleteItemForm: SuperValidated<Infer<DeleteItemSchema>>;
+    deleteAccountForm: SuperValidated<Infer<DeleteAccountSchema>>;
   }
 
-  const { deleteItemForm }: Props = $props();
+  const { deleteAccountForm }: Props = $props();
 
   const tableState = useTableState();
 
-  const form = superForm(deleteItemForm, {
-    validators: zodClient(deleteItemSchema),
-    id: 'delete-item-form',
+  const form = superForm(deleteAccountForm, {
+    validators: zodClient(deleteAccountSchema),
+    id: 'delete-account-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 

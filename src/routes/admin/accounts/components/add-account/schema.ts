@@ -1,16 +1,20 @@
 import { z } from 'zod';
 
-export const addItemSchema = z.object({
-  device_id: z.string().min(1, { message: 'Device ID is required' }),
-  model: z.string().min(1, { message: 'Model is required' }),
-  category: z.string().min(1, { message: 'Category is required' }),
-  type: z.string().min(1, { message: 'Type is required' }),
-  status: z.string().min(1, { message: 'Status is required' }),
-  mr: z.string().min(1, { message: 'MR is required' }),
-  brand: z.string().min(1, { message: 'Brand is required' }),
-  quantity: z.number().min(1, { message: 'Quantity is required' }),
-  price: z.number().min(1, { message: 'Price is required' }),
-  description: z.string().min(1, { message: 'Description is required' })
-});
+export const addAccountSchema = z
+  .object({
+    phone: z.string().min(1, { message: 'Phone is required' }),
+    email: z.string().min(1, { message: 'Email is required' }),
+    firstname: z.string().min(1, { message: 'First name is required' }),
+    middlename: z.string().min(1, { message: 'Middle name is required' }),
+    lastname: z.string().min(1, { message: 'Last name is required' }),
+    teacher_id: z.string().min(1, { message: 'Teacher ID is required' }),
+    department: z.string().min(1, { message: 'Department is required' }),
+    password: z.string().min(1, { message: 'Password is required' }),
+    confirm_password: z.string().min(1, { message: 'Confirm password is required' })
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    path: ['confirm_password'],
+    message: 'Passwords do not match'
+  });
 
-export type AddItemSchema = typeof addItemSchema;
+export type AddAccountSchema = typeof addAccountSchema;

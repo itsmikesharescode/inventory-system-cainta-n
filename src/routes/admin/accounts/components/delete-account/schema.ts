@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const deleteItemSchema = z.object({
+export const deleteAccountSchema = z.object({
   id: z.number()
 });
 
-export type DeleteItemSchema = typeof deleteItemSchema;
+export type DeleteAccountSchema = typeof deleteAccountSchema;

@@ -9,22 +9,22 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import { Input } from '$lib/components/ui/input/index';
   import type { ItemsPageTable } from '../data/schemas.js';
-  import AddItem from '../../add-item/add-item.svelte';
+  import AddItem from '../../add-account/add-account.svelte';
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
-  import type { AddItemSchema } from '../../add-item/schema.js';
+  import type { AddAccountSchema } from '../../add-account/schema.js';
 
   interface Props {
-    addItemForm: SuperValidated<Infer<AddItemSchema>>;
+    addAccountForm: SuperValidated<Infer<AddAccountSchema>>;
     table: Table<ItemsPageTable>;
   }
 
-  let { addItemForm, table }: Props = $props();
+  let { addAccountForm, table }: Props = $props();
 
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
 </script>
 
 <div class="flex items-center justify-between gap-2">
-  <AddItem {addItemForm} />
+  <AddItem {addAccountForm} />
 
   <div class="flex items-center gap-2">
     <div class="flex items-center space-x-2">

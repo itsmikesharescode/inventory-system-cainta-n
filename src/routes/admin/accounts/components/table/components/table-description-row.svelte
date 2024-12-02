@@ -4,10 +4,10 @@
 
 <script lang="ts" generics="TData">
   import type { Row } from '@tanstack/table-core';
-  import { type ItemsPageTable } from '../data/schemas';
+  import { type AccountsPageTable } from '../data/schemas';
   import * as Popover from '$lib/components/ui/popover/index.js';
 
-  let { row }: { row: Row<ItemsPageTable> } = $props();
+  let { row }: { row: Row<AccountsPageTable> } = $props();
 </script>
 
 <Popover.Root>

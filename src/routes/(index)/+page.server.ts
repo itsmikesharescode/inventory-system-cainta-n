@@ -54,10 +54,10 @@ export const actions: Actions = {
         data: {
           role: 'teacher',
           email: form.data.email,
-          firstName: form.data.firstName,
-          middleName: form.data.middleName,
-          lastName: form.data.lastName,
-          teacherId: form.data.teacherId,
+          firstname: form.data.firstName,
+          middlename: form.data.middleName,
+          lastname: form.data.lastName,
+          teacher_id: form.data.teacherId,
           phone: form.data.phone,
           department: form.data.department
         }
