@@ -32,7 +32,7 @@ export const actions: Actions = {
 
     if (error) return fail(401, { form, msg: error.message });
 
-    return { form, msg: `Welcome back, ${user?.user_metadata.firstName}!` };
+    return { form, msg: `Welcome back, ${user?.user_metadata.firstname}!` };
   },
 
   registerEvent: async ({ request, locals: { supabase } }) => {

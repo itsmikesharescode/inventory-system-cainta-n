@@ -20,11 +20,11 @@
       const { status, data } = result;
       switch (status) {
         case 200:
-          toast.success('', { description: data.msg });
+          toast.success(data.msg);
           break;
 
         case 401:
-          toast.error('', { description: data.msg });
+          toast.error(data.msg);
           break;
       }
     }
