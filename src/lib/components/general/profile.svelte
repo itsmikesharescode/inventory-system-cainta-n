@@ -18,23 +18,31 @@
     invalidateAll();
     loader = false;
   };
+
+  const user = $derived($page.data.user);
 </script>
 
 <Popover.Root>
   <Popover.Trigger class="flex items-center gap-2.5">
     <CircleUser class="size-6" />
-    <span class="text-xs"><strong>Admin</strong> Charles Ostria</span>
+    <span class="text-xs"
+      ><strong>{user?.user_metadata.role}</strong>
+      {user?.user_metadata.lastname}</span
+    >
   </Popover.Trigger>
   <Popover.Content>
     <sectrion class="absolute right-3 top-2">
-      <Badge>Admin</Badge>
+      <Badge>{user?.user_metadata.role.toUpperCase()}</Badge>
     </sectrion>
     <section class="flex items-center gap-2.5">
       <CircleUser class="size-20" />
       <div>
         <div class="flex flex-col">
-          <span class="text-sm">Charles Ostria</span>
-          <span class="text-sm text-muted-foreground">admin@admin.com</span>
+          <span class="text-sm"
+            >{user?.user_metadata.lastname}, {user?.user_metadata.firstname}
+            {user?.user_metadata.middlename}</span
+          >
+          <span class="text-sm text-muted-foreground">{user?.email}</span>
         </div>
       </div>
     </section>
