@@ -63,8 +63,8 @@
     <Dialog.Header>
       <Dialog.Title>Delete Reservation</Dialog.Title>
       <Dialog.Description>
-        You are about to delete reservation of <strong
-          >{tableState.getActiveRow()?.fullname}
+        You are about to delete reservation with reference id <strong
+          >{tableState.getActiveRow()?.reference_id}
         </strong>
         for item
         <strong>{tableState.getActiveRow()?.item}</strong>
