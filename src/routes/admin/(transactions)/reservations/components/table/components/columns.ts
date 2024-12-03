@@ -50,7 +50,7 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'email',
+    accessorKey: 'items',
     id: 'email',
     header: ({ column }) => {
       return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {

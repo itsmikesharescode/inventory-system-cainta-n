@@ -3,10 +3,12 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addReservationSchema } from './components/add-reservation/schema';
 import { fail } from '@sveltejs/kit';
+import streamReservations from '$lib/db-calls/streamReservations';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
-    addReservationForm: await superValidate(zod(addReservationSchema))
+    addReservationForm: await superValidate(zod(addReservationSchema)),
+    getReservations: streamReservations(supabase)
   };
 };
 

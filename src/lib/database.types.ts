@@ -30,6 +30,42 @@ export type Database = {
   };
   public: {
     Tables: {
+      borrowed_items_tb: {
+        Row: {
+          created_at: string;
+          id: number;
+          item_id: number;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          item_id: number;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          item_id?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'borrowed_items_tb_items_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'items_tb';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'borrowed_items_tb_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers_tb';
+            referencedColumns: ['user_id'];
+          }
+        ];
+      };
       items_tb: {
         Row: {
           brand: string;
@@ -74,6 +110,57 @@ export type Database = {
           type?: string;
         };
         Relationships: [];
+      };
+      reservations_tb: {
+        Row: {
+          created_at: string;
+          date: string;
+          id: number;
+          item_id: number;
+          quantity: number;
+          room: string;
+          status: string;
+          time: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          date: string;
+          id?: number;
+          item_id: number;
+          quantity: number;
+          room: string;
+          status?: string;
+          time: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          date?: string;
+          id?: number;
+          item_id?: number;
+          quantity?: number;
+          room?: string;
+          status?: string;
+          time?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'reservations_tb_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'items_tb';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'reservations_tb_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers_tb';
+            referencedColumns: ['user_id'];
+          }
+        ];
       };
       roles_tb: {
         Row: {
