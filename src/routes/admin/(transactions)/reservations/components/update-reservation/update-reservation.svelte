@@ -173,7 +173,7 @@
               <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
             </div>
           {/if}
-          Create
+          Update
         </Form.Button>
       </section>
     </form>

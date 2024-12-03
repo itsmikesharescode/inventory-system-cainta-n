@@ -3,6 +3,7 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
+  import UpdateStatusReservation from './components/update-status-reservation/update-status-reservation.svelte';
   import UpdateReservation from './components/update-reservation/update-reservation.svelte';
   import DeleteReservation from './components/delete-reservation/delete-reservation.svelte';
   const { data } = $props();
@@ -49,5 +50,6 @@
   {/await}
 </main>
 
+<UpdateStatusReservation updateStatusReservationForm={data.updateStatusReservationForm} />
 <UpdateReservation updateReservationForm={data.updateReservationForm} />
 <DeleteReservation deleteReservationForm={data.deleteReservationForm} />

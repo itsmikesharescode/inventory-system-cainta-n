@@ -33,7 +33,7 @@
     <DropdownMenu.Item
       onclick={() => {
         tableState.setActiveRow(row.original);
-        tableState.setShowUpdate(true);
+        tableState.setShowUpdateStatus(true);
       }}
     >
       <NotebookPen />
