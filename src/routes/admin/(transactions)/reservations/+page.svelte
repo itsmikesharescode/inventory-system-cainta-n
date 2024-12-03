@@ -3,7 +3,7 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
-  import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
+  import UpdateReservation from './components/update-reservation/update-reservation.svelte';
 
   const { data } = $props();
 
@@ -28,6 +28,7 @@
     <Table
       addReservationForm={data.addReservationForm}
       data={reservations?.map((reservation) => ({
+        id: reservation.id,
         status: reservation.status,
         created_at: reservation.created_at,
         teacher_id: reservation.teachers_tb?.user_meta_data.teacher_id ?? '',
@@ -47,3 +48,5 @@
     />
   {/await}
 </main>
+
+<UpdateReservation updateReservationForm={data.updateReservationForm} />

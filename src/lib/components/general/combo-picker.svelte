@@ -19,7 +19,7 @@
   let { selected = $bindable(), selections, placeholder = 'Select an option...' }: Props = $props();
 
   let open = $state(false);
-  let value = $state('');
+  let value = $state(selected);
   let triggerRef = $state<HTMLButtonElement>(null!);
 
   const selectedValue = $derived(selections.find((f) => f.value === value)?.label);
@@ -64,8 +64,8 @@
             <Command.Item
               value={selection.value}
               onSelect={() => {
-                value = selection.value;
                 selected = selection.value;
+                value = selection.value;
                 closeAndFocusTrigger();
               }}
             >

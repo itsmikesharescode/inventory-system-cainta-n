@@ -24,7 +24,7 @@
   };
 
   let open = $state(false);
-  let value = $state('');
+  let value = $state(String(item_id));
   let triggerRef = $state<HTMLButtonElement>(null!);
 
   const selectedValue = $derived(items?.find((f) => f.id.toString() === value));

@@ -1,6 +1,11 @@
 <script lang="ts">
   import CalendarIcon from 'lucide-svelte/icons/calendar';
-  import { DateFormatter, type DateValue, getLocalTimeZone } from '@internationalized/date';
+  import {
+    DateFormatter,
+    type DateValue,
+    getLocalTimeZone,
+    parseDate
+  } from '@internationalized/date';
   import { cn } from '$lib/utils.js';
   import { buttonVariants } from '$lib/components/ui/button/index.js';
   import { Calendar } from '$lib/components/ui/calendar/index.js';
@@ -16,7 +21,7 @@
     dateStyle: 'long'
   });
 
-  let value = $state<DateValue | undefined>();
+  let value = $state<DateValue | undefined>(selected ? parseDate(selected) : undefined);
   let contentRef = $state<HTMLElement | null>(null);
 
   $effect(() => {

@@ -1,4 +1,3 @@
-import type { DateValue } from '@internationalized/date';
 import { z } from 'zod';
 
 export const addReservationSchema = z.object({

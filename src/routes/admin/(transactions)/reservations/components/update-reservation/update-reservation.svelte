@@ -2,29 +2,31 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { updateAccountSchema, type UpdateAccountSchema } from './schema';
+  import { updateReservationSchema, type UpdateReservationSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, typeMeta } from '$lib';
+  import { timeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
+  import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
+  import ItemPicker from '$lib/components/general/item-picker.svelte';
+  import ComboPicker from '$lib/components/general/combo-picker.svelte';
+  import DatePicker from '$lib/components/general/date-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    updateAccountForm: SuperValidated<Infer<UpdateAccountSchema>>;
+    updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
   }
 
-  const { updateAccountForm }: Props = $props();
+  const { updateReservationForm }: Props = $props();
 
   const tableState = useTableState();
-  const form = superForm(updateAccountForm, {
-    validators: zodClient(updateAccountSchema),
-    id: 'update-account-form',
+
+  const form = superForm(updateReservationForm, {
+    validators: zodClient(updateReservationSchema),
+    id: 'update-reservation-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -46,26 +48,21 @@
 
   $effect(() => {
     if (tableState.getShowUpdate()) {
+      $formData.id = tableState.getActiveRow()?.id ?? 0;
       $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
-      $formData.teacher_id = tableState.getActiveRow()?.teacher_id ?? '';
-      $formData.department = tableState.getActiveRow()?.department ?? '';
-      $formData.email = tableState.getActiveRow()?.email ?? '';
-      $formData.phone = tableState.getActiveRow()?.phone ?? '';
-      $formData.firstname = tableState.getActiveRow()?.firstname ?? '';
-      $formData.middlename = tableState.getActiveRow()?.middlename ?? '';
-      $formData.lastname = tableState.getActiveRow()?.lastname ?? '';
-
+      $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
+      $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
+      $formData.room = tableState.getActiveRow()?.room ?? '';
+      $formData.date = tableState.getActiveRow()?.date ?? '';
+      $formData.time = tableState.getActiveRow()?.time ?? '';
       return () => {
+        $formData.id = 0;
         $formData.user_id = '';
-        $formData.teacher_id = '';
-        $formData.department = '';
-        $formData.email = '';
-        $formData.phone = '';
-        $formData.firstname = '';
-        $formData.middlename = '';
-        $formData.lastname = '';
-        tableState.setActiveRow(null);
-        tableState.setShowUpdate(false);
+        $formData.item_id = 0;
+        $formData.quantity = 0;
+        $formData.room = '';
+        $formData.date = '';
+        $formData.time = '';
         reset();
       };
     }
@@ -74,51 +71,53 @@
 
 <Dialog.Root
   controlledOpen
-  onOpenChange={(open) => {
-    tableState.setShowUpdate(open);
-  }}
+  onOpenChange={(open) => tableState.setShowUpdate(open)}
   open={tableState.getShowUpdate()}
 >
-  <Dialog.Content class="max-h-[80dvh] max-w-4xl overflow-y-auto">
+  <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Update Account</Dialog.Title>
+      <Dialog.Title>Add Reservation</Dialog.Title>
+      {$formData.time}
     </Dialog.Header>
 
-    <form method="POST" action="?/updateAccountEvent" use:enhance>
-      <input type="hidden" name="user_id" bind:value={$formData.user_id} />
-      <section class="grid grid-cols-3 gap-2.5">
+    <form method="POST" action="?/updateReservationEvent" use:enhance>
+      <input name="id" type="hidden" {...formData} bind:value={$formData.id} />
+      <section class="grid gap-4 md:grid-cols-2">
         <div class="">
-          <Form.Field {form} name="firstname">
+          <Form.Field {form} name="user_id">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>First Name</Form.Label>
-                <Input {...props} bind:value={$formData.firstname} placeholder="Enter First Name" />
+                <Form.Label>Teacher</Form.Label>
+                <TeacherPicker bind:user_id={$formData.user_id} />
+                <input type="hidden" {...props} bind:value={$formData.user_id} />
               {/snippet}
             </Form.Control>
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
 
-          <Form.Field {form} name="middlename">
+          <Form.Field {form} name="item_id">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Middle Name</Form.Label>
+                <Form.Label>Item</Form.Label>
+                <ItemPicker bind:item_id={$formData.item_id} />
+                <input type="hidden" {...props} bind:value={$formData.item_id} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+
+          <Form.Field {form} name="quantity">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Quantity</Form.Label>
                 <Input
+                  type="number"
                   {...props}
-                  bind:value={$formData.middlename}
-                  placeholder="Enter Middle Name"
+                  bind:value={$formData.quantity}
+                  placeholder="Enter Quantity"
                 />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
-          <Form.Field {form} name="lastname">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Last Name</Form.Label>
-                <Input {...props} bind:value={$formData.lastname} placeholder="Enter Last Name" />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -127,85 +126,39 @@
         </div>
 
         <div class="">
-          <Form.Field {form} name="teacher_id">
+          <Form.Field {form} name="room">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Teacher ID</Form.Label>
-                <Input
-                  {...props}
-                  bind:value={$formData.teacher_id}
-                  placeholder="Enter Teacher ID"
-                />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-          <Form.Field {form} name="email">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Email</Form.Label>
-                <Input {...props} bind:value={$formData.email} placeholder="Enter Email" />
+                <Form.Label>Room</Form.Label>
+                <Input {...props} bind:value={$formData.room} placeholder="Enter Room" />
               {/snippet}
             </Form.Control>
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
 
-          <Form.Field {form} name="phone">
+          <Form.Field {form} name="date">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Phone</Form.Label>
-                <Input {...props} bind:value={$formData.phone} placeholder="Enter Phone" />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-        </div>
-
-        <div class="">
-          <Form.Field {form} name="department">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Department</Form.Label>
-                <Input
-                  {...props}
-                  bind:value={$formData.department}
-                  placeholder="Enter Department"
-                />
+                <Form.Label>Date</Form.Label>
+                <DatePicker bind:selected={$formData.date} />
+                <input type="hidden" {...props} bind:value={$formData.date} />
               {/snippet}
             </Form.Control>
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
 
-          <Form.Field {form} name="password">
+          <Form.Field {form} name="time">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Password</Form.Label>
-                <Input
-                  type="password"
-                  {...props}
-                  bind:value={$formData.password}
-                  placeholder="Enter Password"
+                <Form.Label>Time</Form.Label>
+                <ComboPicker
+                  placeholder="Select Time"
+                  bind:selected={$formData.time}
+                  selections={timeMeta}
                 />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
-          <Form.Field {form} name="confirm_password">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Password</Form.Label>
-                <Input
-                  type="password"
-                  {...props}
-                  bind:value={$formData.confirm_password}
-                  placeholder="Enter Confirm Password"
-                />
+                <input type="hidden" {...props} bind:value={$formData.time} />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -221,7 +174,7 @@
               <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
             </div>
           {/if}
-          Update
+          Create
         </Form.Button>
       </section>
     </form>

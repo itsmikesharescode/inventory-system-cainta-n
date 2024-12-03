@@ -24,7 +24,7 @@
   };
 
   let open = $state(false);
-  let value = $state('');
+  let value = $state(user_id);
   let triggerRef = $state<HTMLButtonElement>(null!);
 
   const selectedValue = $derived(teachers?.find((f) => f.user_id === value)?.user_meta_data);
