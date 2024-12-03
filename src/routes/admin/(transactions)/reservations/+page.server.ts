@@ -5,11 +5,13 @@ import { addReservationSchema } from './components/add-reservation/schema';
 import { fail } from '@sveltejs/kit';
 import streamReservations from '$lib/db-calls/streamReservations';
 import { updateReservationSchema } from './components/update-reservation/schema';
+import { deleteReservationSchema } from './components/delete-reservation/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
     addReservationForm: await superValidate(zod(addReservationSchema)),
     updateReservationForm: await superValidate(zod(updateReservationSchema)),
+    deleteReservationForm: await superValidate(zod(deleteReservationSchema)),
     getReservations: streamReservations(supabase)
   };
 };
@@ -61,5 +63,20 @@ export const actions: Actions = {
     }
 
     return { form, msg: 'Reservation updated successfully' };
+  },
+  removeReservationEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(deleteReservationSchema));
+
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+
+    const { error } = await supabase.from('reservations_tb').delete().eq('id', form.data.id);
+
+    if (error) {
+      return fail(401, { form, msg: error.message });
+    }
+
+    return { form, msg: 'Reservation deleted successfully' };
   }
 };

@@ -77,7 +77,6 @@
   <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
     <Dialog.Header>
       <Dialog.Title>Add Reservation</Dialog.Title>
-      {$formData.time}
     </Dialog.Header>
 
     <form method="POST" action="?/updateReservationEvent" use:enhance>
