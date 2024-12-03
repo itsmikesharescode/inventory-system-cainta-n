@@ -6,6 +6,7 @@ import { fail } from '@sveltejs/kit';
 import { updateReservationSchema } from './components/update-reservation/schema';
 import { deleteReservationSchema } from './components/delete-reservation/schema';
 import streamReservationsItems from '$lib/db-calls/streamReservationsItems';
+import { generateRefId } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
   return {
@@ -17,7 +18,7 @@ export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
 };
 
 export const actions: Actions = {
-  addReservationEvent: async ({ request, locals: { supabase } }) => {
+  addReservationEvent: async ({ request, locals: { supabase, user } }) => {
     const form = await superValidate(request, zod(addReservationSchema));
 
     if (!form.valid) {
@@ -25,7 +26,8 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase.from('reservations_tb').insert({
-      user_id: form.data.user_id,
+      reference_id: generateRefId(8),
+      user_id: user?.id ?? '',
       item_id: form.data.item_id,
       quantity: form.data.quantity,
       room: form.data.room,

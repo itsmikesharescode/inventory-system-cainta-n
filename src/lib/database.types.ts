@@ -118,6 +118,7 @@ export type Database = {
           id: number;
           item_id: number;
           quantity: number;
+          reference_id: string;
           room: string;
           status: string;
           time: string;
@@ -129,6 +130,7 @@ export type Database = {
           id?: number;
           item_id: number;
           quantity: number;
+          reference_id: string;
           room: string;
           status?: string;
           time: string;
@@ -140,6 +142,7 @@ export type Database = {
           id?: number;
           item_id?: number;
           quantity?: number;
+          reference_id?: string;
           room?: string;
           status?: string;
           time?: string;

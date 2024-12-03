@@ -29,13 +29,13 @@
   <div class="flex items-center gap-2">
     <div class="flex items-center space-x-2">
       <Input
-        placeholder="Search by fullname"
-        value={(table.getColumn('fullname')?.getFilterValue() as string) ?? ''}
+        placeholder="Search by reference id"
+        value={(table.getColumn('reference_id')?.getFilterValue() as string) ?? ''}
         oninput={(e) => {
-          table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
+          table.getColumn('reference_id')?.setFilterValue(e.currentTarget.value);
         }}
         onchange={(e) => {
-          table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
+          table.getColumn('reference_id')?.setFilterValue(e.currentTarget.value);
         }}
         class="h-8 w-[150px] lg:w-[250px]"
       />

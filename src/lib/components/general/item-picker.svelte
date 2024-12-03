@@ -69,15 +69,15 @@
   </Popover.Trigger>
   <Popover.Content class="w-[300px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search teacher ID..." />
+      <Command.Input placeholder="Search item model..." />
       <Command.List>
-        <Command.Empty>No teachers found.</Command.Empty>
+        <Command.Empty>No items found.</Command.Empty>
         <Command.Group>
           {#each items ?? [] as item}
             <Command.Item
-              value={item.id.toString()}
+              value={item.model}
               onSelect={() => {
-                value = item.id.toString();
+                value = item.model;
                 item_id = item.id;
                 closeAndFocusTrigger();
               }}

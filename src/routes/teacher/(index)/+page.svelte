@@ -25,7 +25,23 @@
       <Skeleton class="h-[40px] w-full rounded-lg" />
     </section>
   {:then reservations}
-    <Table addReservationForm={data.addReservationForm} data={[]} {columns} />
+    <Table
+      addReservationForm={data.addReservationForm}
+      data={reservations?.map((reservation) => ({
+        id: reservation.id ?? 0,
+        reference_id: reservation.reference_id ?? '',
+        created_at: reservation.created_at ?? '',
+        item_id: reservation.item_id ?? 0,
+        room: reservation.room ?? '',
+        status: reservation.status ?? '',
+        quantity: reservation.quantity ?? 0,
+        date: reservation.date ?? '',
+        time: reservation.time ?? '',
+        item: reservation.items_tb?.model ?? '',
+        when: `${reservation.date} ${reservation.time}`
+      })) ?? []}
+      {columns}
+    />
   {/await}
 </main>
 

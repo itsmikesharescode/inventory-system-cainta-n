@@ -12,7 +12,8 @@ export const reservationSchema = z.object({
   quantity: z.number(),
   date: z.string(),
   time: z.string(),
-  item: z.string()
+  item: z.string(),
+  when: z.string().nullable()
 });
 
 export type ReservationsPageTable = z.output<typeof reservationSchema>;

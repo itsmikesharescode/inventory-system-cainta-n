@@ -28,28 +28,6 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'fullname',
-    id: 'fullname',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
-        column,
-        title: 'Fullname'
-      });
-    },
-    cell: ({ row }) => {
-      const fullnameSnippet = createRawSnippet<[string]>((getFullname) => {
-        return {
-          render: () => `<div class="w-full">${getFullname()}</div>`
-        };
-      });
-
-      return renderSnippet(fullnameSnippet, row.getValue('fullname'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     accessorKey: 'item',
     id: 'item',
     header: ({ column }) => {
