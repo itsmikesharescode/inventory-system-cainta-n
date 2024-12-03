@@ -7,8 +7,11 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
-  import { timeMeta } from '$lib';
+  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+  import SelectPicker from '$lib/components/general/select-picker.svelte';
+  import { categoriesMeta, timeMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
   import ItemPicker from '$lib/components/general/item-picker.svelte';
@@ -49,7 +52,6 @@
   $effect(() => {
     if (tableState.getShowUpdate()) {
       $formData.id = tableState.getActiveRow()?.id ?? 0;
-      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
       $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
       $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
       $formData.room = tableState.getActiveRow()?.room ?? '';
@@ -57,7 +59,6 @@
       $formData.time = tableState.getActiveRow()?.time ?? '';
       return () => {
         $formData.id = 0;
-        $formData.user_id = '';
         $formData.item_id = 0;
         $formData.quantity = 0;
         $formData.room = '';
@@ -74,108 +75,92 @@
   onOpenChange={(open) => tableState.setShowUpdate(open)}
   open={tableState.getShowUpdate()}
 >
-  <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
+  <Dialog.Content class="max-h-screen  overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Add Reservation</Dialog.Title>
+      <Dialog.Title>Update Reservation</Dialog.Title>
     </Dialog.Header>
 
     <form method="POST" action="?/updateReservationEvent" use:enhance>
-      <input name="id" type="hidden" {...formData} bind:value={$formData.id} />
-      <section class="grid gap-4 md:grid-cols-2">
-        <div class="">
-          <Form.Field {form} name="user_id">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Teacher</Form.Label>
-                <TeacherPicker bind:user_id={$formData.user_id} />
-                <input type="hidden" {...props} bind:value={$formData.user_id} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
+      <input name="id" type="hidden" bind:value={$formData.id} />
+      <div class="">
+        <Form.Field {form} name="item_id">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Item</Form.Label>
+              <ItemPicker bind:item_id={$formData.item_id} />
+              <input type="hidden" {...props} bind:value={$formData.item_id} />
+            {/snippet}
+          </Form.Control>
+          <Form.Description />
+          <Form.FieldErrors />
+        </Form.Field>
 
-          <Form.Field {form} name="item_id">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Item</Form.Label>
-                <ItemPicker bind:item_id={$formData.item_id} />
-                <input type="hidden" {...props} bind:value={$formData.item_id} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
+        <Form.Field {form} name="quantity">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Quantity</Form.Label>
+              <Input
+                type="number"
+                {...props}
+                bind:value={$formData.quantity}
+                placeholder="Enter Quantity"
+              />
+            {/snippet}
+          </Form.Control>
+          <Form.Description />
+          <Form.FieldErrors />
+        </Form.Field>
 
-          <Form.Field {form} name="quantity">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Quantity</Form.Label>
-                <Input
-                  type="number"
-                  {...props}
-                  bind:value={$formData.quantity}
-                  placeholder="Enter Quantity"
-                />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-        </div>
+        <Form.Field {form} name="room">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Room</Form.Label>
+              <Input {...props} bind:value={$formData.room} placeholder="Enter Room" />
+            {/snippet}
+          </Form.Control>
+          <Form.Description />
+          <Form.FieldErrors />
+        </Form.Field>
 
-        <div class="">
-          <Form.Field {form} name="room">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Room</Form.Label>
-                <Input {...props} bind:value={$formData.room} placeholder="Enter Room" />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
+        <Form.Field {form} name="date">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Date</Form.Label>
+              <DatePicker bind:selected={$formData.date} />
+              <input type="hidden" {...props} bind:value={$formData.date} />
+            {/snippet}
+          </Form.Control>
+          <Form.Description />
+          <Form.FieldErrors />
+        </Form.Field>
 
-          <Form.Field {form} name="date">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Date</Form.Label>
-                <DatePicker bind:selected={$formData.date} />
-                <input type="hidden" {...props} bind:value={$formData.date} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
+        <Form.Field {form} name="time">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Time</Form.Label>
+              <ComboPicker
+                placeholder="Select Time"
+                bind:selected={$formData.time}
+                selections={timeMeta}
+              />
+              <input type="hidden" {...props} bind:value={$formData.time} />
+            {/snippet}
+          </Form.Control>
+          <Form.Description />
+          <Form.FieldErrors />
+        </Form.Field>
 
-          <Form.Field {form} name="time">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Time</Form.Label>
-                <ComboPicker
-                  placeholder="Select Time"
-                  bind:selected={$formData.time}
-                  selections={timeMeta}
-                />
-                <input type="hidden" {...props} bind:value={$formData.time} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-        </div>
-      </section>
-
-      <section class="flex justify-end">
-        <Form.Button disabled={$submitting} class="relative">
-          {#if $submitting}
-            <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-primary">
-              <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
-            </div>
-          {/if}
-          Update
-        </Form.Button>
-      </section>
+        <section class="flex justify-end">
+          <Form.Button disabled={$submitting} class="relative">
+            {#if $submitting}
+              <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-primary">
+                <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
+              </div>
+            {/if}
+            Update
+          </Form.Button>
+        </section>
+      </div>
     </form>
   </Dialog.Content>
 </Dialog.Root>

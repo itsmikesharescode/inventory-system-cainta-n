@@ -47,11 +47,9 @@ export const actions: Actions = {
     if (!form.valid) {
       return fail(400, { form });
     }
-
     const { error } = await supabase
       .from('reservations_tb')
       .update({
-        user_id: form.data.user_id,
         item_id: form.data.item_id,
         quantity: form.data.quantity,
         room: form.data.room,
