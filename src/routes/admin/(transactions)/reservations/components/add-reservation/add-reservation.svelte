@@ -9,10 +9,14 @@
   import Plus from 'lucide-svelte/icons/plus';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, typeMeta } from '$lib';
+  import { categoriesMeta, timeMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
+  import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
+  import ItemPicker from '$lib/components/general/item-picker.svelte';
+  import ComboPicker from '$lib/components/general/combo-picker.svelte';
+  import DatePicker from '$lib/components/general/date-picker.svelte';
 
   interface Props {
     addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
@@ -45,8 +49,6 @@
 
   $effect(() => {
     if (open) {
-      $formData.teacher_id = generateRefId(12);
-
       return () => {
         reset();
       };
@@ -56,40 +58,56 @@
 
 <Button onclick={() => (open = true)} class="items-center"><Plus /> New Reservation</Button>
 <Dialog.Root bind:open>
-  <Dialog.Content class="max-h-[80dvh] max-w-4xl overflow-y-auto">
+  <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
     <Dialog.Header>
       <Dialog.Title>Add Reservation</Dialog.Title>
     </Dialog.Header>
 
     <form method="POST" action="?/addReservationEvent" use:enhance>
-      <section class="grid grid-cols-3 gap-2.5">
+      <section class="grid gap-4 md:grid-cols-2">
         <div class="">
-          <Form.Field {form} name="teacher_id">
+          <Form.Field {form} name="user_id">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Teacher ID</Form.Label>
+                <Form.Label>Teacher</Form.Label>
+                <TeacherPicker bind:user_id={$formData.user_id} />
+                <input type="hidden" {...props} bind:value={$formData.user_id} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+
+          <Form.Field {form} name="item_id">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Item</Form.Label>
+                <ItemPicker bind:item_id={$formData.item_id} />
+                <input type="hidden" {...props} bind:value={$formData.item_id} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+
+          <Form.Field {form} name="quantity">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Quantity</Form.Label>
                 <Input
+                  type="number"
                   {...props}
-                  bind:value={$formData.teacher_id}
-                  placeholder="Enter Teacher ID"
+                  bind:value={$formData.quantity}
+                  placeholder="Enter Quantity"
                 />
               {/snippet}
             </Form.Control>
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
+        </div>
 
-          <Form.Field {form} name="max_items">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Middle Name</Form.Label>
-                <Input {...props} bind:value={$formData.max_items} placeholder="Enter Max Items" />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
+        <div class="">
           <Form.Field {form} name="room">
             <Form.Control>
               {#snippet children({ props })}
@@ -100,14 +118,13 @@
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
-        </div>
 
-        <div class="">
           <Form.Field {form} name="date">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Teacher ID</Form.Label>
-                <Input {...props} bind:value={$formData.date} placeholder="Enter Date" />
+                <Form.Label>Date</Form.Label>
+                <DatePicker bind:selected={$formData.date} />
+                <input type="hidden" {...props} bind:value={$formData.date} />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -118,7 +135,12 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Time</Form.Label>
-                <Input {...props} bind:value={$formData.time} placeholder="Enter Time" />
+                <ComboPicker
+                  placeholder="Select Time"
+                  bind:selected={$formData.time}
+                  selections={timeMeta}
+                />
+                <input type="hidden" {...props} bind:value={$formData.time} />
               {/snippet}
             </Form.Control>
             <Form.Description />

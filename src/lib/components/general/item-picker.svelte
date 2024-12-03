@@ -7,27 +7,27 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import { cn } from '$lib/utils.js';
   import { page } from '$app/stores';
-  import streamTeachers from '$lib/db-calls/streamTeachers';
   import type { Database } from '$lib/database.types';
+  import streamItems from '$lib/db-calls/streamItems';
 
   interface Props {
-    user_id: string;
+    item_id: number;
   }
 
-  let { user_id = $bindable() }: Props = $props();
+  let { item_id = $bindable() }: Props = $props();
 
-  let teachers = $state<Database['public']['Tables']['teachers_tb']['Row'][] | null>(null);
+  let items = $state<Database['public']['Tables']['items_tb']['Row'][] | null>(null);
 
-  const getTeachers = async () => {
+  const getItems = async () => {
     if (!$page.data.supabase) return;
-    teachers = await streamTeachers($page.data.supabase);
+    items = await streamItems($page.data.supabase);
   };
 
   let open = $state(false);
   let value = $state('');
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(teachers?.find((f) => f.user_id === value)?.user_meta_data);
+  const selectedValue = $derived(items?.find((f) => f.id.toString() === value));
 
   function closeAndFocusTrigger() {
     open = false;
@@ -37,18 +37,18 @@
   }
 
   $effect(() => {
-    getTeachers();
+    getItems();
 
     return () => {
-      teachers = null;
+      items = null;
     };
   });
 
   const checkSelected = () => {
     if (selectedValue) {
-      return `${selectedValue?.lastname}, ${selectedValue?.firstname} ${selectedValue?.middlename}`;
+      return `${selectedValue?.model}`;
     }
-    return 'Select a teacher';
+    return 'Select an item';
   };
 </script>
 
@@ -57,7 +57,7 @@
     {#snippet child({ props })}
       <Button
         variant="outline"
-        class="w-full justify-between {user_id ? '' : 'text-muted-foreground'}"
+        class="w-full justify-between {item_id ? '' : 'text-muted-foreground'}"
         {...props}
         role="combobox"
         aria-expanded={open}
@@ -73,22 +73,22 @@
       <Command.List>
         <Command.Empty>No teachers found.</Command.Empty>
         <Command.Group>
-          {#each teachers ?? [] as teacher}
+          {#each items ?? [] as item}
             <Command.Item
-              value={teacher.user_meta_data.teacher_id}
+              value={item.id.toString()}
               onSelect={() => {
-                value = teacher.user_id;
-                user_id = teacher.user_id;
+                value = item.id.toString();
+                item_id = item.id;
                 closeAndFocusTrigger();
               }}
             >
-              <Check class={cn('mr-2 size-4', value !== teacher.user_id && 'text-transparent')} />
+              <Check
+                class={cn('mr-2 size-4', value !== item.id.toString() && 'text-transparent')}
+              />
               <section class="flex flex-col">
-                <span>
-                  {`${teacher.user_meta_data.lastname}, ${teacher.user_meta_data.firstname} ${teacher.user_meta_data.middlename}`}
-                </span>
+                <span>{item.model}</span>
                 <span class="text-xs text-muted-foreground">
-                  {teacher.user_meta_data.teacher_id}
+                  {item.brand}/{item.quantity}
                 </span>
               </section>
             </Command.Item>

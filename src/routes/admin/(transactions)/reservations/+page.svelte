@@ -10,9 +10,8 @@
   initTableState();
 </script>
 
-<TeacherPicker />
 <main class="container mt-10 flex flex-col gap-5">
-  <span class="text-4xl font-semibold">Accounts</span>
+  <span class="text-4xl font-semibold">Reservations</span>
   {#await data.getReservations}
     <section class="flex flex-col gap-2.5">
       <div class="flex items-center justify-between gap-2.5">
