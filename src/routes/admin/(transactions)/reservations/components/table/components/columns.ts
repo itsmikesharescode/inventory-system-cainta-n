@@ -50,66 +50,88 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'items',
-    id: 'email',
+    accessorKey: 'item',
+    id: 'item',
     header: ({ column }) => {
       return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
         column,
-        title: 'Email'
+        title: 'Item'
       });
     },
     cell: ({ row }) => {
-      const emailSnippet = createRawSnippet<[string]>((getEmail) => {
+      const itemSnippet = createRawSnippet<[string]>((getItem) => {
         return {
-          render: () => `<div class="w-full">${getEmail()}</div>`
+          render: () => `<div class="w-full">${getItem()}</div>`
         };
       });
 
-      return renderSnippet(emailSnippet, row.getValue('email'));
+      return renderSnippet(itemSnippet, row.getValue('item'));
     },
     enableSorting: true,
     enableHiding: true
   },
 
   {
-    accessorKey: 'phone',
-    id: 'phone',
+    accessorKey: 'quantity',
+    id: 'quantity',
     header: ({ column }) => {
       return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
         column,
-        title: 'Phone'
+        title: 'Quantity'
       });
     },
     cell: ({ row }) => {
-      const phoneSnippet = createRawSnippet<[string]>((getPhone) => {
+      const quantitySnippet = createRawSnippet<[string]>((getQuantity) => {
         return {
-          render: () => `<div class="w-full truncate">${getPhone()}</div>`
+          render: () => `<div class="w-full truncate">${getQuantity()}</div>`
         };
       });
 
-      return renderSnippet(phoneSnippet, row.getValue('phone'));
+      return renderSnippet(quantitySnippet, row.getValue('quantity'));
     },
     enableSorting: true,
     enableHiding: true
   },
 
   {
-    accessorKey: 'department',
-    id: 'department',
+    accessorKey: 'room',
+    id: 'room',
     header: ({ column }) => {
       return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
         column,
-        title: 'Department'
+        title: 'Room'
       });
     },
     cell: ({ row }) => {
-      const departmentSnippet = createRawSnippet<[string]>((getDepartment) => {
+      const roomSnippet = createRawSnippet<[string]>((getRoom) => {
         return {
-          render: () => `<div class="w-full">${getDepartment()}</div>`
+          render: () => `<div class="w-full">${getRoom()}</div>`
         };
       });
 
-      return renderSnippet(departmentSnippet, row.getValue('department'));
+      return renderSnippet(roomSnippet, row.getValue('room'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
+    accessorKey: 'when',
+    id: 'when',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+        column,
+        title: 'Date & Time'
+      });
+    },
+    cell: ({ row }) => {
+      const whenSnippet = createRawSnippet<[string]>((getWhen) => {
+        return {
+          render: () => `<div class="w-full">${getWhen()}</div>`
+        };
+      });
+
+      return renderSnippet(whenSnippet, row.getValue('when'));
     },
     enableSorting: true,
     enableHiding: true
@@ -132,6 +154,38 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
       });
 
       return renderSnippet(createdAtSnippet, row.getValue('created_at'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
+    accessorKey: 'status',
+    id: 'status',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+        column,
+        title: 'Status'
+      });
+    },
+    cell: ({ row }) => {
+      const statusSnippet = createRawSnippet<[string]>((getStatus) => {
+        const checkBgColor = () => {
+          if (getStatus() === 'pending') {
+            return 'bg-yellow-500';
+          } else if (getStatus() === 'rejected') {
+            return 'bg-red-500';
+          }
+          return 'bg-green-500';
+        };
+
+        return {
+          render: () =>
+            `<div class="w-full ${checkBgColor()} rounded-md px-2 py-1 flex items-center justify-center text-white">${getStatus()}</div>`
+        };
+      });
+
+      return renderSnippet(statusSnippet, row.getValue('status'));
     },
     enableSorting: true,
     enableHiding: true

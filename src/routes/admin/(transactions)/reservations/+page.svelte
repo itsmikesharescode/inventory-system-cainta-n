@@ -28,6 +28,10 @@
     <Table
       addReservationForm={data.addReservationForm}
       data={reservations?.map((reservation) => ({
+        status: reservation.status,
+        created_at: reservation.created_at,
+        teacher_id: reservation.teachers_tb?.user_meta_data.teacher_id ?? '',
+        when: reservation.date + ' ' + reservation.time,
         user_id: reservation.user_id ?? '',
         item_id: reservation.items_tb?.id ?? 0,
         fullname: `${reservation.teachers_tb?.user_meta_data.lastname}, ${reservation.teachers_tb?.user_meta_data.firstname} ${reservation.teachers_tb?.user_meta_data.middlename}`,

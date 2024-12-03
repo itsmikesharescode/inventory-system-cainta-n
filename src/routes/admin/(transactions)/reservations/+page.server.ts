@@ -4,7 +4,6 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { addReservationSchema } from './components/add-reservation/schema';
 import { fail } from '@sveltejs/kit';
 import streamReservations from '$lib/db-calls/streamReservations';
-import { getLocalTimeZone } from '@internationalized/date';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {

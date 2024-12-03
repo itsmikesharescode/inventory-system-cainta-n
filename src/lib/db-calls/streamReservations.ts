@@ -8,7 +8,7 @@ const streamReservations = async (supabase: SupabaseClient<Database>) => {
     .from('reservations_tb')
     .select('*,teachers_tb("user_meta_data"), items_tb(*)')
     .order('created_at', { ascending: false });
-
+  console.log(data, error?.message);
   if (error) return null;
   return data;
 };

@@ -3,6 +3,10 @@ import type { UserMetaData } from '$lib/types';
 import { z } from 'zod';
 
 export const reservationSchema = z.object({
+  status: z.string(),
+  created_at: z.string(),
+  teacher_id: z.string(),
+  when: z.string(),
   user_id: z.string(),
   item_id: z.number(),
   fullname: z.string(),

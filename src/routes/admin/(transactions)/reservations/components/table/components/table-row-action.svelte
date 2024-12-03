@@ -37,6 +37,15 @@
       }}
     >
       <NotebookPen />
+      Update Status
+    </DropdownMenu.Item>
+    <DropdownMenu.Item
+      onclick={() => {
+        tableState.setActiveRow(row.original);
+        tableState.setShowUpdate(true);
+      }}
+    >
+      <NotebookPen />
       Modify
     </DropdownMenu.Item>
     <DropdownMenu.Item
