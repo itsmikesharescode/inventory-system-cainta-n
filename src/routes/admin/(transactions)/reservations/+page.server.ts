@@ -7,6 +7,7 @@ import streamReservationsUsersItems from '$lib/db-calls/streamReservationsUsersI
 import { updateReservationSchema } from './components/update-reservation/schema';
 import { deleteReservationSchema } from './components/delete-reservation/schema';
 import { updateStatusReservationSchema } from './components/update-status-reservation/schema';
+import { generateRefId } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
@@ -27,6 +28,7 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase.from('reservations_tb').insert({
+      reference_id: generateRefId(8),
       user_id: form.data.user_id,
       item_id: form.data.item_id,
       quantity: form.data.quantity,

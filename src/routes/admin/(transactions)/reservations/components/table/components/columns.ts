@@ -28,6 +28,28 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
   },
 
   {
+    accessorKey: 'reference_id',
+    id: 'reference_id',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+        column,
+        title: 'Reference ID'
+      });
+    },
+    cell: ({ row }) => {
+      const idSnippet = createRawSnippet<[string]>((getReferenceID) => {
+        return {
+          render: () => `<div class="w-full">${getReferenceID()}</div>`
+        };
+      });
+
+      return renderSnippet(idSnippet, row.getValue('reference_id'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
     accessorKey: 'fullname',
     id: 'fullname',
     header: ({ column }) => {

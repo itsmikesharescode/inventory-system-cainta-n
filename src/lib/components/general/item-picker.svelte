@@ -77,7 +77,7 @@
             <Command.Item
               value={item.model}
               onSelect={() => {
-                value = item.model;
+                value = item.id.toString();
                 item_id = item.id;
                 closeAndFocusTrigger();
               }}

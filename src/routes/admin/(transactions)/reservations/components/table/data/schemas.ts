@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export const reservationSchema = z.object({
   id: z.number(),
+  reference_id: z.string(),
   status: z.string(),
   created_at: z.string(),
   teacher_id: z.string(),
