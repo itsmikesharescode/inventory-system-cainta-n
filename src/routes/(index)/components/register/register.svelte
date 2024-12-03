@@ -7,6 +7,7 @@
   import { toast } from 'svelte-sonner';
   import { type RegisterSchema, registerSchema } from './schema';
   import { type SuperValidated, type Infer } from 'sveltekit-superforms';
+  import { generateRefId } from '$lib';
 
   interface Props {
     registerForm: SuperValidated<Infer<RegisterSchema>>;
@@ -32,6 +33,13 @@
   });
 
   const { form: formData, enhance, submitting } = form;
+
+  $effect(() => {
+    $formData.teacherId = generateRefId(12);
+    return () => {
+      $formData.teacherId = '';
+    };
+  });
 </script>
 
 <div class="flex flex-col items-center gap-2.5 md:py-20">
