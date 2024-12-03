@@ -1,7 +1,7 @@
 import type { Database } from '$lib/database.types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-const streamReservations = async (supabase: SupabaseClient<Database>) => {
+const streamReservationsUsersItems = async (supabase: SupabaseClient<Database>) => {
   if (!supabase) return null;
 
   const { data, error } = await supabase
@@ -13,4 +13,4 @@ const streamReservations = async (supabase: SupabaseClient<Database>) => {
   return data;
 };
 
-export default streamReservations;
+export default streamReservationsUsersItems;
