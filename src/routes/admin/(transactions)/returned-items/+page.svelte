@@ -24,6 +24,24 @@
       <Skeleton class="h-[40px] w-full rounded-lg" />
     </section>
   {:then returnees}
-    <Table addReturneeForm={data.addReturneeForm} data={[]} {columns} />
+    <Table
+      addReturneeForm={data.addReturneeForm}
+      data={returnees?.map((returnee) => ({
+        id: returnee.id,
+        created_at: returnee.created_at,
+        reference_id: returnee.borrowed_items_tb?.reference_id ?? '',
+        teacher_id: returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.teacher_id ?? '',
+        when_borrowed: returnee.borrowed_items_tb?.date + ' ' + returnee.borrowed_items_tb?.time,
+        when_returned: returnee.returned_date + ' ' + returnee.time,
+        user_id: returnee.borrowed_items_tb?.teachers_tb?.user_id ?? '',
+        item_id: returnee.borrowed_items_tb?.item_id ?? 0,
+        fullname: `${returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.lastname}, ${returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.firstname} ${returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.middlename}`,
+        room: returnee.borrowed_items_tb?.room ?? '',
+        item: returnee.borrowed_items_tb?.items_tb?.model ?? '',
+        user_meta_data: returnee.borrowed_items_tb?.teachers_tb?.user_meta_data ?? null,
+        items_tb: returnee.borrowed_items_tb?.items_tb ?? null
+      })) ?? []}
+      {columns}
+    />
   {/await}
 </main>

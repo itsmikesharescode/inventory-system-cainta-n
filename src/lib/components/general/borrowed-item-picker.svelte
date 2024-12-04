@@ -77,7 +77,7 @@
             <Command.Item
               value={`${borrowed_item.teachers_tb?.user_meta_data.lastname}, ${borrowed_item.teachers_tb?.user_meta_data.firstname} ${borrowed_item.teachers_tb?.user_meta_data.middlename}`}
               onSelect={() => {
-                borrowed_item_id = String(borrowed_item.item_id);
+                borrowed_item_id = String(borrowed_item.id);
                 closeAndFocusTrigger();
               }}
             >

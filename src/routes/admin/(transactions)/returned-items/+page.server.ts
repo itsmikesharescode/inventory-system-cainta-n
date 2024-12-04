@@ -4,7 +4,6 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { addReturneeSchema } from './components/add-returnee/schema';
 import { fail } from '@sveltejs/kit';
 import streamReturnedItemsUsersItems from '$lib/db-calls/streamReturnedItemsUsersItems';
-import { generateRefId } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
@@ -21,6 +20,15 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    console.log(form.data);
+    const { error } = await supabase.from('returned_items_tb').insert({
+      borrowed_item_id: Number(form.data.borrowed_item_id),
+      returned_date: form.data.returned_date,
+      time: form.data.time
+    });
+    console.log(form.data.borrowed_item_id);
+    console.log(error?.message);
+    if (error) return fail(401, { form, msg: error.message });
+
+    return { form, msg: 'Returnee event added successfully' };
   }
 };

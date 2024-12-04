@@ -41,24 +41,23 @@
   });
 
   const { form: formData, enhance, submitting, reset } = form;
-
-  $effect(() => {
-    if (open) {
-      return () => {
-        reset();
-      };
-    }
-  });
 </script>
 
 <Button onclick={() => (open = true)} class="items-center"><Plus /> New Borrower</Button>
-<Dialog.Root bind:open>
+<Dialog.Root
+  controlledOpen
+  onOpenChange={() => {
+    open = false;
+    reset();
+  }}
+  bind:open
+>
   <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Add Borrower</Dialog.Title>
+      <Dialog.Title>Add Returnee</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" action="?/addBorrowerEvent" use:enhance>
+    <form method="POST" action="?/addReturneeEvent" use:enhance>
       <section class="grid gap-4 md:grid-cols-2">
         <div class="">
           <Form.Field {form} name="borrowed_item_id">
@@ -93,6 +92,7 @@
                 <Form.Label>Time</Form.Label>
                 <ComboPicker
                   placeholder="Select Time"
+                  searchPlaceholder="Search Time"
                   bind:selected={$formData.time}
                   selections={timeMeta}
                 />

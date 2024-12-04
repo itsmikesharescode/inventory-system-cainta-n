@@ -6,7 +6,7 @@ const streamReturnedItemsUsersItems = async (supabase: SupabaseClient<Database>)
 
   const { data, error } = await supabase
     .from('returned_items_tb')
-    .select('*, teachers_tb(*), borrowed_items_tb(*, items_tb(*))');
+    .select('*, borrowed_items_tb(*, items_tb(*), teachers_tb(*))');
 
   if (error) return null;
   return data;
