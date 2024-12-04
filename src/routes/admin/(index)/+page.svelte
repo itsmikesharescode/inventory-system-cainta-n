@@ -28,10 +28,19 @@
     </section>
   {/await}
 
-  <section class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-    <Counter title="Pending" count={10} />
-    <Counter title="Accepted" count={10} />
-    <Counter title="Cancelled" count={10} />
-    <Counter title="Accounts" count={10} />
-  </section>
+  {#await data.dashboardCounters}
+    <section class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <Skeleton class="h-[18dvh] rounded-lg" />
+      <Skeleton class="h-[18dvh] rounded-lg" />
+      <Skeleton class="h-[18dvh] rounded-lg" />
+      <Skeleton class="h-[18dvh] rounded-lg" />
+    </section>
+  {:then counters}
+    <section class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <Counter title="Pending" count={counters?.pendings || 0} />
+      <Counter title="Accepted" count={counters?.approved || 0} />
+      <Counter title="Cancelled" count={counters?.rejected || 0} />
+      <Counter title="Accounts" count={counters?.accounts || 0} />
+    </section>
+  {/await}
 </main>
