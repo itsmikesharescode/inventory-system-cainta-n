@@ -4,10 +4,12 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { addReturneeSchema } from './components/add-returnee/schema';
 import { fail } from '@sveltejs/kit';
 import streamReturnedItemsUsersItems from '$lib/db-calls/streamReturnedItemsUsersItems';
+import { updateReturneeSchema } from './components/update-returnee/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
     addReturneeForm: await superValidate(zod(addReturneeSchema)),
+    updateReturneeForm: await superValidate(zod(updateReturneeSchema)),
     getReturnees: streamReturnedItemsUsersItems(supabase)
   };
 };
@@ -29,6 +31,25 @@ export const actions: Actions = {
     console.log(error?.message);
     if (error) return fail(401, { form, msg: error.message });
 
-    return { form, msg: 'Returnee event added successfully' };
+    return { form, msg: 'Returnee added successfully' };
+  },
+  updateReturneeEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(updateReturneeSchema));
+
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+
+    const { error } = await supabase
+      .from('returned_items_tb')
+      .update({
+        returned_date: form.data.returned_date,
+        time: form.data.time
+      })
+      .eq('id', form.data.id);
+
+    if (error) return fail(401, { form, msg: error.message });
+
+    return { form, msg: 'Returnee updated successfully' };
   }
 };

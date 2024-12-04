@@ -14,6 +14,7 @@ export const returneeSchema = z.object({
   fullname: z.string(),
   room: z.string(),
   item: z.string(),
+  time: z.string(),
   user_meta_data: z.custom<UserMetaData>().nullable(),
   items_tb: z.custom<Database['public']['Tables']['items_tb']['Row']>().nullable()
 });

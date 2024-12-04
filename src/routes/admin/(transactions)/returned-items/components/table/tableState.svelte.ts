@@ -1,10 +1,10 @@
 import { getContext, setContext } from 'svelte';
-import type { BorrowedItemsPageTable } from './data/schemas';
+import type { ReturneePageTable } from './data/schemas';
 
 class TableState {
-  #activeRow = $state<BorrowedItemsPageTable | null>(null);
+  #activeRow = $state<ReturneePageTable | null>(null);
 
-  setActiveRow(row: BorrowedItemsPageTable | null) {
+  setActiveRow(row: ReturneePageTable | null) {
     this.#activeRow = row;
   }
 

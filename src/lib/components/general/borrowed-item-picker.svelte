@@ -11,9 +11,10 @@
 
   interface Props {
     borrowed_item_id: string;
+    disabled?: boolean;
   }
 
-  let { borrowed_item_id = $bindable() }: Props = $props();
+  let { borrowed_item_id = $bindable(), disabled = false }: Props = $props();
 
   let borrowed_items = $state<Awaited<ReturnType<typeof streamBorrowersUsersItems>> | null>(null);
 
@@ -53,7 +54,7 @@
 </script>
 
 <Popover.Root bind:open>
-  <Popover.Trigger bind:ref={triggerRef}>
+  <Popover.Trigger {disabled} bind:ref={triggerRef}>
     {#snippet child({ props })}
       <Button
         variant="outline"
@@ -69,7 +70,7 @@
   </Popover.Trigger>
   <Popover.Content class="w-[300px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search borrower fullname..." />
+      <Command.Input {disabled} placeholder="Search borrower fullname..." />
       <Command.List>
         <Command.Empty>No borrowers found.</Command.Empty>
         <Command.Group>

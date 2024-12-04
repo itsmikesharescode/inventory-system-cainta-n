@@ -3,7 +3,7 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
-
+  import UpdateReturnee from './components/update-returnee/update-returnee.svelte';
   const { data } = $props();
 
   initTableState();
@@ -32,6 +32,7 @@
         reference_id: returnee.borrowed_items_tb?.reference_id ?? '',
         teacher_id: returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.teacher_id ?? '',
         when_borrowed: returnee.borrowed_items_tb?.date + ' ' + returnee.borrowed_items_tb?.time,
+        time: returnee.time,
         when_returned: returnee.returned_date + ' ' + returnee.time,
         user_id: returnee.borrowed_items_tb?.teachers_tb?.user_id ?? '',
         item_id: returnee.borrowed_items_tb?.item_id ?? 0,
@@ -45,3 +46,5 @@
     />
   {/await}
 </main>
+
+<UpdateReturnee updateReturneeForm={data.updateReturneeForm} />

@@ -1,30 +1,30 @@
 <script lang="ts">
+  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { updateBorrowerSchema, type UpdateBorrowerSchema } from './schema';
+  import { updateReturneeSchema, type UpdateReturneeSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
-  import { Input } from '$lib/components/ui/input/index.js';
+  import Plus from 'lucide-svelte/icons/plus';
   import { timeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
-  import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
-  import ItemPicker from '$lib/components/general/item-picker.svelte';
   import ComboPicker from '$lib/components/general/combo-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
+  import BorrowedItemPicker from '$lib/components/general/borrowed-item-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    updateBorrowerForm: SuperValidated<Infer<UpdateBorrowerSchema>>;
+    updateReturneeForm: SuperValidated<Infer<UpdateReturneeSchema>>;
   }
 
-  const { updateBorrowerForm }: Props = $props();
+  const { updateReturneeForm }: Props = $props();
 
   const tableState = useTableState();
 
-  const form = superForm(updateBorrowerForm, {
-    validators: zodClient(updateBorrowerSchema),
-    id: 'update-borrower-form',
+  const form = superForm(updateReturneeForm, {
+    validators: zodClient(updateReturneeSchema),
+    id: 'update-returnee-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -47,20 +47,13 @@
   $effect(() => {
     if (tableState.getShowUpdate()) {
       $formData.id = tableState.getActiveRow()?.id ?? 0;
-      $formData.date = tableState.getActiveRow()?.date ?? '';
+      $formData.returned_date = tableState.getActiveRow()?.when_returned ?? '';
       $formData.time = tableState.getActiveRow()?.time ?? '';
-      $formData.room = tableState.getActiveRow()?.room ?? '';
-      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
-      $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
 
       return () => {
-        $formData.id = tableState.getActiveRow()?.id ?? 0;
-        $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
-        $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
-        $formData.room = tableState.getActiveRow()?.room ?? '';
-        $formData.date = tableState.getActiveRow()?.date ?? '';
-        $formData.time = tableState.getActiveRow()?.time ?? '';
-        reset();
+        $formData.id = 0;
+        $formData.returned_date = '';
+        $formData.time = '';
       };
     }
   });
@@ -68,86 +61,54 @@
 
 <Dialog.Root
   controlledOpen
-  onOpenChange={(open) => {
-    tableState.setShowUpdate(open);
+  onOpenChange={() => {
+    tableState.setActiveRow(null);
+    tableState.setShowUpdate(false);
+    reset();
   }}
   open={tableState.getShowUpdate()}
 >
-  <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
+  <Dialog.Content class="] max-h-screen overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Update Borrower</Dialog.Title>
+      <Dialog.Title>Update Returnee</Dialog.Title>
+      <Dialog.Description>
+        Update the returnee details for <stron>{tableState.getActiveRow()?.fullname}</stron>
+      </Dialog.Description>
     </Dialog.Header>
 
-    <form method="POST" action="?/updateBorrowerEvent" use:enhance>
+    <form method="POST" action="?/updateReturneeEvent" use:enhance>
       <input name="id" type="hidden" bind:value={$formData.id} />
-      <section class="grid gap-4 md:grid-cols-2">
-        <div class="">
-          <Form.Field {form} name="user_id">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Teacher</Form.Label>
-                <TeacherPicker bind:user_id={$formData.user_id} />
-                <input type="hidden" {...props} bind:value={$formData.user_id} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
 
-          <Form.Field {form} name="item_id">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Item</Form.Label>
-                <ItemPicker bind:item_id={$formData.item_id} />
-                <input type="hidden" {...props} bind:value={$formData.item_id} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
+      <div class="">
+        <Form.Field {form} name="returned_date">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Date</Form.Label>
+              <DatePicker bind:selected={$formData.returned_date} />
+              <input type="hidden" {...props} bind:value={$formData.returned_date} />
+            {/snippet}
+          </Form.Control>
+          <Form.Description />
+          <Form.FieldErrors />
+        </Form.Field>
 
-          <Form.Field {form} name="room">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Room</Form.Label>
-                <Input {...props} bind:value={$formData.room} placeholder="Enter Room" />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-        </div>
-
-        <div class="">
-          <Form.Field {form} name="date">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Date</Form.Label>
-                <DatePicker bind:selected={$formData.date} />
-                <input type="hidden" {...props} bind:value={$formData.date} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
-          <Form.Field {form} name="time">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Time</Form.Label>
-                <ComboPicker
-                  placeholder="Select Time"
-                  bind:selected={$formData.time}
-                  selections={timeMeta}
-                />
-                <input type="hidden" {...props} bind:value={$formData.time} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-        </div>
-      </section>
+        <Form.Field {form} name="time">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Time</Form.Label>
+              <ComboPicker
+                placeholder="Select Time"
+                searchPlaceholder="Search Time"
+                bind:selected={$formData.time}
+                selections={timeMeta}
+              />
+              <input type="hidden" {...props} bind:value={$formData.time} />
+            {/snippet}
+          </Form.Control>
+          <Form.Description />
+          <Form.FieldErrors />
+        </Form.Field>
+      </div>
 
       <section class="flex justify-end">
         <Form.Button disabled={$submitting} class="relative">
