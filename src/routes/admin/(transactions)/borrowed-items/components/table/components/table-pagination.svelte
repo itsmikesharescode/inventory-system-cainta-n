@@ -10,9 +10,9 @@
   import type { Table } from '@tanstack/table-core';
   import * as Select from '$lib/components/ui/select/index';
   import { Button } from '$lib/components/ui/button/index';
-  import type { ReservationsPageTable } from '../data/schemas';
+  import type { BorrowedItemsPageTable } from '../data/schemas';
 
-  let { table }: { table: Table<ReservationsPageTable> } = $props();
+  let { table }: { table: Table<BorrowedItemsPageTable> } = $props();
 </script>
 
 <div class="flex items-center justify-end px-2">

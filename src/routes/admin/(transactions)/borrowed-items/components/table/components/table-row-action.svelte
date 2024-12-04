@@ -10,12 +10,12 @@
   import Pen from 'lucide-svelte/icons/pen';
   import Check from 'lucide-svelte/icons/check';
   import type { Row } from '@tanstack/table-core';
-  import { type ReservationsPageTable } from '../data/schemas';
+  import { type BorrowedItemsPageTable } from '../data/schemas';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
   import Button from '$lib/components/ui/button/button.svelte';
   import { useTableState } from '../tableState.svelte';
 
-  let { row }: { row: Row<ReservationsPageTable> } = $props();
+  let { row }: { row: Row<BorrowedItemsPageTable> } = $props();
 
   const tableState = useTableState();
 </script>
@@ -30,15 +30,6 @@
     {/snippet}
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-fit" align="end">
-    <DropdownMenu.Item
-      onclick={() => {
-        tableState.setActiveRow(row.original);
-        tableState.setShowUpdateStatus(true);
-      }}
-    >
-      <NotebookPen />
-      Update Status
-    </DropdownMenu.Item>
     <DropdownMenu.Item
       onclick={() => {
         tableState.setActiveRow(row.original);

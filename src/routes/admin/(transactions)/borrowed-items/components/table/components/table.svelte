@@ -23,17 +23,18 @@
   import { createSvelteTable } from '$lib/components/ui/data-table/data-table.svelte';
   import FlexRender from '$lib/components/ui/data-table/flex-render.svelte';
   import * as Table from '$lib/components/ui/table/index';
-  import type { ReservationsPageTable } from '../data/schemas';
-  import type { AddReservationSchema } from '../../add-reservation/schema';
+  import type { BorrowedItemsPageTable } from '../data/schemas';
+
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
+  import type { AddBorrowerSchema } from '../../add-borrower/schema';
 
   interface Props {
-    addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
-    columns: ColumnDef<ReservationsPageTable, unknown>[];
-    data: ReservationsPageTable[];
+    addBorrowerForm: SuperValidated<Infer<AddBorrowerSchema>>;
+    columns: ColumnDef<BorrowedItemsPageTable, unknown>[];
+    data: BorrowedItemsPageTable[];
   }
 
-  let { addReservationForm, columns, data }: Props = $props();
+  let { addBorrowerForm, columns, data }: Props = $props();
 
   let rowSelection = $state<RowSelectionState>({});
   let columnVisibility = $state<VisibilityState>({});
@@ -109,7 +110,7 @@
 </script>
 
 <div class="space-y-4">
-  <TableToolbar {addReservationForm} {table} />
+  <TableToolbar {addBorrowerForm} {table} />
 
   <TablePagination {table} />
 

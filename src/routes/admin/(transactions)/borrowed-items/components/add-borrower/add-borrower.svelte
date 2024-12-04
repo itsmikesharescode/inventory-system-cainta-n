@@ -2,16 +2,13 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { addReservationSchema, type AddReservationSchema } from './schema';
+  import { addBorrowerSchema, type AddBorrowerSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, timeMeta, typeMeta } from '$lib';
+  import { timeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
   import ItemPicker from '$lib/components/general/item-picker.svelte';
@@ -19,16 +16,16 @@
   import DatePicker from '$lib/components/general/date-picker.svelte';
 
   interface Props {
-    addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
+    addBorrowerForm: SuperValidated<Infer<AddBorrowerSchema>>;
   }
 
-  const { addReservationForm }: Props = $props();
+  const { addBorrowerForm }: Props = $props();
 
   let open = $state(false);
 
-  const form = superForm(addReservationForm, {
-    validators: zodClient(addReservationSchema),
-    id: 'add-reservation-form',
+  const form = superForm(addBorrowerForm, {
+    validators: zodClient(addBorrowerSchema),
+    id: 'add-borrower-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -56,11 +53,11 @@
   });
 </script>
 
-<Button onclick={() => (open = true)} class="items-center"><Plus /> New Reservation</Button>
+<Button onclick={() => (open = true)} class="items-center"><Plus /> New Borrower</Button>
 <Dialog.Root bind:open>
   <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Add Reservation</Dialog.Title>
+      <Dialog.Title>Add Borrower</Dialog.Title>
     </Dialog.Header>
 
     <form method="POST" action="?/addReservationEvent" use:enhance>
@@ -84,22 +81,6 @@
                 <Form.Label>Item</Form.Label>
                 <ItemPicker bind:item_id={$formData.item_id} />
                 <input type="hidden" {...props} bind:value={$formData.item_id} />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-
-          <Form.Field {form} name="quantity">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Quantity</Form.Label>
-                <Input
-                  type="number"
-                  {...props}
-                  bind:value={$formData.quantity}
-                  placeholder="Enter Quantity"
-                />
               {/snippet}
             </Form.Control>
             <Form.Description />

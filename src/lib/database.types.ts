@@ -33,20 +33,29 @@ export type Database = {
       borrowed_items_tb: {
         Row: {
           created_at: string;
+          date: string;
           id: number;
           item_id: number;
+          room: string;
+          time: string;
           user_id: string;
         };
         Insert: {
           created_at?: string;
+          date: string;
           id?: number;
           item_id: number;
+          room: string;
+          time: string;
           user_id: string;
         };
         Update: {
           created_at?: string;
+          date?: string;
           id?: number;
           item_id?: number;
+          room?: string;
+          time?: string;
           user_id?: string;
         };
         Relationships: [

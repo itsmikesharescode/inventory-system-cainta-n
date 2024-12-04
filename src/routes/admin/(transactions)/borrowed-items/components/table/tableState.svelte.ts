@@ -1,25 +1,15 @@
 import { getContext, setContext } from 'svelte';
-import type { ReservationsPageTable } from './data/schemas';
+import type { BorrowedItemsPageTable } from './data/schemas';
 
 class TableState {
-  #activeRow = $state<ReservationsPageTable | null>(null);
+  #activeRow = $state<BorrowedItemsPageTable | null>(null);
 
-  setActiveRow(row: ReservationsPageTable | null) {
+  setActiveRow(row: BorrowedItemsPageTable | null) {
     this.#activeRow = row;
   }
 
   getActiveRow() {
     return this.#activeRow;
-  }
-
-  #showUpdateStatus = $state(false);
-
-  setShowUpdateStatus(show: boolean) {
-    this.#showUpdateStatus = show;
-  }
-
-  getShowUpdateStatus() {
-    return this.#showUpdateStatus;
   }
 
   #showUpdate = $state(false);

@@ -8,23 +8,23 @@
   import { TableViewOptions } from './index.js';
   import Button from '$lib/components/ui/button/button.svelte';
   import { Input } from '$lib/components/ui/input/index';
-  import type { ReservationsPageTable } from '../data/schemas.js';
-  import AddReservation from '../../add-reservation/add-reservation.svelte';
+  import type { BorrowedItemsPageTable } from '../data/schemas.js';
+  import AddBorrower from '../../add-borrower/add-borrower.svelte';
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
-  import type { AddReservationSchema } from '../../add-reservation/schema.js';
+  import type { AddBorrowerSchema } from '../../add-borrower/schema.js';
 
   interface Props {
-    addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
-    table: Table<ReservationsPageTable>;
+    addBorrowerForm: SuperValidated<Infer<AddBorrowerSchema>>;
+    table: Table<BorrowedItemsPageTable>;
   }
 
-  let { addReservationForm, table }: Props = $props();
+  let { addBorrowerForm, table }: Props = $props();
 
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
 </script>
 
 <div class="flex items-center justify-between gap-2">
-  <AddReservation {addReservationForm} />
+  <AddBorrower {addBorrowerForm} />
 
   <div class="flex items-center gap-2">
     <div class="flex items-center space-x-2">

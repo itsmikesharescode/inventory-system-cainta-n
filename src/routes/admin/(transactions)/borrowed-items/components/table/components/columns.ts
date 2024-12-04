@@ -1,15 +1,15 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
-import type { ReservationsPageTable } from '../data/schemas';
+import type { BorrowedItemsPageTable } from '../data/schemas';
 import { TableColumnHeader, TableRowActions } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
-export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
+export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
   {
     accessorKey: 'teacher_id',
     id: 'teacher_id',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
         column,
         title: 'Teacher ID'
       });
@@ -28,32 +28,10 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'reference_id',
-    id: 'reference_id',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
-        column,
-        title: 'Reference ID'
-      });
-    },
-    cell: ({ row }) => {
-      const idSnippet = createRawSnippet<[string]>((getReferenceID) => {
-        return {
-          render: () => `<div class="w-full">${getReferenceID()}</div>`
-        };
-      });
-
-      return renderSnippet(idSnippet, row.getValue('reference_id'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     accessorKey: 'fullname',
     id: 'fullname',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
         column,
         title: 'Fullname'
       });
@@ -75,7 +53,7 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
     accessorKey: 'item',
     id: 'item',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
         column,
         title: 'Item'
       });
@@ -94,32 +72,10 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'quantity',
-    id: 'quantity',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
-        column,
-        title: 'Quantity'
-      });
-    },
-    cell: ({ row }) => {
-      const quantitySnippet = createRawSnippet<[string]>((getQuantity) => {
-        return {
-          render: () => `<div class="w-full truncate">${getQuantity()}</div>`
-        };
-      });
-
-      return renderSnippet(quantitySnippet, row.getValue('quantity'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     accessorKey: 'room',
     id: 'room',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
         column,
         title: 'Room'
       });
@@ -141,7 +97,7 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
     accessorKey: 'when',
     id: 'when',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
         column,
         title: 'Date & Time'
       });
@@ -163,7 +119,7 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
     accessorKey: 'created_at',
     id: 'created_at',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
         column,
         title: 'Created At'
       });
@@ -182,39 +138,7 @@ export const columns: ColumnDef<ReservationsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'status',
-    id: 'status',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReservationsPageTable, unknown>, {
-        column,
-        title: 'Status'
-      });
-    },
-    cell: ({ row }) => {
-      const statusSnippet = createRawSnippet<[string]>((getStatus) => {
-        const checkBgColor = () => {
-          if (getStatus() === 'pending') {
-            return 'bg-yellow-500';
-          } else if (getStatus() === 'rejected') {
-            return 'bg-red-500';
-          }
-          return 'bg-green-500';
-        };
-
-        return {
-          render: () =>
-            `<div class="w-full ${checkBgColor()} rounded-md px-2 py-1 flex items-center justify-center text-white">${getStatus()}</div>`
-        };
-      });
-
-      return renderSnippet(statusSnippet, row.getValue('status'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     id: 'actions',
-    cell: ({ row }) => renderComponent(TableRowActions<ReservationsPageTable>, { row })
+    cell: ({ row }) => renderComponent(TableRowActions<BorrowedItemsPageTable>, { row })
   }
 ];
