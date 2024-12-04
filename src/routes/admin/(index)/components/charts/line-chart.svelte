@@ -5,14 +5,22 @@
   let chartCanvas: HTMLCanvasElement | undefined = $state(undefined);
   let chartInstance: Chart | null = $state(null);
 
-  const pendingValues: number[] = [1, 2, 3, 4, 5, 6];
-  const pendingLabels: string[] = ['1', '2', '3', '4', '5', '6'];
+  interface Props {
+    pendings: { date: string; count: number }[];
+    approved: { date: string; count: number }[];
+    rejected: { date: string; count: number }[];
+  }
 
-  const acceptedValues: number[] = [1, 2, 3, 4, 5, 6];
-  const acceptedLabels: string[] = ['1', '2', '3', '4', '5', '6'];
+  const { pendings, approved, rejected }: Props = $props();
 
-  const canceledValues: number[] = [1, 2, 3, 4, 5, 6];
-  const canceledLabels: string[] = ['1', '2', '3', '4', '5', '6'];
+  const pendingValues: number[] = pendings.map((item) => item.count);
+  const pendingLabels: string[] = pendings.map((item) => item.date);
+
+  const approvedValues: number[] = approved.map((item) => item.count);
+  const approvedLabels: string[] = approved.map((item) => item.date);
+
+  const rejectedValues: number[] = rejected.map((item) => item.count);
+  const rejectedLabels: string[] = rejected.map((item) => item.date);
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
@@ -39,17 +47,17 @@
             tension: 0.4
           },
           {
-            label: 'Accepted this month',
+            label: 'Approved this month',
             backgroundColor: '#000000',
             borderColor: '#000000',
-            data: acceptedValues,
+            data: approvedValues,
             tension: 0.4
           },
           {
-            label: 'Canceled this month',
+            label: 'Rejected this month',
             backgroundColor: '#000000',
             borderColor: '#000000',
-            data: canceledValues,
+            data: rejectedValues,
             tension: 0.4
           }
         ]

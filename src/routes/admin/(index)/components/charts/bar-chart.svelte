@@ -2,12 +2,17 @@
   import { onMount } from 'svelte';
   import Chart from 'chart.js/auto';
 
+  interface Props {
+    reservations: { date: string; count: number }[];
+  }
+
+  const { reservations }: Props = $props();
+
   let chartCanvas: HTMLCanvasElement | undefined = $state(undefined);
   let chartInstance: Chart | null = $state(null);
 
-  // needs optimize for now lets cohers this sht
-  const reservationValues: number[] = [1, 2, 3, 4, 5, 6];
-  const reservationLabels: string[] = ['1', '2', '3', '4', '5', '6'];
+  const reservationValues: number[] = reservations.map((item) => item.count);
+  const reservationLabels: string[] = reservations.map((item) => item.date);
 
   onMount(async () => {
     if (typeof window !== 'undefined') {

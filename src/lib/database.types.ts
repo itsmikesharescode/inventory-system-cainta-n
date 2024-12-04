@@ -276,6 +276,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      admin_dashboard_counts: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       is_admin: {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
