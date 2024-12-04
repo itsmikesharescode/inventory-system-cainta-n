@@ -1,12 +1,10 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { updateReservationSchema, type UpdateReservationSchema } from './schema';
+  import { updateBorrowerSchema, type UpdateBorrowerSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import Plus from 'lucide-svelte/icons/plus';
   import { timeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
@@ -17,16 +15,16 @@
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
+    updateBorrowerForm: SuperValidated<Infer<UpdateBorrowerSchema>>;
   }
 
-  const { updateReservationForm }: Props = $props();
+  const { updateBorrowerForm }: Props = $props();
 
   const tableState = useTableState();
 
-  const form = superForm(updateReservationForm, {
-    validators: zodClient(updateReservationSchema),
-    id: 'update-reservation-form',
+  const form = superForm(updateBorrowerForm, {
+    validators: zodClient(updateBorrowerSchema),
+    id: 'update-borrower-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -49,20 +47,19 @@
   $effect(() => {
     if (tableState.getShowUpdate()) {
       $formData.id = tableState.getActiveRow()?.id ?? 0;
-      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
-      $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
-      $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
-      $formData.room = tableState.getActiveRow()?.room ?? '';
       $formData.date = tableState.getActiveRow()?.date ?? '';
       $formData.time = tableState.getActiveRow()?.time ?? '';
+      $formData.room = tableState.getActiveRow()?.room ?? '';
+      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
+      $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
+
       return () => {
-        $formData.id = 0;
-        $formData.user_id = '';
-        $formData.item_id = 0;
-        $formData.quantity = 0;
-        $formData.room = '';
-        $formData.date = '';
-        $formData.time = '';
+        $formData.id = tableState.getActiveRow()?.id ?? 0;
+        $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
+        $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
+        $formData.room = tableState.getActiveRow()?.room ?? '';
+        $formData.date = tableState.getActiveRow()?.date ?? '';
+        $formData.time = tableState.getActiveRow()?.time ?? '';
         reset();
       };
     }
@@ -71,16 +68,18 @@
 
 <Dialog.Root
   controlledOpen
-  onOpenChange={(open) => tableState.setShowUpdate(open)}
+  onOpenChange={(open) => {
+    tableState.setShowUpdate(open);
+  }}
   open={tableState.getShowUpdate()}
 >
   <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Add Reservation</Dialog.Title>
+      <Dialog.Title>Update Borrower</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" action="?/updateReservationEvent" use:enhance>
-      <input name="id" type="hidden" {...formData} bind:value={$formData.id} />
+    <form method="POST" action="?/updateBorrowerEvent" use:enhance>
+      <input name="id" type="hidden" bind:value={$formData.id} />
       <section class="grid gap-4 md:grid-cols-2">
         <div class="">
           <Form.Field {form} name="user_id">
@@ -107,24 +106,6 @@
             <Form.FieldErrors />
           </Form.Field>
 
-          <Form.Field {form} name="quantity">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Quantity</Form.Label>
-                <Input
-                  type="number"
-                  {...props}
-                  bind:value={$formData.quantity}
-                  placeholder="Enter Quantity"
-                />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
-        </div>
-
-        <div class="">
           <Form.Field {form} name="room">
             <Form.Control>
               {#snippet children({ props })}
@@ -135,7 +116,9 @@
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
+        </div>
 
+        <div class="">
           <Form.Field {form} name="date">
             <Form.Control>
               {#snippet children({ props })}

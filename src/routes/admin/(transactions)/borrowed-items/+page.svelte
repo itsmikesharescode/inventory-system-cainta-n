@@ -3,6 +3,7 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
+  import UpdateBorrower from './components/update-borrower/update-borrower.svelte';
   const { data } = $props();
 
   initTableState();
@@ -44,3 +45,5 @@
     />
   {/await}
 </main>
+
+<UpdateBorrower updateBorrowerForm={data.updateBorrowerForm} />
