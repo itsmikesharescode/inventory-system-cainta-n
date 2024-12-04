@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { deleteReservationSchema, type DeleteReservationSchema } from './schema';
+  import { deleteBorrowerSchema, type DeleteBorrowerSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
@@ -9,16 +9,16 @@
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    deleteReservationForm: SuperValidated<Infer<DeleteReservationSchema>>;
+    deleteBorrowerForm: SuperValidated<Infer<DeleteBorrowerSchema>>;
   }
 
-  const { deleteReservationForm }: Props = $props();
+  const { deleteBorrowerForm }: Props = $props();
 
   const tableState = useTableState();
 
-  const form = superForm(deleteReservationForm, {
-    validators: zodClient(deleteReservationSchema),
-    id: 'delete-reservation-form',
+  const form = superForm(deleteBorrowerForm, {
+    validators: zodClient(deleteBorrowerSchema),
+    id: 'delete-borrower-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -63,15 +63,13 @@
     <Dialog.Header>
       <Dialog.Title>Delete Reservation</Dialog.Title>
       <Dialog.Description>
-        You are about to delete reservation of <strong
-          >{tableState.getActiveRow()?.fullname}
-        </strong>
+        You are about to delete the borrower <strong>{tableState.getActiveRow()?.fullname} </strong>
         for item
         <strong>{tableState.getActiveRow()?.item}</strong>
       </Dialog.Description>
     </Dialog.Header>
 
-    <form method="POST" action="?/removeReservationEvent" use:enhance>
+    <form method="POST" action="?/deleteBorrowerEvent" use:enhance>
       <input type="hidden" name="id" bind:value={$formData.id} />
 
       <section class="flex justify-end">

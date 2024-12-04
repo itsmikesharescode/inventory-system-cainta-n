@@ -4,6 +4,7 @@
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateBorrower from './components/update-borrower/update-borrower.svelte';
+  import DeleteBorrower from './components/delete-borrower/delete-borrower.svelte';
   const { data } = $props();
 
   initTableState();
@@ -47,3 +48,4 @@
 </main>
 
 <UpdateBorrower updateBorrowerForm={data.updateBorrowerForm} />
+<DeleteBorrower deleteBorrowerForm={data.deleteBorrowerForm} />
