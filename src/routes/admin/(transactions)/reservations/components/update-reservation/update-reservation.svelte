@@ -154,6 +154,7 @@
                 <Form.Label>Time</Form.Label>
                 <ComboPicker
                   placeholder="Select Time"
+                  searchPlaceholder="Search Time"
                   bind:selected={$formData.time}
                   selections={timeMeta}
                 />

@@ -2,33 +2,31 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { addReservationSchema, type AddReservationSchema } from './schema';
+  import { updateReservationSchema, type UpdateReservationSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, timeMeta, typeMeta } from '$lib';
+  import { timeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
   import ItemPicker from '$lib/components/general/item-picker.svelte';
   import ComboPicker from '$lib/components/general/combo-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
+  import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
+    updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
   }
 
-  const { addReservationForm }: Props = $props();
+  const { updateReservationForm }: Props = $props();
 
-  let open = $state(false);
+  const tableState = useTableState();
 
-  const form = superForm(addReservationForm, {
-    validators: zodClient(addReservationSchema),
-    id: 'add-reservation-form',
+  const form = superForm(updateReservationForm, {
+    validators: zodClient(updateReservationSchema),
+    id: 'update-reservation-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -36,7 +34,8 @@
         case 200:
           toast.success(data.msg);
           reset();
-          open = false;
+          tableState.setActiveRow(null);
+          tableState.setShowUpdate(false);
           break;
         case 401:
           toast.error(data.msg);
@@ -48,22 +47,40 @@
   const { form: formData, enhance, submitting, reset } = form;
 
   $effect(() => {
-    if (open) {
+    if (tableState.getShowUpdate()) {
+      $formData.id = tableState.getActiveRow()?.id ?? 0;
+      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
+      $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
+      $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
+      $formData.room = tableState.getActiveRow()?.room ?? '';
+      $formData.date = tableState.getActiveRow()?.date ?? '';
+      $formData.time = tableState.getActiveRow()?.time ?? '';
       return () => {
+        $formData.id = 0;
+        $formData.user_id = '';
+        $formData.item_id = 0;
+        $formData.quantity = 0;
+        $formData.room = '';
+        $formData.date = '';
+        $formData.time = '';
         reset();
       };
     }
   });
 </script>
 
-<Button onclick={() => (open = true)} class="items-center"><Plus /> New Reservation</Button>
-<Dialog.Root bind:open>
+<Dialog.Root
+  controlledOpen
+  onOpenChange={(open) => tableState.setShowUpdate(open)}
+  open={tableState.getShowUpdate()}
+>
   <Dialog.Content class="max-h-screen max-w-[650px] overflow-y-auto">
     <Dialog.Header>
       <Dialog.Title>Add Reservation</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" action="?/addReservationEvent" use:enhance>
+    <form method="POST" action="?/updateReservationEvent" use:enhance>
+      <input name="id" type="hidden" {...formData} bind:value={$formData.id} />
       <section class="grid gap-4 md:grid-cols-2">
         <div class="">
           <Form.Field {form} name="user_id">
@@ -137,7 +154,6 @@
                 <Form.Label>Time</Form.Label>
                 <ComboPicker
                   placeholder="Select Time"
-                  searchPlaceholder="Search Time"
                   bind:selected={$formData.time}
                   selections={timeMeta}
                 />
@@ -157,7 +173,7 @@
               <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
             </div>
           {/if}
-          Create
+          Update
         </Form.Button>
       </section>
     </form>

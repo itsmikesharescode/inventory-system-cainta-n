@@ -14,15 +14,20 @@
     }[];
     selected: string;
     placeholder?: string;
+    searchPlaceholder?: string;
   }
 
-  let { selected = $bindable(), selections, placeholder = 'Select an option...' }: Props = $props();
+  let {
+    selected = $bindable(),
+    selections,
+    placeholder = 'Select an option...',
+    searchPlaceholder = 'Search item'
+  }: Props = $props();
 
   let open = $state(false);
-  let value = $state(selected);
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(selections.find((f) => f.value === value)?.label);
+  const selectedValue = $derived(selections.find((f) => f.value === selected)?.label);
 
   function closeAndFocusTrigger() {
     open = false;
@@ -56,20 +61,21 @@
   </Popover.Trigger>
   <Popover.Content class="w-[200px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search framework..." />
+      <Command.Input placeholder={searchPlaceholder} />
       <Command.List>
         <Command.Empty>No framework found.</Command.Empty>
         <Command.Group>
           {#each selections as selection}
             <Command.Item
-              value={selection.value}
               onSelect={() => {
                 selected = selection.value;
-                value = selection.value;
                 closeAndFocusTrigger();
               }}
+              value={selection.value}
             >
-              <Check class={cn('mr-2 size-4', value !== selection.value && 'text-transparent')} />
+              <Check
+                class={cn('mr-2 size-4', selected !== selection.value && 'text-transparent')}
+              />
               {selection.label}
             </Command.Item>
           {/each}

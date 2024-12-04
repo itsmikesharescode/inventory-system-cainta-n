@@ -24,10 +24,10 @@
   };
 
   let open = $state(false);
-  let value = $state(String(item_id));
+  let value = $state(String());
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(items?.find((f) => f.id.toString() === value));
+  const selectedValue = $derived(items?.find((f) => f.id.toString() === String(item_id)));
 
   function closeAndFocusTrigger() {
     open = false;
@@ -83,7 +83,10 @@
               }}
             >
               <Check
-                class={cn('mr-2 size-4', value !== item.id.toString() && 'text-transparent')}
+                class={cn(
+                  'mr-2 size-4',
+                  String(item_id) !== item.id.toString() && 'text-transparent'
+                )}
               />
               <section class="flex flex-col">
                 <span>{item.model}</span>

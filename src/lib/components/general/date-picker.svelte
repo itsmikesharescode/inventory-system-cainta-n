@@ -17,22 +17,23 @@
 
   let { selected = $bindable() }: Props = $props();
 
-  const df = new DateFormatter('en-US', {
-    dateStyle: 'long'
-  });
+  function formatDate(
+    dateStr: string,
+    style: 'full' | 'long' | 'medium' | 'short' = 'long'
+  ): string {
+    try {
+      const df = new DateFormatter('en-US', { dateStyle: style });
+      const parsedDate = parseDate(dateStr);
+      return df.format(parsedDate.toDate(getLocalTimeZone()));
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateStr; // Return original string if parsing fails
+    }
+  }
 
-  let value = $state<DateValue | undefined>(selected ? parseDate(selected) : undefined);
   let contentRef = $state<HTMLElement | null>(null);
 
-  $effect(() => {
-    if (value) {
-      selected = df.format(value.toDate(getLocalTimeZone()));
-
-      return () => {
-        value = undefined;
-      };
-    }
-  });
+  const read = $derived(selected ? formatDate(selected) : 'Pick a date');
 </script>
 
 <Popover.Root>
@@ -42,13 +43,19 @@
         variant: 'outline',
         class: 'w-full justify-start text-left font-normal'
       }),
-      !value && 'text-muted-foreground'
+      !selected && 'text-muted-foreground'
     )}
   >
     <CalendarIcon />
-    {value ? df.format(value.toDate(getLocalTimeZone())) : 'Pick a date'}
+    {read}
   </Popover.Trigger>
   <Popover.Content bind:ref={contentRef} class="w-auto p-0">
-    <Calendar type="single" bind:value />
+    <Calendar
+      onValueChange={(v) => {
+        if (!v) return (selected = '');
+        selected = formatDate(v.toString());
+      }}
+      type="single"
+    />
   </Popover.Content>
 </Popover.Root>

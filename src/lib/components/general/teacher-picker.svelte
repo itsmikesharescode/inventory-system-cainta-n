@@ -24,10 +24,9 @@
   };
 
   let open = $state(false);
-  let value = $state(user_id);
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(teachers?.find((f) => f.user_id === value)?.user_meta_data);
+  const selectedValue = $derived(teachers?.find((f) => f.user_id === user_id)?.user_meta_data);
 
   function closeAndFocusTrigger() {
     open = false;
@@ -77,12 +76,11 @@
             <Command.Item
               value={teacher.user_meta_data.teacher_id}
               onSelect={() => {
-                value = teacher.user_id;
                 user_id = teacher.user_id;
                 closeAndFocusTrigger();
               }}
             >
-              <Check class={cn('mr-2 size-4', value !== teacher.user_id && 'text-transparent')} />
+              <Check class={cn('mr-2 size-4', user_id !== teacher.user_id && 'text-transparent')} />
               <section class="flex flex-col">
                 <span>
                   {`${teacher.user_meta_data.lastname}, ${teacher.user_meta_data.firstname} ${teacher.user_meta_data.middlename}`}
