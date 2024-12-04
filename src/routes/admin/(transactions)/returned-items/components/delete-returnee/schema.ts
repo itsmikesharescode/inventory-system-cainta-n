@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const deleteBorrowerSchema = z.object({
+export const deleteReturneeSchema = z.object({
   id: z.number()
 });
 
-export type DeleteBorrowerSchema = typeof deleteBorrowerSchema;
+export type DeleteReturneeSchema = typeof deleteReturneeSchema;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { deleteBorrowerSchema, type DeleteBorrowerSchema } from './schema';
+  import { deleteReturneeSchema, type DeleteReturneeSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
@@ -9,16 +9,16 @@
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    deleteBorrowerForm: SuperValidated<Infer<DeleteBorrowerSchema>>;
+    deleteReturneeForm: SuperValidated<Infer<DeleteReturneeSchema>>;
   }
 
-  const { deleteBorrowerForm }: Props = $props();
+  const { deleteReturneeForm }: Props = $props();
 
   const tableState = useTableState();
 
-  const form = superForm(deleteBorrowerForm, {
-    validators: zodClient(deleteBorrowerSchema),
-    id: 'delete-borrower-form',
+  const form = superForm(deleteReturneeForm, {
+    validators: zodClient(deleteReturneeSchema),
+    id: 'delete-returnee-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -61,15 +61,15 @@
 >
   <Dialog.Content class=" overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Delete Reservation</Dialog.Title>
+      <Dialog.Title>Delete Returnee</Dialog.Title>
       <Dialog.Description>
-        You are about to delete the borrower <strong>{tableState.getActiveRow()?.fullname} </strong>
+        You are about to delete the returnee <strong>{tableState.getActiveRow()?.fullname} </strong>
         for item
-        <strong>{tableState.getActiveRow()?.item}</strong>
+        <strong>{tableState.getActiveRow()?.items_tb?.model}</strong>
       </Dialog.Description>
     </Dialog.Header>
 
-    <form method="POST" action="?/deleteBorrowerEvent" use:enhance>
+    <form method="POST" action="?/deleteReturneeEvent" use:enhance>
       <input type="hidden" name="id" bind:value={$formData.id} />
 
       <section class="flex justify-end">

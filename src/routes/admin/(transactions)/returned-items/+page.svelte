@@ -4,6 +4,7 @@
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateReturnee from './components/update-returnee/update-returnee.svelte';
+  import DeleteReturnee from './components/delete-returnee/delete-returnee.svelte';
   const { data } = $props();
 
   initTableState();
@@ -48,3 +49,4 @@
 </main>
 
 <UpdateReturnee updateReturneeForm={data.updateReturneeForm} />
+<DeleteReturnee deleteReturneeForm={data.deleteReturneeForm} />

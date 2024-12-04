@@ -5,11 +5,13 @@ import { addReturneeSchema } from './components/add-returnee/schema';
 import { fail } from '@sveltejs/kit';
 import streamReturnedItemsUsersItems from '$lib/db-calls/streamReturnedItemsUsersItems';
 import { updateReturneeSchema } from './components/update-returnee/schema';
+import { deleteReturneeSchema } from './components/delete-returnee/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
     addReturneeForm: await superValidate(zod(addReturneeSchema)),
     updateReturneeForm: await superValidate(zod(updateReturneeSchema)),
+    deleteReturneeForm: await superValidate(zod(deleteReturneeSchema)),
     getReturnees: streamReturnedItemsUsersItems(supabase)
   };
 };
@@ -51,5 +53,18 @@ export const actions: Actions = {
     if (error) return fail(401, { form, msg: error.message });
 
     return { form, msg: 'Returnee updated successfully' };
+  },
+  deleteReturneeEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(deleteReturneeSchema));
+
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+
+    const { error } = await supabase.from('returned_items_tb').delete().eq('id', form.data.id);
+
+    if (error) return fail(401, { form, msg: error.message });
+
+    return { form, msg: 'Returnee deleted successfully' };
   }
 };
