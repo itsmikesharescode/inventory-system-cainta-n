@@ -19,5 +19,19 @@ export const actions: Actions = {
     if (!form.valid) {
       return fail(400, { form });
     }
+
+    const { error } = await supabase.from('borrowed_items_tb').insert({
+      user_id: form.data.user_id,
+      item_id: form.data.item_id,
+      date: form.data.date,
+      time: form.data.time,
+      room: form.data.room
+    });
+
+    if (error) {
+      return fail(401, { form, msg: error.message });
+    }
+
+    return { form, msg: 'Borrower added successfully' };
   }
 };

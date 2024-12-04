@@ -60,7 +60,7 @@
       <Dialog.Title>Add Borrower</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" action="?/addReservationEvent" use:enhance>
+    <form method="POST" action="?/addBorrowerEvent" use:enhance>
       <section class="grid gap-4 md:grid-cols-2">
         <div class="">
           <Form.Field {form} name="user_id">
@@ -86,9 +86,7 @@
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
-        </div>
 
-        <div class="">
           <Form.Field {form} name="room">
             <Form.Control>
               {#snippet children({ props })}
@@ -99,7 +97,9 @@
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
+        </div>
 
+        <div class="">
           <Form.Field {form} name="date">
             <Form.Control>
               {#snippet children({ props })}

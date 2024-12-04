@@ -68,13 +68,13 @@
   </Popover.Trigger>
   <Popover.Content class="w-[300px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search teacher ID..." />
+      <Command.Input placeholder="Search teacher fullname..." />
       <Command.List>
         <Command.Empty>No teachers found.</Command.Empty>
         <Command.Group>
           {#each teachers ?? [] as teacher}
             <Command.Item
-              value={teacher.user_meta_data.teacher_id}
+              value={`${teacher.user_meta_data.lastname}, ${teacher.user_meta_data.firstname} ${teacher.user_meta_data.middlename}`}
               onSelect={() => {
                 user_id = teacher.user_id;
                 closeAndFocusTrigger();

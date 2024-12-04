@@ -23,6 +23,24 @@
       <Skeleton class="h-[40px] w-full rounded-lg" />
     </section>
   {:then borrowers}
-    <Table addBorrowerForm={data.addBorrowerForm} data={[]} {columns} />
+    <Table
+      addBorrowerForm={data.addBorrowerForm}
+      data={borrowers?.map((borrower) => ({
+        id: borrower.id,
+        created_at: borrower.created_at,
+        teacher_id: borrower.teachers_tb?.user_meta_data?.teacher_id ?? '',
+        when: borrower.date + ' ' + borrower.time,
+        user_id: borrower.user_id,
+        item_id: borrower.item_id,
+        fullname: `${borrower.teachers_tb?.user_meta_data.lastname}, ${borrower.teachers_tb?.user_meta_data.firstname} ${borrower.teachers_tb?.user_meta_data.middlename}`,
+        room: borrower.room,
+        date: borrower.date,
+        time: borrower.time,
+        item: borrower.items_tb?.model ?? '',
+        user_meta_data: borrower.teachers_tb?.user_meta_data ?? null,
+        items_tb: borrower.items_tb
+      })) ?? []}
+      {columns}
+    />
   {/await}
 </main>
