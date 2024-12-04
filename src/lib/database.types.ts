@@ -177,6 +177,38 @@ export type Database = {
           }
         ];
       };
+      returned_items_tb: {
+        Row: {
+          borrowed_item_id: number;
+          created_at: string;
+          id: number;
+          returned_date: string;
+          time: string;
+        };
+        Insert: {
+          borrowed_item_id: number;
+          created_at?: string;
+          id?: number;
+          returned_date: string;
+          time: string;
+        };
+        Update: {
+          borrowed_item_id?: number;
+          created_at?: string;
+          id?: number;
+          returned_date?: string;
+          time?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'returned_items_tb_borrowed_item_id_fkey';
+            columns: ['borrowed_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'borrowed_items_tb';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
       roles_tb: {
         Row: {
           created_at: string;

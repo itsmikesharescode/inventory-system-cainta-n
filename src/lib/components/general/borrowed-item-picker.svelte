@@ -7,26 +7,27 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import { cn } from '$lib/utils.js';
   import { page } from '$app/stores';
-  import streamTeachers from '$lib/db-calls/streamTeachers';
-  import type { Database } from '$lib/database.types';
+  import streamBorrowersUsersItems from '$lib/db-calls/streamBorrowersUsersItems';
 
   interface Props {
-    user_id: string;
+    borrowed_item_id: string;
   }
 
-  let { user_id = $bindable() }: Props = $props();
+  let { borrowed_item_id = $bindable() }: Props = $props();
 
-  let teachers = $state<Awaited<ReturnType<typeof streamTeachers>> | null>(null);
+  let borrowed_items = $state<Awaited<ReturnType<typeof streamBorrowersUsersItems>> | null>(null);
 
-  const getTeachers = async () => {
+  const getBorrowedItems = async () => {
     if (!$page.data.supabase) return;
-    teachers = await streamTeachers($page.data.supabase);
+    borrowed_items = await streamBorrowersUsersItems($page.data.supabase);
   };
 
   let open = $state(false);
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(teachers?.find((f) => f.user_id === user_id)?.user_meta_data);
+  const selectedValue = $derived(
+    borrowed_items?.find((f) => f.item_id === Number(borrowed_item_id))
+  );
 
   function closeAndFocusTrigger() {
     open = false;
@@ -36,18 +37,18 @@
   }
 
   $effect(() => {
-    getTeachers();
+    getBorrowedItems();
 
     return () => {
-      teachers = null;
+      borrowed_items = null;
     };
   });
 
   const checkSelected = () => {
     if (selectedValue) {
-      return `${selectedValue?.lastname}, ${selectedValue?.firstname} ${selectedValue?.middlename}`;
+      return `${selectedValue?.teachers_tb?.user_meta_data.lastname}, ${selectedValue?.teachers_tb?.user_meta_data.firstname} ${selectedValue?.teachers_tb?.user_meta_data.middlename}`;
     }
-    return 'Select a teacher';
+    return 'Select a borrower';
   };
 </script>
 
@@ -56,7 +57,7 @@
     {#snippet child({ props })}
       <Button
         variant="outline"
-        class="w-full justify-between {user_id ? '' : 'text-muted-foreground'}"
+        class="w-full justify-between {borrowed_item_id ? '' : 'text-muted-foreground'}"
         {...props}
         role="combobox"
         aria-expanded={open}
@@ -68,25 +69,30 @@
   </Popover.Trigger>
   <Popover.Content class="w-[300px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search teacher fullname..." />
+      <Command.Input placeholder="Search borrower fullname..." />
       <Command.List>
-        <Command.Empty>No teachers found.</Command.Empty>
+        <Command.Empty>No borrowers found.</Command.Empty>
         <Command.Group>
-          {#each teachers ?? [] as teacher}
+          {#each borrowed_items ?? [] as borrowed_item}
             <Command.Item
-              value={`${teacher.user_meta_data.lastname}, ${teacher.user_meta_data.firstname} ${teacher.user_meta_data.middlename}`}
+              value={`${borrowed_item.teachers_tb?.user_meta_data.lastname}, ${borrowed_item.teachers_tb?.user_meta_data.firstname} ${borrowed_item.teachers_tb?.user_meta_data.middlename}`}
               onSelect={() => {
-                user_id = teacher.user_id;
+                borrowed_item_id = String(borrowed_item.item_id);
                 closeAndFocusTrigger();
               }}
             >
-              <Check class={cn('mr-2 size-4', user_id !== teacher.user_id && 'text-transparent')} />
+              <Check
+                class={cn(
+                  'mr-2 size-4',
+                  borrowed_item_id !== String(borrowed_item.item_id) && 'text-transparent'
+                )}
+              />
               <section class="flex flex-col">
                 <span>
-                  {`${teacher.user_meta_data.lastname}, ${teacher.user_meta_data.firstname} ${teacher.user_meta_data.middlename}`}
+                  {`${borrowed_item.teachers_tb?.user_meta_data.lastname}, ${borrowed_item.teachers_tb?.user_meta_data.firstname} ${borrowed_item.teachers_tb?.user_meta_data.middlename}`}
                 </span>
                 <span class="text-xs text-muted-foreground">
-                  {teacher.user_meta_data.teacher_id}
+                  {borrowed_item.items_tb?.model} / {borrowed_item.items_tb?.brand}
                 </span>
               </section>
             </Command.Item>
