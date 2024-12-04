@@ -36,6 +36,7 @@ export type Database = {
           date: string;
           id: number;
           item_id: number;
+          reference_id: string;
           room: string;
           time: string;
           user_id: string;
@@ -45,6 +46,7 @@ export type Database = {
           date: string;
           id?: number;
           item_id: number;
+          reference_id: string;
           room: string;
           time: string;
           user_id: string;
@@ -54,6 +56,7 @@ export type Database = {
           date?: string;
           id?: number;
           item_id?: number;
+          reference_id?: string;
           room?: string;
           time?: string;
           user_id?: string;

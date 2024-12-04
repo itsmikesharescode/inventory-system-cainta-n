@@ -29,6 +29,7 @@
       addBorrowerForm={data.addBorrowerForm}
       data={borrowers?.map((borrower) => ({
         id: borrower.id,
+        reference_id: borrower.reference_id,
         created_at: borrower.created_at,
         teacher_id: borrower.teachers_tb?.user_meta_data?.teacher_id ?? '',
         when: borrower.date + ' ' + borrower.time,

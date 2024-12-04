@@ -5,6 +5,7 @@ import { z } from 'zod';
 export const borrowerSchema = z.object({
   id: z.number(),
   created_at: z.string(),
+  reference_id: z.string(),
   teacher_id: z.string(),
   when: z.string(),
   user_id: z.string(),

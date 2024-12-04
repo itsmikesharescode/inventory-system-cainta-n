@@ -6,6 +6,7 @@ import { fail } from '@sveltejs/kit';
 import streamBorrowersUsersItems from '$lib/db-calls/streamBorrowersUsersItems';
 import { updateBorrowerSchema } from './components/update-borrower/schema';
 import { deleteBorrowerSchema } from './components/delete-borrower/schema';
+import { generateRefId } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
@@ -25,6 +26,7 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase.from('borrowed_items_tb').insert({
+      reference_id: generateRefId(8),
       user_id: form.data.user_id,
       item_id: form.data.item_id,
       date: form.data.date,

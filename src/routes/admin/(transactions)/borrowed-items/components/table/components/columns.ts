@@ -28,6 +28,28 @@ export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
   },
 
   {
+    accessorKey: 'reference_id',
+    id: 'reference_id',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
+        column,
+        title: 'Reference ID'
+      });
+    },
+    cell: ({ row }) => {
+      const referenceIdSnippet = createRawSnippet<[string]>((getReferenceId) => {
+        return {
+          render: () => `<div class="w-full">${getReferenceId()}</div>`
+        };
+      });
+
+      return renderSnippet(referenceIdSnippet, row.getValue('reference_id'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
     accessorKey: 'fullname',
     id: 'fullname',
     header: ({ column }) => {
