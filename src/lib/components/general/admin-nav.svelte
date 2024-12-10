@@ -27,17 +27,17 @@
           </Menubar.Trigger>
           <Menubar.Content class="bg-white">
             <a href="/admin/reservations">
-              <Menubar.Item class="cursor-pointer font-roboto text-sm font-medium">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
                 Reservations
               </Menubar.Item>
             </a>
             <a href="/admin/borrowed-items">
-              <Menubar.Item class="cursor-pointer font-roboto text-sm font-medium">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
                 Borrowed Items
               </Menubar.Item>
             </a>
             <a href="/admin/returned-items">
-              <Menubar.Item class="cursor-pointer font-roboto text-sm font-medium">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
                 Returned Items
               </Menubar.Item>
             </a>
@@ -69,7 +69,7 @@
     </button>
   </nav>
   <Sheet.Root bind:open={showMobileMenu}>
-    <Sheet.Content side="left" class="pt-10 font-roboto">
+    <Sheet.Content side="left" class="font-roboto pt-10">
       <section class="flex flex-col gap-2">
         <a
           onclick={() => (showMobileMenu = false)}
