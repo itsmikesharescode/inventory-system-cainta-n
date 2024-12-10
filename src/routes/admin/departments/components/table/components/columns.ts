@@ -1,115 +1,49 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
-import type { AccountsPageTable } from '../data/schemas';
+import type { DepartmentsPageTable } from '../data/schemas';
 import { TableColumnHeader, TableRowActions } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
-export const columns: ColumnDef<AccountsPageTable, unknown>[] = [
+export const columns: ColumnDef<DepartmentsPageTable, unknown>[] = [
   {
-    accessorKey: 'teacher_id',
-    id: 'teacher_id',
+    accessorKey: 'name',
+    id: 'name',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<DepartmentsPageTable, unknown>, {
         column,
-        title: 'Teacher ID'
+        title: 'Department Name'
       });
     },
     cell: ({ row }) => {
-      const idSnippet = createRawSnippet<[string]>((getTeacherID) => {
+      const nameSnippet = createRawSnippet<[string]>((getName) => {
         return {
-          render: () => `<div class="w-full">${getTeacherID()}</div>`
+          render: () => `<div class="w-full">${getName()}</div>`
         };
       });
 
-      return renderSnippet(idSnippet, row.getValue('teacher_id'));
+      return renderSnippet(nameSnippet, row.getValue('name'));
     },
     enableSorting: true,
     enableHiding: true
   },
 
   {
-    accessorKey: 'fullname',
-    id: 'fullname',
+    accessorKey: 'code',
+    id: 'code',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<DepartmentsPageTable, unknown>, {
         column,
-        title: 'Fullname'
+        title: 'Department Code'
       });
     },
     cell: ({ row }) => {
-      const fullnameSnippet = createRawSnippet<[string]>((getFullname) => {
+      const codeSnippet = createRawSnippet<[string]>((getCode) => {
         return {
-          render: () => `<div class="w-full">${getFullname()}</div>`
+          render: () => `<div class="w-full">${getCode()}</div>`
         };
       });
 
-      return renderSnippet(fullnameSnippet, row.getValue('fullname'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
-    accessorKey: 'email',
-    id: 'email',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
-        column,
-        title: 'Email'
-      });
-    },
-    cell: ({ row }) => {
-      const emailSnippet = createRawSnippet<[string]>((getEmail) => {
-        return {
-          render: () => `<div class="w-full">${getEmail()}</div>`
-        };
-      });
-
-      return renderSnippet(emailSnippet, row.getValue('email'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
-    accessorKey: 'phone',
-    id: 'phone',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
-        column,
-        title: 'Phone'
-      });
-    },
-    cell: ({ row }) => {
-      const phoneSnippet = createRawSnippet<[string]>((getPhone) => {
-        return {
-          render: () => `<div class="w-full truncate">${getPhone()}</div>`
-        };
-      });
-
-      return renderSnippet(phoneSnippet, row.getValue('phone'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
-    accessorKey: 'department',
-    id: 'department',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
-        column,
-        title: 'Department'
-      });
-    },
-    cell: ({ row }) => {
-      const departmentSnippet = createRawSnippet<[string]>((getDepartment) => {
-        return {
-          render: () => `<div class="w-full">${getDepartment()}</div>`
-        };
-      });
-
-      return renderSnippet(departmentSnippet, row.getValue('department'));
+      return renderSnippet(codeSnippet, row.getValue('code'));
     },
     enableSorting: true,
     enableHiding: true
@@ -119,7 +53,7 @@ export const columns: ColumnDef<AccountsPageTable, unknown>[] = [
     accessorKey: 'created_at',
     id: 'created_at',
     header: ({ column }) => {
-      return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
+      return renderComponent(TableColumnHeader<DepartmentsPageTable, unknown>, {
         column,
         title: 'Created At'
       });
@@ -139,6 +73,6 @@ export const columns: ColumnDef<AccountsPageTable, unknown>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => renderComponent(TableRowActions<AccountsPageTable>, { row })
+    cell: ({ row }) => renderComponent(TableRowActions<DepartmentsPageTable>, { row })
   }
 ];

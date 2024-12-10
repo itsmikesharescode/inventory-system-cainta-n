@@ -8,34 +8,34 @@
   import { TableViewOptions } from './index.js';
   import Button from '$lib/components/ui/button/button.svelte';
   import { Input } from '$lib/components/ui/input/index';
-  import type { AccountsPageTable } from '../data/schemas.js';
+  import type { DepartmentsPageTable } from '../data/schemas.js';
   import AddItem from '../../add-department/add-department.svelte';
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
-  import type { AddAccountSchema } from '../../add-department/schema.js';
+  import type { AddDepartmentSchema } from '../../add-department/schema.js';
 
   interface Props {
-    addAccountForm: SuperValidated<Infer<AddAccountSchema>>;
-    table: Table<AccountsPageTable>;
+    addDepartmentForm: SuperValidated<Infer<AddDepartmentSchema>>;
+    table: Table<DepartmentsPageTable>;
   }
 
-  let { addAccountForm, table }: Props = $props();
+  let { addDepartmentForm, table }: Props = $props();
 
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
 </script>
 
 <div class="flex items-center justify-between gap-2">
-  <AddItem {addAccountForm} />
+  <AddItem {addDepartmentForm} />
 
   <div class="flex items-center gap-2">
     <div class="flex items-center space-x-2">
       <Input
-        placeholder="Search by fullname"
-        value={(table.getColumn('fullname')?.getFilterValue() as string) ?? ''}
+        placeholder="Search by department name"
+        value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
         oninput={(e) => {
-          table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
+          table.getColumn('name')?.setFilterValue(e.currentTarget.value);
         }}
         onchange={(e) => {
-          table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
+          table.getColumn('name')?.setFilterValue(e.currentTarget.value);
         }}
         class="h-8 w-[150px] lg:w-[250px]"
       />

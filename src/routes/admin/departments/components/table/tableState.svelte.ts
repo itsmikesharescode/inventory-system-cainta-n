@@ -1,25 +1,15 @@
 import { getContext, setContext } from 'svelte';
-import type { AccountsPageTable } from './data/schemas';
+import type { DepartmentsPageTable } from './data/schemas';
 
 class TableState {
-  #activeRow = $state<AccountsPageTable | null>(null);
+  #activeRow = $state<DepartmentsPageTable | null>(null);
 
-  setActiveRow(row: AccountsPageTable | null) {
+  setActiveRow(row: DepartmentsPageTable | null) {
     this.#activeRow = row;
   }
 
   getActiveRow() {
     return this.#activeRow;
-  }
-
-  #showUpdateStatus = $state(false);
-
-  setShowUpdateStatus(show: boolean) {
-    this.#showUpdateStatus = show;
-  }
-
-  getShowUpdateStatus() {
-    return this.#showUpdateStatus;
   }
 
   #showUpdate = $state(false);

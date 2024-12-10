@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { deleteAccountSchema, type DeleteAccountSchema } from './schema';
+  import { deleteDepartmentSchema, type DeleteDepartmentSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
@@ -9,16 +9,16 @@
   import { useTableState } from '../table/tableState.svelte';
 
   interface Props {
-    deleteAccountForm: SuperValidated<Infer<DeleteAccountSchema>>;
+    deleteDepartmentForm: SuperValidated<Infer<DeleteDepartmentSchema>>;
   }
 
-  const { deleteAccountForm }: Props = $props();
+  const { deleteDepartmentForm }: Props = $props();
 
   const tableState = useTableState();
 
-  const form = superForm(deleteAccountForm, {
-    validators: zodClient(deleteAccountSchema),
-    id: 'delete-account-form',
+  const form = superForm(deleteDepartmentForm, {
+    validators: zodClient(deleteDepartmentSchema),
+    id: 'delete-department-form',
     onUpdate: async ({ result }) => {
       const { status, data } = result;
 
@@ -40,10 +40,10 @@
 
   $effect(() => {
     if (tableState.getShowDelete()) {
-      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
+      $formData.id = tableState.getActiveRow()?.id ?? 0;
 
       return () => {
-        $formData.user_id = '';
+        $formData.id = 0;
         tableState.setActiveRow(null);
         tableState.setShowDelete(false);
         reset();
@@ -63,14 +63,13 @@
     <Dialog.Header>
       <Dialog.Title>Delete Account</Dialog.Title>
       <Dialog.Description>
-        You are about to delete <strong>{tableState.getActiveRow()?.fullname}</strong> with teacher
-        id of
-        <strong>{tableState.getActiveRow()?.teacher_id}</strong>
+        You are about to delete <strong>{tableState.getActiveRow()?.name}</strong> with code of
+        <strong>{tableState.getActiveRow()?.code}</strong>
       </Dialog.Description>
     </Dialog.Header>
 
-    <form method="POST" action="?/removeAccountEvent" use:enhance>
-      <input type="hidden" name="user_id" bind:value={$formData.user_id} />
+    <form method="POST" action="?/removeDepartmentEvent" use:enhance>
+      <input type="hidden" name="id" bind:value={$formData.id} />
 
       <section class="flex justify-end">
         <Form.Button disabled={$submitting} class="relative">

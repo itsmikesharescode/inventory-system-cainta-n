@@ -1,82 +1,71 @@
 import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { addAccountSchema } from './components/add-department/schema';
+import { addDepartmentSchema } from './components/add-department/schema';
 import { fail } from '@sveltejs/kit';
-import streamTeachers from '$lib/db-calls/streamTeachers';
-import { updateAccountSchema } from './components/update-department/schema';
-import { deleteAccountSchema } from './components/delete-department/schema';
+import streamDepartments from '$lib/db-calls/streamDepartments';
+import { updateDepartmentSchema } from './components/update-department/schema';
+import { deleteDepartmentSchema } from './components/delete-department/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   return {
-    addAccountForm: await superValidate(zod(addAccountSchema)),
-    updateAccountForm: await superValidate(zod(updateAccountSchema)),
-    deleteAccountForm: await superValidate(zod(deleteAccountSchema)),
-    getTeachers: streamTeachers(supabase)
+    addDepartmentForm: await superValidate(zod(addDepartmentSchema)),
+    updateDepartmentForm: await superValidate(zod(updateDepartmentSchema)),
+    deleteDepartmentForm: await superValidate(zod(deleteDepartmentSchema)),
+    getDepartments: streamDepartments(supabase)
   };
 };
 
 export const actions: Actions = {
-  addAccountEvent: async ({ request, locals: { supabaseAdmin } }) => {
-    const form = await superValidate(request, zod(addAccountSchema));
+  addDepartmentEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(addDepartmentSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    const { error } = await supabaseAdmin.auth.admin.createUser({
-      email: form.data.email,
-      password: form.data.password,
-      email_confirm: true,
-      user_metadata: {
-        role: 'teacher',
-        email: form.data.email,
-        teacher_id: form.data.teacher_id,
-        firstname: form.data.firstname,
-        middlename: form.data.middlename,
-        lastname: form.data.lastname,
-        phone: form.data.phone,
-        department: form.data.department
-      }
+    const { error } = await supabase.from('departments_tb').insert({
+      name: form.data.name,
+      code: form.data.code
     });
 
-    if (error) return fail(401, { form, msg: error.message });
+    if (error) {
+      return fail(401, { form, msg: error.message });
+    }
 
-    return { form, msg: 'Account added successfully' };
+    return { form, msg: 'Department added successfully' };
   },
-  updateAccountEvent: async ({ request, locals: { supabaseAdmin } }) => {
-    const form = await superValidate(request, zod(updateAccountSchema));
+  updateDepartmentEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(updateDepartmentSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    const { error } = await supabaseAdmin.auth.admin.updateUserById(form.data.user_id, {
-      email: form.data.email,
-      password: form.data.password,
-      user_metadata: {
-        email: form.data.email,
-        teacher_id: form.data.teacher_id,
-        firstname: form.data.firstname,
-        middlename: form.data.middlename,
-        lastname: form.data.lastname,
-        phone: form.data.phone,
-        department: form.data.department
-      }
-    });
+    const { error } = await supabase
+      .from('departments_tb')
+      .update({
+        name: form.data.name,
+        code: form.data.code
+      })
+      .eq('id', form.data.id);
 
-    if (error) return fail(401, { form, msg: error.message });
+    if (error) {
+      return fail(401, { form, msg: error.message });
+    }
 
-    return { form, msg: 'Account updated successfully' };
+    return { form, msg: 'Department updated successfully' };
   },
-  removeAccountEvent: async ({ request, locals: { supabaseAdmin } }) => {
-    const form = await superValidate(request, zod(deleteAccountSchema));
+  removeDepartmentEvent: async ({ request, locals: { supabase } }) => {
+    const form = await superValidate(request, zod(deleteDepartmentSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(form.data.user_id);
+    const { error } = await supabase.from('departments_tb').delete().eq('id', form.data.id);
 
-    if (error) return fail(401, { form, msg: error.message });
+    if (error) {
+      return fail(401, { form, msg: error.message });
+    }
 
-    return { form, msg: 'Account deleted successfully' };
+    return { form, msg: 'Department removed successfully' };
   }
 };

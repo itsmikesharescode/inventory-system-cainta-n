@@ -7,11 +7,7 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
 
   interface Props {
@@ -44,19 +40,30 @@
   const { form: formData, enhance, submitting, reset } = form;
 </script>
 
-<Button onclick={() => (open = true)} class="items-center"><Plus /> New Account</Button>
+<Button onclick={() => (open = true)} class="items-center"><Plus /> New Department</Button>
 <Dialog.Root bind:open>
-  <Dialog.Content class="max-h-[80dvh] max-w-4xl overflow-y-auto">
+  <Dialog.Content class=" overflow-y-auto">
     <Dialog.Header>
       <Dialog.Title>Add Department</Dialog.Title>
     </Dialog.Header>
 
-    <form method="POST" action="?/addAccountEvent" use:enhance>
+    <form method="POST" action="?/addDepartmentEvent" use:enhance>
       <Form.Field {form} name="name">
         <Form.Control>
           {#snippet children({ props })}
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Department Name</Form.Label>
             <Input {...props} bind:value={$formData.name} placeholder="Enter Name" />
+          {/snippet}
+        </Form.Control>
+        <Form.Description />
+        <Form.FieldErrors />
+      </Form.Field>
+
+      <Form.Field {form} name="code">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Department Code</Form.Label>
+            <Input {...props} bind:value={$formData.code} placeholder="Enter Code" />
           {/snippet}
         </Form.Control>
         <Form.Description />
