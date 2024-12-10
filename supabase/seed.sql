@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS "public"."rooms_tb" (
     "id" bigint NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "name" "text" NOT NULL,
-    "code" "text" NOT NULL
+    "number" numeric NOT NULL
 );
 
 

@@ -44,6 +44,24 @@
           </Menubar.Content>
         </Menubar.Menu>
 
+        <Menubar.Menu>
+          <Menubar.Trigger class="cursor-pointer gap-1.5 transition-all hover:bg-accent">
+            Entries <ChevronDown class="size-4" />
+          </Menubar.Trigger>
+          <Menubar.Content class="bg-white">
+            <a href="/admin/departments">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
+                Departments
+              </Menubar.Item>
+            </a>
+            <a href="/admin/rooms">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
+                Rooms
+              </Menubar.Item>
+            </a>
+          </Menubar.Content>
+        </Menubar.Menu>
+
         <a
           href="/admin/items"
           class="flex cursor-pointer select-none items-center rounded-sm px-3 py-1 text-sm font-medium outline-none transition-all hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
