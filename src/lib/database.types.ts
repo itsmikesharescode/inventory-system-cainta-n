@@ -113,7 +113,6 @@ export type Database = {
           id: number
           model: string
           mr: string
-          price: number
           quantity: number
           status: string
           type: string
@@ -127,7 +126,6 @@ export type Database = {
           id?: number
           model: string
           mr: string
-          price: number
           quantity: number
           status: string
           type: string
@@ -141,7 +139,6 @@ export type Database = {
           id?: number
           model?: string
           mr?: string
-          price?: number
           quantity?: number
           status?: string
           type?: string

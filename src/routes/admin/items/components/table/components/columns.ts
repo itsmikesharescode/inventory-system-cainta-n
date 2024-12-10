@@ -182,28 +182,6 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'price',
-    id: 'price',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
-        column,
-        title: 'Price'
-      });
-    },
-    cell: ({ row }) => {
-      const priceSnippet = createRawSnippet<[number]>((getPrice) => {
-        return {
-          render: () => `<div class="w-full">₱ ${getPrice().toLocaleString()}</div>`
-        };
-      });
-
-      return renderSnippet(priceSnippet, row.getValue('price'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     accessorKey: 'description',
     id: 'description',
     header: ({ column }) => {

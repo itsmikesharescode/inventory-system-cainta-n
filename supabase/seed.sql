@@ -269,7 +269,6 @@ CREATE TABLE IF NOT EXISTS "public"."items_tb" (
     "mr" "text" NOT NULL,
     "brand" "text" NOT NULL,
     "quantity" numeric NOT NULL,
-    "price" numeric NOT NULL,
     "description" "text" NOT NULL
 );
 

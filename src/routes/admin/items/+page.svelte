@@ -5,6 +5,7 @@
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateItem from './components/update-item/update-item.svelte';
   import DeleteItem from './components/delete-item/delete-item.svelte';
+
   const { data } = $props();
 
   initTableState();

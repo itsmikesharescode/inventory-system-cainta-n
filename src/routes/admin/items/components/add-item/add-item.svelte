@@ -43,13 +43,14 @@
 
   const { form: formData, enhance, submitting, reset } = form;
 
-  $effect(() => {
-    if (open) {
-      $formData.device_id = generateRefId();
+  let catSignature = $derived($formData.category.slice(0, 2).toUpperCase());
+  let modelSignature = $derived($formData.model.slice(0, 2).toUpperCase());
 
-      return () => {
-        reset();
-      };
+  $effect(() => {
+    catSignature;
+    modelSignature;
+    if (open) {
+      $formData.device_id = `${catSignature}-${modelSignature}-${generateRefId()}`;
     }
   });
 </script>
@@ -60,7 +61,7 @@
     <Dialog.Header>
       <Dialog.Title>Add Item</Dialog.Title>
     </Dialog.Header>
-
+    {$formData.category}
     <form method="POST" action="?/addItemEvent" use:enhance>
       <section class="grid grid-cols-3 gap-2.5">
         <div class="">
@@ -68,6 +69,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Device ID</Form.Label>
+
                 <Input {...props} bind:value={$formData.device_id} placeholder="Enter Device ID" />
               {/snippet}
             </Form.Control>
@@ -170,40 +172,23 @@
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
-
-          <Form.Field {form} name="price">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Price</Form.Label>
-                <Input
-                  type="number"
-                  {...props}
-                  bind:value={$formData.price}
-                  placeholder="Enter Price"
-                />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
         </div>
-
-        <Form.Field {form} name="description">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Description</Form.Label>
-              <Textarea
-                rows={10}
-                {...props}
-                bind:value={$formData.description}
-                placeholder="Enter Description"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.Description />
-          <Form.FieldErrors />
-        </Form.Field>
       </section>
+      <Form.Field {form} name="description">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Description</Form.Label>
+            <Textarea
+              rows={3}
+              {...props}
+              bind:value={$formData.description}
+              placeholder="Enter Description"
+            />
+          {/snippet}
+        </Form.Control>
+        <Form.Description />
+        <Form.FieldErrors />
+      </Form.Field>
 
       <section class="flex justify-end">
         <Form.Button disabled={$submitting} class="relative">
