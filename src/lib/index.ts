@@ -86,3 +86,10 @@ export const timeMeta = [
   { value: '23:00:00', label: '11:00 PM' },
   { value: '23:30:00', label: '11:30 PM' }
 ];
+
+export const convert24Hto12H = (time: string) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const hours12 = hours % 12 || 12;
+  return `${hours12.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+};

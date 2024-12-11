@@ -18,7 +18,8 @@
   import ComboPicker from '$lib/components/general/combo-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
-
+  import { TimePicker } from '$lib/components/general/time-picker/index';
+  import { convert24Hto12H } from '$lib';
   interface Props {
     updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
   }
@@ -56,7 +57,7 @@
       $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
       $formData.room = tableState.getActiveRow()?.room ?? '';
       $formData.date = tableState.getActiveRow()?.date ?? '';
-      $formData.time = tableState.getActiveRow()?.time ?? '';
+      $formData.time = convert24Hto12H(tableState.getActiveRow()?.time ?? '');
       return () => {
         $formData.id = 0;
         $formData.item_id = 0;
@@ -125,7 +126,7 @@
         <Form.Field {form} name="date">
           <Form.Control>
             {#snippet children({ props })}
-              <Form.Label>Date</Form.Label>
+              <Form.Label>Reservation Date</Form.Label>
               <DatePicker bind:selected={$formData.date} />
               <input type="hidden" {...props} bind:value={$formData.date} />
             {/snippet}
@@ -137,12 +138,8 @@
         <Form.Field {form} name="time">
           <Form.Control>
             {#snippet children({ props })}
-              <Form.Label>Time</Form.Label>
-              <ComboPicker
-                placeholder="Select Time"
-                bind:selected={$formData.time}
-                selections={timeMeta}
-              />
+              <Form.Label>Reservation Time</Form.Label>
+              <TimePicker bind:value={$formData.time} />
               <input type="hidden" {...props} bind:value={$formData.time} />
             {/snippet}
           </Form.Control>
@@ -151,14 +148,18 @@
         </Form.Field>
 
         <section class="flex justify-end">
-          <Form.Button disabled={$submitting} class="relative">
-            {#if $submitting}
-              <div class="absolute inset-0 flex items-center justify-center rounded-lg bg-primary">
-                <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
-              </div>
-            {/if}
-            Update
-          </Form.Button>
+          {#if tableState.getActiveRow()?.status !== 'approved'}
+            <Form.Button disabled={$submitting} class="relative">
+              {#if $submitting}
+                <div
+                  class="absolute inset-0 flex items-center justify-center rounded-lg bg-primary"
+                >
+                  <LoaderCircle class="h-[20px] w-[20px] animate-spin" />
+                </div>
+              {/if}
+              Update
+            </Form.Button>
+          {/if}
         </section>
       </div>
     </form>

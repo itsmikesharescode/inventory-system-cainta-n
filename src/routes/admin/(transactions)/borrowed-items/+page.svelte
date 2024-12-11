@@ -5,7 +5,7 @@
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateBorrower from './components/update-borrower/update-borrower.svelte';
   import DeleteBorrower from './components/delete-borrower/delete-borrower.svelte';
-
+  import { convert24Hto12H } from '$lib';
   const { data } = $props();
 
   initTableState();
@@ -33,7 +33,7 @@
         reference_id: borrower.reference_id,
         created_at: borrower.created_at,
         teacher_id: borrower.teachers_tb?.user_meta_data?.teacher_id ?? '',
-        when: borrower.date + ' ' + borrower.time,
+        when: borrower.date + ' ' + convert24Hto12H(borrower.time),
         user_id: borrower.user_id,
         item_id: borrower.item_id,
         fullname: `${borrower.teachers_tb?.user_meta_data.lastname}, ${borrower.teachers_tb?.user_meta_data.firstname} ${borrower.teachers_tb?.user_meta_data.middlename}`,

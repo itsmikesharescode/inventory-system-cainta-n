@@ -204,6 +204,7 @@ export type Database = {
           borrowed_item_id: number
           created_at: string
           id: number
+          remarks: string
           returned_date: string
           time: string
         }
@@ -211,6 +212,7 @@ export type Database = {
           borrowed_item_id: number
           created_at?: string
           id?: number
+          remarks: string
           returned_date: string
           time: string
         }
@@ -218,6 +220,7 @@ export type Database = {
           borrowed_item_id?: number
           created_at?: string
           id?: number
+          remarks?: string
           returned_date?: string
           time?: string
         }

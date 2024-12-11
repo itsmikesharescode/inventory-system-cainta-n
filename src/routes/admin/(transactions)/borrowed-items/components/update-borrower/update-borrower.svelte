@@ -13,7 +13,8 @@
   import ComboPicker from '$lib/components/general/combo-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
-
+  import { TimePicker } from '$lib/components/general/time-picker/index.js';
+  import { convert24Hto12H } from '$lib';
   interface Props {
     updateBorrowerForm: SuperValidated<Infer<UpdateBorrowerSchema>>;
   }
@@ -48,7 +49,7 @@
     if (tableState.getShowUpdate()) {
       $formData.id = tableState.getActiveRow()?.id ?? 0;
       $formData.date = tableState.getActiveRow()?.date ?? '';
-      $formData.time = tableState.getActiveRow()?.time ?? '';
+      $formData.time = convert24Hto12H(tableState.getActiveRow()?.time ?? '');
       $formData.room = tableState.getActiveRow()?.room ?? '';
       $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
       $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
@@ -122,7 +123,7 @@
           <Form.Field {form} name="date">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Date</Form.Label>
+                <Form.Label>Borrowed Date</Form.Label>
                 <DatePicker bind:selected={$formData.date} />
                 <input type="hidden" {...props} bind:value={$formData.date} />
               {/snippet}
@@ -134,12 +135,8 @@
           <Form.Field {form} name="time">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Time</Form.Label>
-                <ComboPicker
-                  placeholder="Select Time"
-                  bind:selected={$formData.time}
-                  selections={timeMeta}
-                />
+                <Form.Label>Borrowed Time</Form.Label>
+                <TimePicker bind:value={$formData.time} />
                 <input type="hidden" {...props} bind:value={$formData.time} />
               {/snippet}
             </Form.Control>

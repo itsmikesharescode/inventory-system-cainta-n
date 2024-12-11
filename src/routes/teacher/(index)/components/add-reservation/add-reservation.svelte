@@ -17,7 +17,7 @@
   import ItemPicker from '$lib/components/general/item-picker.svelte';
   import ComboPicker from '$lib/components/general/combo-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
-
+  import { TimePicker } from '$lib/components/general/time-picker/index';
   interface Props {
     addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
   }
@@ -107,7 +107,7 @@
         <Form.Field {form} name="date">
           <Form.Control>
             {#snippet children({ props })}
-              <Form.Label>Date</Form.Label>
+              <Form.Label>Reservation Date</Form.Label>
               <DatePicker bind:selected={$formData.date} />
               <input type="hidden" {...props} bind:value={$formData.date} />
             {/snippet}
@@ -119,12 +119,8 @@
         <Form.Field {form} name="time">
           <Form.Control>
             {#snippet children({ props })}
-              <Form.Label>Time</Form.Label>
-              <ComboPicker
-                placeholder="Select Time"
-                bind:selected={$formData.time}
-                selections={timeMeta}
-              />
+              <Form.Label>Reservation Time</Form.Label>
+              <TimePicker bind:value={$formData.time} />
               <input type="hidden" {...props} bind:value={$formData.time} />
             {/snippet}
           </Form.Control>

@@ -13,6 +13,9 @@
   import DatePicker from '$lib/components/general/date-picker.svelte';
   import BorrowedItemPicker from '$lib/components/general/borrowed-item-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
+  import { TimePicker } from '$lib/components/general/time-picker';
+  import { Textarea } from '$lib/components/ui/textarea/index.js';
+  import { convert24Hto12H } from '$lib';
 
   interface Props {
     updateReturneeForm: SuperValidated<Infer<UpdateReturneeSchema>>;
@@ -47,13 +50,14 @@
   $effect(() => {
     if (tableState.getShowUpdate()) {
       $formData.id = tableState.getActiveRow()?.id ?? 0;
-      $formData.returned_date = tableState.getActiveRow()?.when_returned ?? '';
-      $formData.time = tableState.getActiveRow()?.time ?? '';
-
+      $formData.returned_date = tableState.getActiveRow()?.returned_date ?? '';
+      $formData.time = convert24Hto12H(tableState.getActiveRow()?.time ?? '');
+      $formData.remarks = tableState.getActiveRow()?.remarks ?? '';
       return () => {
         $formData.id = 0;
         $formData.returned_date = '';
         $formData.time = '';
+        $formData.remarks = '';
       };
     }
   });
@@ -79,36 +83,57 @@
     <form method="POST" action="?/updateReturneeEvent" use:enhance>
       <input name="id" type="hidden" bind:value={$formData.id} />
 
-      <div class="">
-        <Form.Field {form} name="returned_date">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Date</Form.Label>
-              <DatePicker bind:selected={$formData.returned_date} />
-              <input type="hidden" {...props} bind:value={$formData.returned_date} />
-            {/snippet}
-          </Form.Control>
-          <Form.Description />
-          <Form.FieldErrors />
-        </Form.Field>
+      <section class="grid gap-4 md:grid-cols-2">
+        <div class="">
+          <!-- <Form.Field {form} name="borrowed_item_id">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Borrowed Item</Form.Label>
+                <BorrowedItemPicker bind:borrowed_item_id={$formData.borrowed_item_id} />
+                <input type="hidden" {...props} bind:value={$formData.borrowed_item_id} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field> -->
 
-        <Form.Field {form} name="time">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Time</Form.Label>
-              <ComboPicker
-                placeholder="Select Time"
-                searchPlaceholder="Search Time"
-                bind:selected={$formData.time}
-                selections={timeMeta}
-              />
-              <input type="hidden" {...props} bind:value={$formData.time} />
-            {/snippet}
-          </Form.Control>
-          <Form.Description />
-          <Form.FieldErrors />
-        </Form.Field>
-      </div>
+          <Form.Field {form} name="returned_date">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Date Returned</Form.Label>
+                <DatePicker bind:selected={$formData.returned_date} />
+                <input type="hidden" {...props} bind:value={$formData.returned_date} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+
+          <Form.Field {form} name="time">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Time Returned</Form.Label>
+                <TimePicker bind:value={$formData.time} />
+                <input type="hidden" {...props} bind:value={$formData.time} />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+        </div>
+
+        <div class="">
+          <Form.Field {form} name="remarks">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Remarks</Form.Label>
+                <Textarea {...props} bind:value={$formData.remarks} placeholder="Enter Remarks" />
+              {/snippet}
+            </Form.Control>
+            <Form.FieldErrors />
+          </Form.Field>
+        </div>
+      </section>
 
       <section class="flex justify-end">
         <Form.Button disabled={$submitting} class="relative">

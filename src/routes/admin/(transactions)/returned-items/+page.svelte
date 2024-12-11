@@ -5,6 +5,7 @@
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateReturnee from './components/update-returnee/update-returnee.svelte';
   import DeleteReturnee from './components/delete-returnee/delete-returnee.svelte';
+  import { convert24Hto12H } from '$lib';
   const { data } = $props();
 
   initTableState();
@@ -28,13 +29,18 @@
     <Table
       addReturneeForm={data.addReturneeForm}
       data={returnees?.map((returnee) => ({
+        returned_date: returnee.returned_date,
+        teacher_id: returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.teacher_id ?? '',
+        remarks: returnee.remarks,
         id: returnee.id,
         created_at: returnee.created_at,
         reference_id: returnee.borrowed_items_tb?.reference_id ?? '',
-        teacher_id: returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.teacher_id ?? '',
-        when_borrowed: returnee.borrowed_items_tb?.date + ' ' + returnee.borrowed_items_tb?.time,
+        when_borrowed:
+          returnee.borrowed_items_tb?.date +
+          ' ' +
+          convert24Hto12H(returnee.borrowed_items_tb?.time),
         time: returnee.time,
-        when_returned: returnee.returned_date + ' ' + returnee.time,
+        when_returned: returnee.returned_date + ' ' + convert24Hto12H(returnee.time),
         user_id: returnee.borrowed_items_tb?.teachers_tb?.user_id ?? '',
         item_id: returnee.borrowed_items_tb?.item_id ?? 0,
         fullname: `${returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.lastname}, ${returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.firstname} ${returnee.borrowed_items_tb?.teachers_tb?.user_meta_data.middlename}`,

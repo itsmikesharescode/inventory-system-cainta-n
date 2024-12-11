@@ -1,6 +1,6 @@
 {
   "deno.enablePaths": ["supabase/functions"],
-  "deno.lint": true,
+  "deno.lint": false,
   "deno.unstable": [
     "bare-node-builtins",
     "byonm",
@@ -15,6 +15,5 @@
     "fs",
     "http",
     "net"
-  ],
-  "[typescript]": {}
+  ]
 }

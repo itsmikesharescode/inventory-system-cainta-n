@@ -177,8 +177,11 @@ ALTER FUNCTION "public"."admin_dashboard_counts"() OWNER TO "postgres";
 CREATE OR REPLACE FUNCTION "public"."is_admin"() RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
-begin 
-    return exists(select 1 from roles_tb where role = 'admin' and user_id = auth.uid());
+begin
+    return exists(
+        select 1 from roles_tb where user_id = auth.uid() and role = 'admin'
+    )
+    return;
 end;
 $$;
 
@@ -189,13 +192,68 @@ ALTER FUNCTION "public"."is_admin"() OWNER TO "postgres";
 CREATE OR REPLACE FUNCTION "public"."is_teacher"() RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
-begin
-    return exists(select 1 from roles_tb where role = 'teacher' and user_id = auth.uid());
+begin 
+    return exists(
+        select 1 from roles_tb where user_id = auth.uid() and role = 'teacher'
+    )
+    return;
 end;
 $$;
 
 
 ALTER FUNCTION "public"."is_teacher"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."on_auth_user_created"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+declare
+  role text;
+begin
+  role = new.raw_user_meta_data ->> 'role'; 
+
+  insert into public.users_tb (user_id, user_meta_data) values(new.id, new.raw_user_meta_data);
+  
+  insert into public.roles_tb (user_id, role) values(new.id, role);
+
+  insert into public.teachers_tb (user_id, user_meta_data)
+  values (
+    new.id,
+    new.raw_user_meta_data
+  );
+  return new;
+
+end;
+$$;
+
+
+ALTER FUNCTION "public"."on_auth_user_created"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."on_auth_user_updated"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+begin
+
+  update public.users_tb
+  set user_meta_data = new.raw_user_meta_data
+  where user_id = new.id;
+
+  update public.teachers_tb
+  set user_meta_data = new.raw_user_meta_data
+  where user_id = new.id;
+
+
+  update public.roles_tb
+  set role = new.raw_user_meta_data ->> 'role'
+  where user_id = new.id;
+  return new;
+
+end;
+$$;
+
+
+ALTER FUNCTION "public"."on_auth_user_updated"() OWNER TO "postgres";
 
 SET default_tablespace = '';
 
@@ -328,7 +386,8 @@ CREATE TABLE IF NOT EXISTS "public"."returned_items_tb" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "returned_date" "date" NOT NULL,
     "time" time without time zone NOT NULL,
-    "borrowed_item_id" bigint NOT NULL
+    "borrowed_item_id" bigint NOT NULL,
+    "remarks" "text" NOT NULL
 );
 
 
@@ -810,6 +869,18 @@ GRANT ALL ON FUNCTION "public"."is_admin"() TO "service_role";
 GRANT ALL ON FUNCTION "public"."is_teacher"() TO "anon";
 GRANT ALL ON FUNCTION "public"."is_teacher"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."is_teacher"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."on_auth_user_created"() TO "anon";
+GRANT ALL ON FUNCTION "public"."on_auth_user_created"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."on_auth_user_created"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."on_auth_user_updated"() TO "anon";
+GRANT ALL ON FUNCTION "public"."on_auth_user_updated"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."on_auth_user_updated"() TO "service_role";
 
 
 
