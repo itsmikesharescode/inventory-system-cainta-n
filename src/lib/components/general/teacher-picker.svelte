@@ -71,10 +71,10 @@
       <Command.Input placeholder="Search teacher fullname..." />
       <Command.List>
         <Command.Empty>No teachers found.</Command.Empty>
-        <Command.Group>
+        <Command.Group class="">
           {#each teachers ?? [] as teacher}
             <Command.Item
-              value={`${teacher.user_meta_data.lastname}, ${teacher.user_meta_data.firstname} ${teacher.user_meta_data.middlename}`}
+              value={teacher.user_id}
               onSelect={() => {
                 user_id = teacher.user_id;
                 closeAndFocusTrigger();

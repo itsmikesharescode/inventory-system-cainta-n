@@ -75,7 +75,7 @@
         <Command.Group>
           {#each items ?? [] as item}
             <Command.Item
-              value={item.model}
+              value={item.id}
               onSelect={() => {
                 value = item.id.toString();
                 item_id = item.id;
