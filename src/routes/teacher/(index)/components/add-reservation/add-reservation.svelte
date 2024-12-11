@@ -18,6 +18,7 @@
   import ComboPicker from '$lib/components/general/combo-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
   import { TimePicker } from '$lib/components/general/time-picker/index';
+  import RoomPicker from '$lib/components/general/room-picker.svelte';
   interface Props {
     addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
   }
@@ -93,11 +94,12 @@
           <Form.FieldErrors />
         </Form.Field>
 
-        <Form.Field {form} name="room">
+        <Form.Field {form} name="room_id">
           <Form.Control>
             {#snippet children({ props })}
               <Form.Label>Room</Form.Label>
-              <Input {...props} bind:value={$formData.room} placeholder="Enter Room" />
+              <RoomPicker bind:room_id={$formData.room_id} />
+              <input type="hidden" {...props} bind:value={$formData.room_id} />
             {/snippet}
           </Form.Control>
           <Form.Description />

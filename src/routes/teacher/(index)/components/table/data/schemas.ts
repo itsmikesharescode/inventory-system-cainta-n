@@ -7,12 +7,13 @@ export const reservationSchema = z.object({
   reference_id: z.string(),
   created_at: z.string(),
   item_id: z.number(),
-  room: z.string(),
+  room_id: z.number(),
   status: z.string(),
   quantity: z.number(),
   date: z.string(),
   time: z.string(),
   item: z.string(),
+  room: z.string(),
   when: z.string().nullable()
 });
 
