@@ -6,9 +6,8 @@ const streamReservationsUsersItems = async (supabase: SupabaseClient<Database>) 
 
   const { data, error } = await supabase
     .from('reservations_tb')
-    .select('*,teachers_tb("user_meta_data"), items_tb(*)')
+    .select('*,teachers_tb("user_meta_data"), items_tb(*),rooms_tb(*)')
     .order('created_at', { ascending: false });
-
   if (error) return null;
   return data;
 };

@@ -32,7 +32,7 @@ export const actions: Actions = {
       user_id: form.data.user_id,
       item_id: form.data.item_id,
       quantity: form.data.quantity,
-      room: form.data.room,
+      room_id: form.data.room_id,
       date: form.data.date,
       time: form.data.time
     });
@@ -56,7 +56,7 @@ export const actions: Actions = {
         user_id: form.data.user_id,
         item_id: form.data.item_id,
         quantity: form.data.quantity,
-        room: form.data.room,
+        room_id: form.data.room_id,
         date: form.data.date,
         time: form.data.time
       })

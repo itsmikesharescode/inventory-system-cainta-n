@@ -30,6 +30,8 @@
     <Table
       addReservationForm={data.addReservationForm}
       data={reservations?.map((reservation) => ({
+        room_id: reservation.rooms_tb?.id ?? 0,
+        room: reservation.rooms_tb?.name ?? '',
         id: reservation.id,
         reference_id: reservation.reference_id,
         status: reservation.status,
@@ -40,7 +42,6 @@
         item_id: reservation.items_tb?.id ?? 0,
         fullname: `${reservation.teachers_tb?.user_meta_data.lastname}, ${reservation.teachers_tb?.user_meta_data.firstname} ${reservation.teachers_tb?.user_meta_data.middlename}`,
         quantity: reservation.quantity,
-        room: reservation.room,
         date: reservation.date,
         time: reservation.time,
         item: reservation.items_tb?.model ?? '',
