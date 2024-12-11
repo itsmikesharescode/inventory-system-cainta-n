@@ -65,7 +65,7 @@
           <Form.Field {form} name="borrowed_item_id">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Borrowed Item</Form.Label>
+                <Form.Label>Borrower</Form.Label>
                 <BorrowedItemPicker bind:borrowed_item_id={$formData.borrowed_item_id} />
                 <input type="hidden" {...props} bind:value={$formData.borrowed_item_id} />
               {/snippet}

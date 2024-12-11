@@ -94,28 +94,6 @@ export const columns: ColumnDef<ReturneePageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'room',
-    id: 'room',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReturneePageTable, unknown>, {
-        column,
-        title: 'Room'
-      });
-    },
-    cell: ({ row }) => {
-      const roomSnippet = createRawSnippet<[string]>((getRoom) => {
-        return {
-          render: () => `<div class="w-full">${getRoom()}</div>`
-        };
-      });
-
-      return renderSnippet(roomSnippet, row.getValue('room'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     accessorKey: 'when_borrowed',
     id: 'when_borrowed',
     header: ({ column }) => {
