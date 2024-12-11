@@ -90,7 +90,21 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase
+    console.log(form.data);
+
+    const { error } = await supabase.rpc('general_update_reservation_status', {
+      reservation_id: form.data.id,
+      item_id_param: form.data.item_id,
+      status: form.data.status
+    });
+
+    if (error) {
+      return fail(401, { form, msg: error.message });
+    }
+
+    return { form, msg: 'Reservation status updated successfully' };
+
+    /* const { error } = await supabase
       .from('reservations_tb')
       .update({ status: form.data.status })
       .eq('id', form.data.id);
@@ -99,6 +113,6 @@ export const actions: Actions = {
       return fail(401, { form, msg: error.message });
     }
 
-    return { form, msg: 'Reservation status updated successfully' };
+    return { form, msg: 'Reservation status updated successfully' }; */
   }
 };
