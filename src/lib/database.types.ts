@@ -41,7 +41,7 @@ export type Database = {
           id: number
           item_id: number
           reference_id: string
-          room: string
+          room_id: number
           time: string
           user_id: string
         }
@@ -51,7 +51,7 @@ export type Database = {
           id?: number
           item_id: number
           reference_id: string
-          room: string
+          room_id: number
           time: string
           user_id: string
         }
@@ -61,7 +61,7 @@ export type Database = {
           id?: number
           item_id?: number
           reference_id?: string
-          room?: string
+          room_id?: number
           time?: string
           user_id?: string
         }
@@ -71,6 +71,13 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "items_tb"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "borrowed_items_tb_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms_tb"
             referencedColumns: ["id"]
           },
           {
@@ -153,7 +160,7 @@ export type Database = {
           item_id: number
           quantity: number
           reference_id: string
-          room: string
+          room_id: number
           status: string
           time: string
           user_id: string
@@ -165,7 +172,7 @@ export type Database = {
           item_id: number
           quantity: number
           reference_id: string
-          room: string
+          room_id: number
           status?: string
           time: string
           user_id: string
@@ -177,7 +184,7 @@ export type Database = {
           item_id?: number
           quantity?: number
           reference_id?: string
-          room?: string
+          room_id?: number
           status?: string
           time?: string
           user_id?: string
@@ -188,6 +195,13 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "items_tb"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reservations_tb_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms_tb"
             referencedColumns: ["id"]
           },
           {
@@ -329,6 +343,14 @@ export type Database = {
       admin_dashboard_counts: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      general_update_reservation_status: {
+        Args: {
+          reservation_id: number
+          item_id_param: number
+          status: string
+        }
+        Returns: undefined
       }
       is_admin: {
         Args: Record<PropertyKey, never>

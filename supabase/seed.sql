@@ -174,6 +174,77 @@ $$;
 ALTER FUNCTION "public"."admin_dashboard_counts"() OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $_$
+declare
+    available_quantity numeric;
+    reservation_quantity numeric;
+    actual_item_id int8;
+    current_status varchar;
+begin
+    -- Get the reservation details and verify item_id matches
+    select r.quantity, r.item_id, r.status into reservation_quantity, actual_item_id, current_status
+    from reservations_tb r
+    where r.id = reservation_id;
+
+    -- Check if reservation exists
+    if not found then
+        raise exception 'Reservation not found with ID: %', reservation_id;
+        return;
+    end if;
+
+    -- Check if trying to approve an already approved reservation
+    if status = 'approved' and current_status = 'approved' then
+        raise exception 'Cannot approve: Reservation is already approved';
+        return;
+    end if;
+
+    -- Verify the item_id matches
+    if actual_item_id != item_id_param then
+        raise exception 'Item ID mismatch. Expected: %, Got: %', 
+            actual_item_id, item_id_param;
+        return;
+    end if;
+
+    -- Only proceed with quantity checks if status is being updated to 'approve'
+    if status = 'approved' then
+        -- Get the available quantity from items_tb
+        select quantity into available_quantity
+        from items_tb
+        where id = item_id_param;
+
+        -- Check if item exists
+        if not found then
+            raise exception 'Item not found with ID: %', item_id_param;
+            return;
+        end if;
+
+        -- Check if we have enough quantity
+        if available_quantity < reservation_quantity then
+            raise exception 'Insufficient quantity. Available: %, Requested: %', 
+                available_quantity, reservation_quantity;
+            return;
+        end if;
+
+        -- Update the items_tb quantity
+        update items_tb
+        set quantity = quantity - reservation_quantity
+        where id = item_id_param;
+    end if;
+
+    -- Update the reservation status (now works for all status values)
+    update reservations_tb
+    set status = $3  -- Using the parameter position instead of name
+    where id = reservation_id;
+
+end;
+$_$;
+
+
+ALTER FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."is_admin"() RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -265,10 +336,10 @@ CREATE TABLE IF NOT EXISTS "public"."borrowed_items_tb" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "user_id" "uuid" NOT NULL,
     "item_id" bigint NOT NULL,
-    "room" character varying NOT NULL,
     "date" "date" NOT NULL,
     "time" time without time zone NOT NULL,
-    "reference_id" character varying NOT NULL
+    "reference_id" character varying NOT NULL,
+    "room_id" bigint NOT NULL
 );
 
 
@@ -354,12 +425,12 @@ CREATE TABLE IF NOT EXISTS "public"."reservations_tb" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "item_id" bigint NOT NULL,
     "user_id" "uuid" NOT NULL,
-    "room" "text" NOT NULL,
     "status" character varying DEFAULT 'pending'::character varying NOT NULL,
     "quantity" numeric NOT NULL,
     "date" "date" NOT NULL,
     "time" time without time zone NOT NULL,
-    "reference_id" character varying NOT NULL
+    "reference_id" character varying NOT NULL,
+    "room_id" bigint NOT NULL
 );
 
 
@@ -533,12 +604,22 @@ ALTER TABLE ONLY "public"."borrowed_items_tb"
 
 
 ALTER TABLE ONLY "public"."borrowed_items_tb"
+    ADD CONSTRAINT "borrowed_items_tb_room_id_fkey" FOREIGN KEY ("room_id") REFERENCES "public"."rooms_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."borrowed_items_tb"
     ADD CONSTRAINT "borrowed_items_tb_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."teachers_tb"("user_id") ON DELETE CASCADE;
 
 
 
 ALTER TABLE ONLY "public"."reservations_tb"
     ADD CONSTRAINT "reservations_tb_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "public"."items_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."reservations_tb"
+    ADD CONSTRAINT "reservations_tb_room_id_fkey" FOREIGN KEY ("room_id") REFERENCES "public"."rooms_tb"("id") ON DELETE CASCADE;
 
 
 
@@ -857,6 +938,12 @@ GRANT ALL ON FUNCTION "public"."admin_dashboard_counters"() TO "service_role";
 GRANT ALL ON FUNCTION "public"."admin_dashboard_counts"() TO "anon";
 GRANT ALL ON FUNCTION "public"."admin_dashboard_counts"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."admin_dashboard_counts"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "anon";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "service_role";
 
 
 
