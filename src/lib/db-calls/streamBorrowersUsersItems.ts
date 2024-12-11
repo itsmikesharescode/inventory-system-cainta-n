@@ -6,7 +6,7 @@ const streamBorrowersUsersItems = async (supabase: SupabaseClient<Database>) => 
 
   const { data, error } = await supabase
     .from('borrowed_items_tb')
-    .select('*, teachers_tb("user_meta_data"), items_tb(*)')
+    .select('*, teachers_tb("user_meta_data"), items_tb(*),rooms_tb(*)')
     .order('created_at', { ascending: false });
 
   if (error) return null;

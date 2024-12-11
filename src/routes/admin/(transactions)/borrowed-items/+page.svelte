@@ -29,6 +29,8 @@
     <Table
       addBorrowerForm={data.addBorrowerForm}
       data={borrowers?.map((borrower) => ({
+        room_id: borrower.rooms_tb?.id ?? 0,
+        room: borrower.rooms_tb?.name ?? '',
         id: borrower.id,
         reference_id: borrower.reference_id,
         created_at: borrower.created_at,
@@ -37,7 +39,6 @@
         user_id: borrower.user_id,
         item_id: borrower.item_id,
         fullname: `${borrower.teachers_tb?.user_meta_data.lastname}, ${borrower.teachers_tb?.user_meta_data.firstname} ${borrower.teachers_tb?.user_meta_data.middlename}`,
-        room: borrower.room,
         date: borrower.date,
         time: borrower.time,
         item: borrower.items_tb?.model ?? '',
