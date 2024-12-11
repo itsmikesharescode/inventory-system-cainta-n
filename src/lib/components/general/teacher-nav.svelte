@@ -40,7 +40,7 @@
     </button>
   </nav>
   <Sheet.Root bind:open={showMobileMenu}>
-    <Sheet.Content side="left" class="pt-10 font-roboto">
+    <Sheet.Content side="left" class="font-roboto pt-10">
       <section class="flex flex-col gap-2">
         <a
           onclick={() => (showMobileMenu = false)}

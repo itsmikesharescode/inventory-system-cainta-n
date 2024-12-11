@@ -9,7 +9,13 @@ export const registerSchema = z
     phone: z.string().min(5, { message: 'Must enter a phone number.' }),
     department: z.string().min(1, { message: 'Must enter department.' }),
     email: z.string().email({ message: 'Must enter a valid email.' }),
-    password: z.string().min(8, { message: 'Must choose a strong password.' }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .regex(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/, {
+        message:
+          'Password must contain at least one uppercase letter, one number, and one special character'
+      }),
     confirmPassword: z.string()
   })
   .superRefine(({ password, confirmPassword }, ctx) => {

@@ -53,7 +53,7 @@
     <Calendar
       onValueChange={(v) => {
         if (!v) return (selected = '');
-        selected = formatDate(v.toString());
+        selected = v.toString();
       }}
       type="single"
     />

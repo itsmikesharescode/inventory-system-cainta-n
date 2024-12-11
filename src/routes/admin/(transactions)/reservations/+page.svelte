@@ -6,6 +6,7 @@
   import UpdateStatusReservation from './components/update-status-reservation/update-status-reservation.svelte';
   import UpdateReservation from './components/update-reservation/update-reservation.svelte';
   import DeleteReservation from './components/delete-reservation/delete-reservation.svelte';
+  import { convert24Hto12H } from '$lib';
   const { data } = $props();
 
   initTableState();
@@ -29,17 +30,18 @@
     <Table
       addReservationForm={data.addReservationForm}
       data={reservations?.map((reservation) => ({
+        room_id: reservation.rooms_tb?.id ?? 0,
+        room: reservation.rooms_tb?.name ?? '',
         id: reservation.id,
         reference_id: reservation.reference_id,
         status: reservation.status,
         created_at: reservation.created_at,
         teacher_id: reservation.teachers_tb?.user_meta_data.teacher_id ?? '',
-        when: reservation.date + ' ' + reservation.time,
+        when: reservation.date + ' ' + convert24Hto12H(reservation.time),
         user_id: reservation.user_id ?? '',
         item_id: reservation.items_tb?.id ?? 0,
         fullname: `${reservation.teachers_tb?.user_meta_data.lastname}, ${reservation.teachers_tb?.user_meta_data.firstname} ${reservation.teachers_tb?.user_meta_data.middlename}`,
         quantity: reservation.quantity,
-        room: reservation.room,
         date: reservation.date,
         time: reservation.time,
         item: reservation.items_tb?.model ?? '',

@@ -15,7 +15,9 @@
   import ComboPicker from '$lib/components/general/combo-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
-
+  import { TimePicker } from '$lib/components/general/time-picker/index';
+  import { convert24Hto12H } from '$lib';
+  import RoomPicker from '$lib/components/general/room-picker.svelte';
   interface Props {
     updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
   }
@@ -52,15 +54,15 @@
       $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
       $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
       $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
-      $formData.room = tableState.getActiveRow()?.room ?? '';
+      $formData.room_id = tableState.getActiveRow()?.room_id ?? 0;
       $formData.date = tableState.getActiveRow()?.date ?? '';
-      $formData.time = tableState.getActiveRow()?.time ?? '';
+      $formData.time = convert24Hto12H(tableState.getActiveRow()?.time ?? '');
       return () => {
         $formData.id = 0;
         $formData.user_id = '';
         $formData.item_id = 0;
         $formData.quantity = 0;
-        $formData.room = '';
+        $formData.room_id = 0;
         $formData.date = '';
         $formData.time = '';
         reset();
@@ -125,11 +127,12 @@
         </div>
 
         <div class="">
-          <Form.Field {form} name="room">
+          <Form.Field {form} name="room_id">
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Room</Form.Label>
-                <Input {...props} bind:value={$formData.room} placeholder="Enter Room" />
+                <RoomPicker bind:room_id={$formData.room_id} />
+                <input type="hidden" {...props} bind:value={$formData.room_id} />
               {/snippet}
             </Form.Control>
             <Form.Description />
@@ -139,7 +142,7 @@
           <Form.Field {form} name="date">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Date</Form.Label>
+                <Form.Label>Reservation Date</Form.Label>
                 <DatePicker bind:selected={$formData.date} />
                 <input type="hidden" {...props} bind:value={$formData.date} />
               {/snippet}
@@ -151,13 +154,8 @@
           <Form.Field {form} name="time">
             <Form.Control>
               {#snippet children({ props })}
-                <Form.Label>Time</Form.Label>
-                <ComboPicker
-                  placeholder="Select Time"
-                  searchPlaceholder="Search Time"
-                  bind:selected={$formData.time}
-                  selections={timeMeta}
-                />
+                <Form.Label>Reservation Time</Form.Label>
+                <TimePicker bind:value={$formData.time} />
                 <input type="hidden" {...props} bind:value={$formData.time} />
               {/snippet}
             </Form.Control>

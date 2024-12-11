@@ -56,25 +56,7 @@
       $formData.mr = tableState.getActiveRow()?.mr ?? '';
       $formData.brand = tableState.getActiveRow()?.brand ?? '';
       $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
-      $formData.price = tableState.getActiveRow()?.price ?? 0;
       $formData.description = tableState.getActiveRow()?.description ?? '';
-
-      return () => {
-        $formData.id = 0;
-        $formData.device_id = '';
-        $formData.model = '';
-        $formData.category = '';
-        $formData.type = '';
-        $formData.status = '';
-        $formData.mr = '';
-        $formData.brand = tableState.getActiveRow()?.brand ?? '';
-        $formData.quantity = 0;
-        $formData.price = 0;
-        $formData.description = '';
-        tableState.setActiveRow(null);
-        tableState.setShowUpdate(false);
-        reset();
-      };
     }
   });
 </script>
@@ -88,7 +70,7 @@
 >
   <Dialog.Content class="max-h-[80dvh] max-w-4xl overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>Add Item</Dialog.Title>
+      <Dialog.Title>Update Item</Dialog.Title>
     </Dialog.Header>
 
     <form method="POST" action="?/updateItemEvent" use:enhance>
@@ -201,41 +183,23 @@
             <Form.Description />
             <Form.FieldErrors />
           </Form.Field>
-
-          <Form.Field {form} name="price">
-            <Form.Control>
-              {#snippet children({ props })}
-                <Form.Label>Price</Form.Label>
-                <Input
-                  type="number"
-                  {...props}
-                  bind:value={$formData.price}
-                  placeholder="Enter Price"
-                />
-              {/snippet}
-            </Form.Control>
-            <Form.Description />
-            <Form.FieldErrors />
-          </Form.Field>
         </div>
-
-        <Form.Field {form} name="description">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Description</Form.Label>
-              <Textarea
-                rows={10}
-                {...props}
-                bind:value={$formData.description}
-                placeholder="Enter Description"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.Description />
-          <Form.FieldErrors />
-        </Form.Field>
       </section>
-
+      <Form.Field {form} name="description">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Description</Form.Label>
+            <Textarea
+              rows={3}
+              {...props}
+              bind:value={$formData.description}
+              placeholder="Enter Description"
+            />
+          {/snippet}
+        </Form.Control>
+        <Form.Description />
+        <Form.FieldErrors />
+      </Form.Field>
       <section class="flex justify-end">
         <Form.Button disabled={$submitting} class="relative">
           {#if $submitting}

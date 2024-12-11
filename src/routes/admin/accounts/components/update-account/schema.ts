@@ -10,7 +10,13 @@ export const updateAccountSchema = z
     lastname: z.string().min(1, { message: 'Last name is required' }),
     teacher_id: z.string().min(1, { message: 'Teacher ID is required' }),
     department: z.string().min(1, { message: 'Department is required' }),
-    password: z.string().min(1, { message: 'Password is required' }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .regex(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/, {
+        message:
+          'Password must contain at least one uppercase letter, one number, and one special character'
+      }),
     confirm_password: z.string().min(1, { message: 'Confirm password is required' })
   })
   .refine((data) => data.password === data.confirm_password, {

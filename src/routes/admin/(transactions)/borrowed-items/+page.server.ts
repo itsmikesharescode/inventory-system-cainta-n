@@ -31,7 +31,7 @@ export const actions: Actions = {
       item_id: form.data.item_id,
       date: form.data.date,
       time: form.data.time,
-      room: form.data.room
+      room_id: form.data.room_id
     });
 
     if (error) {
@@ -53,7 +53,7 @@ export const actions: Actions = {
       .update({
         user_id: form.data.user_id,
         item_id: form.data.item_id,
-        room: form.data.room,
+        room_id: form.data.room_id,
         date: form.data.date,
         time: form.data.time
       })

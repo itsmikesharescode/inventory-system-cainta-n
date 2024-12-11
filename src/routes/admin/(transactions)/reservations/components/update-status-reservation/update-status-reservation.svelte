@@ -44,9 +44,11 @@
     if (tableState.getShowUpdateStatus()) {
       $formData.id = tableState.getActiveRow()?.id ?? 0;
       $formData.status = tableState.getActiveRow()?.status ?? '';
+      $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
       return () => {
         $formData.id = 0;
         $formData.status = '';
+        $formData.item_id = 0;
         reset();
       };
     }
@@ -65,7 +67,7 @@
 
     <form method="POST" action="?/updateStatusReservationEvent" use:enhance>
       <input name="id" type="hidden" {...formData} bind:value={$formData.id} />
-
+      <input name="item_id" type="hidden" {...formData} bind:value={$formData.item_id} />
       <Form.Field {form} name="status">
         <Form.Control>
           {#snippet children({ props })}

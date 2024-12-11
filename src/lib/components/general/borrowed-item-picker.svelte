@@ -27,7 +27,7 @@
   let triggerRef = $state<HTMLButtonElement>(null!);
 
   const selectedValue = $derived(
-    borrowed_items?.find((f) => f.item_id === Number(borrowed_item_id))
+    borrowed_items?.find((f) => f.id.toString() === String(borrowed_item_id))
   );
 
   function closeAndFocusTrigger() {
@@ -38,7 +38,9 @@
   }
 
   $effect(() => {
-    getBorrowedItems();
+    tick().then(async () => {
+      await getBorrowedItems();
+    });
 
     return () => {
       borrowed_items = null;

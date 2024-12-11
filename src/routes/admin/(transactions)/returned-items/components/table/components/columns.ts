@@ -94,28 +94,6 @@ export const columns: ColumnDef<ReturneePageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'room',
-    id: 'room',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ReturneePageTable, unknown>, {
-        column,
-        title: 'Room'
-      });
-    },
-    cell: ({ row }) => {
-      const roomSnippet = createRawSnippet<[string]>((getRoom) => {
-        return {
-          render: () => `<div class="w-full">${getRoom()}</div>`
-        };
-      });
-
-      return renderSnippet(roomSnippet, row.getValue('room'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     accessorKey: 'when_borrowed',
     id: 'when_borrowed',
     header: ({ column }) => {
@@ -154,6 +132,28 @@ export const columns: ColumnDef<ReturneePageTable, unknown>[] = [
       });
 
       return renderSnippet(whenSnippet, row.getValue('when_returned'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
+    accessorKey: 'remarks',
+    id: 'remarks',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ReturneePageTable, unknown>, {
+        column,
+        title: 'Remarks'
+      });
+    },
+    cell: ({ row }) => {
+      const remarksSnippet = createRawSnippet<[string]>((getRemarks) => {
+        return {
+          render: () => `<div class="w-full">${getRemarks()}</div>`
+        };
+      });
+
+      return renderSnippet(remarksSnippet, row.getValue('remarks'));
     },
     enableSorting: true,
     enableHiding: true

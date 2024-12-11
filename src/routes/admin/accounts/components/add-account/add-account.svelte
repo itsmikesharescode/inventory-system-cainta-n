@@ -13,6 +13,7 @@
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
+  import DepartmentPicker from '$lib/components/general/department-picker.svelte';
 
   interface Props {
     addAccountForm: SuperValidated<Infer<AddAccountSchema>>;
@@ -145,11 +146,8 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Department</Form.Label>
-                <Input
-                  {...props}
-                  bind:value={$formData.department}
-                  placeholder="Enter Department"
-                />
+                <DepartmentPicker bind:code={$formData.department} />
+                <input type="hidden" {...props} bind:value={$formData.department} />
               {/snippet}
             </Form.Control>
             <Form.Description />

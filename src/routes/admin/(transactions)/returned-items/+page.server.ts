@@ -25,6 +25,7 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase.from('returned_items_tb').insert({
+      remarks: form.data.remarks,
       borrowed_item_id: Number(form.data.borrowed_item_id),
       returned_date: form.data.returned_date,
       time: form.data.time
@@ -46,7 +47,8 @@ export const actions: Actions = {
       .from('returned_items_tb')
       .update({
         returned_date: form.data.returned_date,
-        time: form.data.time
+        time: form.data.time,
+        remarks: form.data.remarks
       })
       .eq('id', form.data.id);
 

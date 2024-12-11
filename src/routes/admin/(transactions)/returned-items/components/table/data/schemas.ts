@@ -9,6 +9,8 @@ export const returneeSchema = z.object({
   teacher_id: z.string(),
   when_borrowed: z.string(),
   when_returned: z.string(),
+  returned_date: z.string(),
+  remarks: z.string(),
   user_id: z.string(),
   item_id: z.number(),
   fullname: z.string(),

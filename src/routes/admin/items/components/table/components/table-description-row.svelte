@@ -15,6 +15,6 @@
     <span class="text-sm text-primary underline">View Description</span>
   </Popover.Trigger>
   <Popover.Content class="max-h-[40dvh] overflow-auto">
-    <pre class="text-wrap font-roboto text-sm">{row.original.description}</pre>
+    <pre class="font-roboto text-wrap text-sm">{row.original.description}</pre>
   </Popover.Content>
 </Popover.Root>

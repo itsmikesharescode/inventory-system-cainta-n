@@ -5,6 +5,7 @@
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateReservation from './components/update-reservation/update-reservation.svelte';
   import DeleteReservation from './components/delete-reservation/delete-reservation.svelte';
+  import { convert24Hto12H } from '$lib';
   const { data } = $props();
 
   initTableState();
@@ -32,13 +33,14 @@
         reference_id: reservation.reference_id ?? '',
         created_at: reservation.created_at ?? '',
         item_id: reservation.item_id ?? 0,
-        room: reservation.room ?? '',
+        room_id: reservation.rooms_tb?.id ?? 0,
+        room: reservation.rooms_tb?.name ?? '',
         status: reservation.status ?? '',
         quantity: reservation.quantity ?? 0,
         date: reservation.date ?? '',
         time: reservation.time ?? '',
         item: reservation.items_tb?.model ?? '',
-        when: `${reservation.date} ${reservation.time}`
+        when: `${reservation.date} ${convert24Hto12H(reservation.time)}`
       })) ?? []}
       {columns}
     />

@@ -27,18 +27,36 @@
           </Menubar.Trigger>
           <Menubar.Content class="bg-white">
             <a href="/admin/reservations">
-              <Menubar.Item class="cursor-pointer font-roboto text-sm font-medium">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
                 Reservations
               </Menubar.Item>
             </a>
             <a href="/admin/borrowed-items">
-              <Menubar.Item class="cursor-pointer font-roboto text-sm font-medium">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
                 Borrowed Items
               </Menubar.Item>
             </a>
             <a href="/admin/returned-items">
-              <Menubar.Item class="cursor-pointer font-roboto text-sm font-medium">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
                 Returned Items
+              </Menubar.Item>
+            </a>
+          </Menubar.Content>
+        </Menubar.Menu>
+
+        <Menubar.Menu>
+          <Menubar.Trigger class="cursor-pointer gap-1.5 transition-all hover:bg-accent">
+            Entries <ChevronDown class="size-4" />
+          </Menubar.Trigger>
+          <Menubar.Content class="bg-white">
+            <a href="/admin/departments">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
+                Departments
+              </Menubar.Item>
+            </a>
+            <a href="/admin/rooms">
+              <Menubar.Item class="font-roboto cursor-pointer text-sm font-medium">
+                Rooms
               </Menubar.Item>
             </a>
           </Menubar.Content>
@@ -69,7 +87,7 @@
     </button>
   </nav>
   <Sheet.Root bind:open={showMobileMenu}>
-    <Sheet.Content side="left" class="pt-10 font-roboto">
+    <Sheet.Content side="left" class="font-roboto pt-10">
       <section class="flex flex-col gap-2">
         <a
           onclick={() => (showMobileMenu = false)}

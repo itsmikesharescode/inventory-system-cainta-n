@@ -9,7 +9,6 @@ export const addItemSchema = z.object({
   mr: z.string().min(1, { message: 'MR is required' }),
   brand: z.string().min(1, { message: 'Brand is required' }),
   quantity: z.number().min(1, { message: 'Quantity is required' }),
-  price: z.number().min(1, { message: 'Price is required' }),
   description: z.string().min(1, { message: 'Description is required' })
 });
 
