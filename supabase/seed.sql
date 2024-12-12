@@ -72,6 +72,100 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 
 
+CREATE OR REPLACE FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+declare
+    available_quantity numeric;
+begin
+    -- Get the available quantity from items_tb
+    select quantity into available_quantity
+    from items_tb
+    where id = item_id_param;
+
+    -- Check if item exists
+    if not found then
+        raise exception 'Item not found with ID: %', item_id_param;
+        return;
+    end if;
+
+    -- Check if we have enough quantity based on quantity_param
+    if available_quantity < quantity_param then
+        raise exception 'Insufficient quantity. Available: %, Requested: %', available_quantity, quantity_param;
+        return;
+    end if;
+
+    -- Update the items_tb quantity using quantity_param
+    update items_tb
+    set quantity = quantity - quantity_param
+    where id = item_id_param;
+
+    -- Insert the new borrowed item record
+    insert into borrowed_items_tb (
+        user_id,
+        item_id,
+        date,
+        time,
+        reference_id,
+        room_id,
+        quantity
+    ) values (
+        user_id_param,
+        item_id_param,
+        date_param,
+        time_param,
+        reference_id_param,
+        room_id_param,
+        quantity_param
+    );
+
+end;
+$$;
+
+
+ALTER FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+declare
+    borrowed_item_id int8;
+begin
+    -- Get the borrowed_item_id first
+    select id into borrowed_item_id
+    from borrowed_items_tb
+    where reference_id = reference_id_param;
+
+    -- Check if borrowed item exists
+    if not found then
+        raise exception 'Borrowed item not found with reference ID: %', reference_id_param;
+        return;
+    end if;
+
+    -- Update the items_tb quantity by adding back the returned quantity
+    update items_tb
+    set quantity = quantity + quantity_param
+    where id = item_id_param;
+
+    -- Insert into returned_items_tb
+    insert into returned_items_tb (
+        user_id, item_name, quantity, reference_id, room_name, remarks, borrowed_date
+    ) values (
+        user_id_param, item_name_param, quantity_param, reference_id_param, room_name_param, remarks_param, borrowed_date_param
+    );
+
+    -- Delete from borrowed_items_tb
+    delete from borrowed_items_tb
+    where id = borrowed_item_id;
+
+end;
+$$;
+
+
+ALTER FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."admin_dashboard_counters"() RETURNS "jsonb"
     LANGUAGE "plpgsql"
     AS $$
@@ -174,7 +268,7 @@ $$;
 ALTER FUNCTION "public"."admin_dashboard_counts"() OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) RETURNS "void"
+CREATE OR REPLACE FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) RETURNS "void"
     LANGUAGE "plpgsql"
     AS $_$
 declare
@@ -186,37 +280,37 @@ begin
     -- Get the reservation details and verify item_id matches
     select r.quantity, r.item_id, r.status into reservation_quantity, actual_item_id, current_status
     from reservations_tb r
-    where r.id = reservation_id;
+    where r.id = reservation_id_client;
 
     -- Check if reservation exists
     if not found then
-        raise exception 'Reservation not found with ID: %', reservation_id;
+        raise exception 'Reservation not found with ID: %', reservation_id_client;
         return;
     end if;
 
     -- Check if trying to approve an already approved reservation
-    if status = 'approved' and current_status = 'approved' then
+    if status_client = 'approved' and current_status = 'approved' then
         raise exception 'Cannot approve: Reservation is already approved';
         return;
     end if;
 
     -- Verify the item_id matches
-    if actual_item_id != item_id_param then
+    if actual_item_id != item_id_param_client then
         raise exception 'Item ID mismatch. Expected: %, Got: %', 
-            actual_item_id, item_id_param;
+            actual_item_id, item_id_param_client;
         return;
     end if;
 
     -- Only proceed with quantity checks if status is being updated to 'approve'
-    if status = 'approved' then
+    if status_client = 'approved' then
         -- Get the available quantity from items_tb
         select quantity into available_quantity
         from items_tb
-        where id = item_id_param;
+        where id = item_id_param_client;
 
         -- Check if item exists
         if not found then
-            raise exception 'Item not found with ID: %', item_id_param;
+            raise exception 'Item not found with ID: %', item_id_param_client;
             return;
         end if;
 
@@ -230,19 +324,22 @@ begin
         -- Update the items_tb quantity
         update items_tb
         set quantity = quantity - reservation_quantity
-        where id = item_id_param;
+        where id = item_id_param_client;
     end if;
 
-    -- Update the reservation status (now works for all status values)
+    
     update reservations_tb
-    set status = $3  -- Using the parameter position instead of name
-    where id = reservation_id;
+    set status = $3  
+    where id = reservation_id_client;
+
+    insert into borrowed_items_tb (user_id, item_id, date, time, reference_id, room_id, quantity)
+    values (user_id_client, item_id_param_client, date_client, time_client, reference_id_client, room_id_client, quantity_client);
 
 end;
 $_$;
 
 
-ALTER FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) OWNER TO "postgres";
+ALTER FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."is_admin"() RETURNS boolean
@@ -339,7 +436,8 @@ CREATE TABLE IF NOT EXISTS "public"."borrowed_items_tb" (
     "date" "date" NOT NULL,
     "time" time without time zone NOT NULL,
     "reference_id" character varying NOT NULL,
-    "room_id" bigint NOT NULL
+    "room_id" bigint NOT NULL,
+    "quantity" numeric NOT NULL
 );
 
 
@@ -455,10 +553,13 @@ ALTER TABLE "public"."reservations_tb" ALTER COLUMN "id" ADD GENERATED BY DEFAUL
 CREATE TABLE IF NOT EXISTS "public"."returned_items_tb" (
     "id" bigint NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "returned_date" "date" NOT NULL,
-    "time" time without time zone NOT NULL,
-    "borrowed_item_id" bigint NOT NULL,
-    "remarks" "text" NOT NULL
+    "user_id" "uuid" NOT NULL,
+    "item_name" "text" NOT NULL,
+    "quantity" numeric NOT NULL,
+    "reference_id" character varying NOT NULL,
+    "room_name" "text" NOT NULL,
+    "remarks" "text" NOT NULL,
+    "borrowed_date" "text" NOT NULL
 );
 
 
@@ -629,7 +730,7 @@ ALTER TABLE ONLY "public"."reservations_tb"
 
 
 ALTER TABLE ONLY "public"."returned_items_tb"
-    ADD CONSTRAINT "returned_items_tb_borrowed_item_id_fkey" FOREIGN KEY ("borrowed_item_id") REFERENCES "public"."borrowed_items_tb"("id") ON DELETE CASCADE;
+    ADD CONSTRAINT "returned_items_tb_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."teachers_tb"("user_id") ON DELETE CASCADE;
 
 
 
@@ -652,10 +753,6 @@ CREATE POLICY "Allow all for admin" ON "public"."items_tb" TO "authenticated" US
 
 
 
-CREATE POLICY "Allow all for admin" ON "public"."returned_items_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
-
-
-
 CREATE POLICY "Allow all if admin" ON "public"."borrowed_items_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
 
 
@@ -665,6 +762,10 @@ CREATE POLICY "Allow all if admin" ON "public"."departments_tb" TO "authenticate
 
 
 CREATE POLICY "Allow all if admin" ON "public"."reservations_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
+
+
+
+CREATE POLICY "Allow all if admin" ON "public"."returned_items_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
 
 
 
@@ -929,6 +1030,18 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
+GRANT ALL ON FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) TO "anon";
+GRANT ALL ON FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."admin_dashboard_counters"() TO "anon";
 GRANT ALL ON FUNCTION "public"."admin_dashboard_counters"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."admin_dashboard_counters"() TO "service_role";
@@ -941,9 +1054,9 @@ GRANT ALL ON FUNCTION "public"."admin_dashboard_counts"() TO "service_role";
 
 
 
-GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "anon";
-GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "service_role";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) TO "anon";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) TO "service_role";
 
 
 

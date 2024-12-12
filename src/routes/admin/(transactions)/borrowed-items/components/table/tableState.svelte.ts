@@ -2,43 +2,53 @@ import { getContext, setContext } from 'svelte';
 import type { BorrowedItemsPageTable } from './data/schemas';
 
 class TableState {
-  #activeRow = $state<BorrowedItemsPageTable | null>(null);
+	#activeRow = $state<BorrowedItemsPageTable | null>(null);
 
-  setActiveRow(row: BorrowedItemsPageTable | null) {
-    this.#activeRow = row;
-  }
+	setActiveRow(row: BorrowedItemsPageTable | null) {
+		this.#activeRow = row;
+	}
 
-  getActiveRow() {
-    return this.#activeRow;
-  }
+	getActiveRow() {
+		return this.#activeRow;
+	}
 
-  #showUpdate = $state(false);
+	#showMoveToReturnee = $state(false);
 
-  setShowUpdate(show: boolean) {
-    this.#showUpdate = show;
-  }
+	setShowMoveToReturnee(show: boolean) {
+		this.#showMoveToReturnee = show;
+	}
 
-  getShowUpdate() {
-    return this.#showUpdate;
-  }
+	getShowMoveToReturnee() {
+		return this.#showMoveToReturnee;
+	}
 
-  #showDelete = $state(false);
+	#showUpdate = $state(false);
 
-  setShowDelete(show: boolean) {
-    this.#showDelete = show;
-  }
+	setShowUpdate(show: boolean) {
+		this.#showUpdate = show;
+	}
 
-  getShowDelete() {
-    return this.#showDelete;
-  }
+	getShowUpdate() {
+		return this.#showUpdate;
+	}
+
+	#showDelete = $state(false);
+
+	setShowDelete(show: boolean) {
+		this.#showDelete = show;
+	}
+
+	getShowDelete() {
+		return this.#showDelete;
+	}
 }
 
 const TableKey = Symbol('ItemsTableState');
 
 export const initTableState = () => {
-  return setContext(TableKey, new TableState());
+	return setContext(TableKey, new TableState());
 };
 
 export const useTableState = () => {
-  return getContext<ReturnType<typeof initTableState>>(TableKey);
+	return getContext<ReturnType<typeof initTableState>>(TableKey);
 };

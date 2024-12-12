@@ -40,6 +40,7 @@ export type Database = {
           date: string
           id: number
           item_id: number
+          quantity: number
           reference_id: string
           room_id: number
           time: string
@@ -50,6 +51,7 @@ export type Database = {
           date: string
           id?: number
           item_id: number
+          quantity: number
           reference_id: string
           room_id: number
           time: string
@@ -60,6 +62,7 @@ export type Database = {
           date?: string
           id?: number
           item_id?: number
+          quantity?: number
           reference_id?: string
           room_id?: number
           time?: string
@@ -215,36 +218,45 @@ export type Database = {
       }
       returned_items_tb: {
         Row: {
-          borrowed_item_id: number
+          borrowed_date: string
           created_at: string
           id: number
+          item_name: string
+          quantity: number
+          reference_id: string
           remarks: string
-          returned_date: string
-          time: string
+          room_name: string
+          user_id: string
         }
         Insert: {
-          borrowed_item_id: number
+          borrowed_date: string
           created_at?: string
           id?: number
+          item_name: string
+          quantity: number
+          reference_id: string
           remarks: string
-          returned_date: string
-          time: string
+          room_name: string
+          user_id: string
         }
         Update: {
-          borrowed_item_id?: number
+          borrowed_date?: string
           created_at?: string
           id?: number
+          item_name?: string
+          quantity?: number
+          reference_id?: string
           remarks?: string
-          returned_date?: string
-          time?: string
+          room_name?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "returned_items_tb_borrowed_item_id_fkey"
-            columns: ["borrowed_item_id"]
+            foreignKeyName: "returned_items_tb_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "borrowed_items_tb"
-            referencedColumns: ["id"]
+            referencedRelation: "teachers_tb"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -336,6 +348,31 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_add_borrower: {
+        Args: {
+          user_id_param: string
+          item_id_param: number
+          date_param: string
+          time_param: string
+          reference_id_param: string
+          room_id_param: number
+          quantity_param: number
+        }
+        Returns: undefined
+      }
+      admin_add_returnee: {
+        Args: {
+          user_id_param: string
+          item_id_param: number
+          item_name_param: string
+          quantity_param: number
+          reference_id_param: string
+          room_name_param: string
+          remarks_param: string
+          borrowed_date_param: string
+        }
+        Returns: undefined
+      }
       admin_dashboard_counters: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -346,9 +383,15 @@ export type Database = {
       }
       general_update_reservation_status: {
         Args: {
-          reservation_id: number
-          item_id_param: number
-          status: string
+          reservation_id_client: number
+          item_id_param_client: number
+          status_client: string
+          user_id_client: string
+          date_client: string
+          time_client: string
+          reference_id_client: string
+          room_id_client: number
+          quantity_client: number
         }
         Returns: undefined
       }
