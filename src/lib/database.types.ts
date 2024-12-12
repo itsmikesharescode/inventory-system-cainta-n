@@ -346,9 +346,14 @@ export type Database = {
       }
       general_update_reservation_status: {
         Args: {
-          reservation_id: number
-          item_id_param: number
-          status: string
+          reservation_id_client: number
+          item_id_param_client: number
+          status_client: string
+          user_id_client: string
+          date_client: string
+          time_client: string
+          reference_id_client: string
+          room_id_client: number
         }
         Returns: undefined
       }

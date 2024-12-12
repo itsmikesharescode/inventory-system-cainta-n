@@ -174,7 +174,7 @@ $$;
 ALTER FUNCTION "public"."admin_dashboard_counts"() OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) RETURNS "void"
+CREATE OR REPLACE FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint) RETURNS "void"
     LANGUAGE "plpgsql"
     AS $_$
 declare
@@ -186,16 +186,16 @@ begin
     -- Get the reservation details and verify item_id matches
     select r.quantity, r.item_id, r.status into reservation_quantity, actual_item_id, current_status
     from reservations_tb r
-    where r.id = reservation_id;
+    where r.id = reservation_id_client;
 
     -- Check if reservation exists
     if not found then
-        raise exception 'Reservation not found with ID: %', reservation_id;
+        raise exception 'Reservation not found with ID: %', reservation_id_client;
         return;
     end if;
 
     -- Check if trying to approve an already approved reservation
-    if status = 'approved' and current_status = 'approved' then
+    if status_client = 'approved' and current_status = 'approved' then
         raise exception 'Cannot approve: Reservation is already approved';
         return;
     end if;
@@ -203,20 +203,20 @@ begin
     -- Verify the item_id matches
     if actual_item_id != item_id_param then
         raise exception 'Item ID mismatch. Expected: %, Got: %', 
-            actual_item_id, item_id_param;
+            actual_item_id, item_id_param_client;
         return;
     end if;
 
     -- Only proceed with quantity checks if status is being updated to 'approve'
-    if status = 'approved' then
+    if status_client = 'approved' then
         -- Get the available quantity from items_tb
         select quantity into available_quantity
         from items_tb
-        where id = item_id_param;
+        where id = item_id_param_client;
 
         -- Check if item exists
         if not found then
-            raise exception 'Item not found with ID: %', item_id_param;
+            raise exception 'Item not found with ID: %', item_id_param_client;
             return;
         end if;
 
@@ -230,19 +230,22 @@ begin
         -- Update the items_tb quantity
         update items_tb
         set quantity = quantity - reservation_quantity
-        where id = item_id_param;
+        where id = item_id_param_client;
     end if;
 
-    -- Update the reservation status (now works for all status values)
+    
     update reservations_tb
-    set status = $3  -- Using the parameter position instead of name
-    where id = reservation_id;
+    set status = $3  
+    where id = reservation_id_client;
+
+    insert into borrowed_items_tb (reservation_id, item_id, quantity, status, user_id, date, time, reference_id, room_id)
+    values (reservation_id_client, item_id_param_client, reservation_quantity, status_client);
 
 end;
 $_$;
 
 
-ALTER FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) OWNER TO "postgres";
+ALTER FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint) OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."is_admin"() RETURNS boolean
@@ -941,9 +944,9 @@ GRANT ALL ON FUNCTION "public"."admin_dashboard_counts"() TO "service_role";
 
 
 
-GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "anon";
-GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id" bigint, "item_id_param" bigint, "status" character varying) TO "service_role";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint) TO "anon";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint) TO "service_role";
 
 
 
