@@ -6,7 +6,8 @@ create or replace function general_update_reservation_status(
     date_client date,
     time_client time,
     reference_id_client varchar,
-    room_id_client int8
+    room_id_client int8,
+    quantity_client int8
 )
 returns void as $$
 declare
@@ -70,8 +71,8 @@ begin
     set status = $3  
     where id = reservation_id_client;
 
-    insert into borrowed_items_tb (user_id, item_id, date, time, reference_id, room_id)
-    values (user_id_client, item_id_param_client, date_client, time_client, reference_id_client, room_id_client);
+    insert into borrowed_items_tb (user_id, item_id, date, time, reference_id, room_id, quantity)
+    values (user_id_client, item_id_param_client, date_client, time_client, reference_id_client, room_id_client, quantity_client);
 
 end;
 $$ language plpgsql;

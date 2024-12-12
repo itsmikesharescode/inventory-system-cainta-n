@@ -7,12 +7,14 @@ import streamBorrowersUsersItems from '$lib/db-calls/streamBorrowersUsersItems';
 import { updateBorrowerSchema } from './components/update-borrower/schema';
 import { deleteBorrowerSchema } from './components/delete-borrower/schema';
 import { generateRefId } from '$lib';
+import { moveToReturneeSchema } from './components/move-to-returnee/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	return {
 		addBorrowerForm: await superValidate(zod(addBorrowerSchema)),
 		updateBorrowerForm: await superValidate(zod(updateBorrowerSchema)),
 		deleteBorrowerForm: await superValidate(zod(deleteBorrowerSchema)),
+		moveToReturneeForm: await superValidate(zod(moveToReturneeSchema)),
 		getBorrowers: streamBorrowersUsersItems(supabase)
 	};
 };
@@ -40,21 +42,6 @@ export const actions: Actions = {
 		}
 
 		return { form, msg: 'Borrower added successfully' };
-
-		/* const { error } = await supabase.from('borrowed_items_tb').insert({
-      reference_id: generateRefId(8),
-      user_id: form.data.user_id,
-      item_id: form.data.item_id,
-      date: form.data.date,
-      time: form.data.time,
-      room_id: form.data.room_id
-    });
-
-    if (error) {
-      return fail(401, { form, msg: error.message });
-    }
-
-    return { form, msg: 'Borrower added successfully' }; */
 	},
 
 	updateBorrowerEvent: async ({ request, locals: { supabase } }) => {
@@ -80,6 +67,30 @@ export const actions: Actions = {
 		}
 
 		return { form, msg: 'Borrower updated successfully' };
+	},
+
+	moveToReturneeEvent: async ({ request, locals: { supabase } }) => {
+		const form = await superValidate(request, zod(moveToReturneeSchema));
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		const { error } = await supabase.rpc('admin_add_returnee', {
+			user_id_param: form.data.user_id,
+			item_id_param: form.data.item_id,
+			item_name_param: form.data.item_name,
+			quantity_param: form.data.quantity,
+			reference_id_param: form.data.reference_id,
+			room_name_param: form.data.room_name,
+			remarks_param: form.data.remarks
+		});
+
+		if (error) {
+			return fail(401, { form, msg: error.message });
+		}
+
+		return { form, msg: 'Borrower moved to returnee successfully' };
 	},
 
 	deleteBorrowerEvent: async ({ request, locals: { supabase } }) => {

@@ -89,7 +89,7 @@ export const actions: Actions = {
 		if (!form.valid) {
 			return fail(400, { form });
 		}
-		console.log(form.data);
+
 		const { error } = await supabase.rpc('general_update_reservation_status', {
 			reservation_id_client: form.data.reservation_id_client,
 			item_id_param_client: form.data.item_id_param_client,
@@ -98,7 +98,8 @@ export const actions: Actions = {
 			date_client: form.data.date_client,
 			time_client: form.data.time_client,
 			reference_id_client: form.data.reference_id_client,
-			room_id_client: form.data.room_id_client
+			room_id_client: form.data.room_id_client,
+			quantity_client: form.data.quantity_client
 		});
 
 		if (error) {

@@ -50,6 +50,7 @@
 			$formData.time_client = tableState.getActiveRow()?.time ?? '';
 			$formData.room_id_client = tableState.getActiveRow()?.room_id ?? 0;
 			$formData.reference_id_client = tableState.getActiveRow()?.reference_id ?? '';
+			$formData.quantity_client = tableState.getActiveRow()?.quantity ?? 0;
 			return () => {
 				$formData.reservation_id_client = 0;
 				$formData.item_id_param_client = 0;
@@ -59,6 +60,7 @@
 				$formData.time_client = '';
 				$formData.room_id_client = 0;
 				$formData.reference_id_client = '';
+				$formData.quantity_client = 0;
 				reset();
 			};
 		}
@@ -76,39 +78,23 @@
 		</Dialog.Header>
 
 		<form method="POST" action="?/updateStatusReservationEvent" use:enhance>
+			<input name="quantity_client" type="hidden" bind:value={$formData.quantity_client} />
 			<input
 				name="reservation_id_client"
 				type="hidden"
-				{...formData}
 				bind:value={$formData.reservation_id_client}
 			/>
 			<input
 				name="item_id_param_client"
 				type="hidden"
-				{...formData}
 				bind:value={$formData.item_id_param_client}
 			/>
 
-			<input
-				name="user_id_client"
-				type="hidden"
-				{...formData}
-				bind:value={$formData.user_id_client}
-			/>
-			<input name="date_client" type="hidden" {...formData} bind:value={$formData.date_client} />
-			<input name="time_client" type="hidden" {...formData} bind:value={$formData.time_client} />
-			<input
-				name="room_id_client"
-				type="hidden"
-				{...formData}
-				bind:value={$formData.room_id_client}
-			/>
-			<input
-				name="reference_id_client"
-				type="hidden"
-				{...formData}
-				bind:value={$formData.reference_id_client}
-			/>
+			<input name="user_id_client" type="hidden" bind:value={$formData.user_id_client} />
+			<input name="date_client" type="hidden" bind:value={$formData.date_client} />
+			<input name="time_client" type="hidden" bind:value={$formData.time_client} />
+			<input name="room_id_client" type="hidden" bind:value={$formData.room_id_client} />
+			<input name="reference_id_client" type="hidden" bind:value={$formData.reference_id_client} />
 
 			<Form.Field {form} name="status_client">
 				<Form.Control>
