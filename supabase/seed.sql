@@ -72,6 +72,60 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 
 
+CREATE OR REPLACE FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+declare
+    available_quantity numeric;
+begin
+    -- Get the available quantity from items_tb
+    select quantity into available_quantity
+    from items_tb
+    where id = item_id_param;
+
+    -- Check if item exists
+    if not found then
+        raise exception 'Item not found with ID: %', item_id_param;
+        return;
+    end if;
+
+    -- Check if we have enough quantity based on quantity_param
+    if available_quantity < quantity_param then
+        raise exception 'Insufficient quantity. Available: %, Requested: %', available_quantity, quantity_param;
+        return;
+    end if;
+
+    -- Update the items_tb quantity using quantity_param
+    update items_tb
+    set quantity = quantity - quantity_param
+    where id = item_id_param;
+
+    -- Insert the new borrowed item record
+    insert into borrowed_items_tb (
+        user_id,
+        item_id,
+        date,
+        time,
+        reference_id,
+        room_id,
+        quantity
+    ) values (
+        user_id_param,
+        item_id_param,
+        date_param,
+        time_param,
+        reference_id_param,
+        room_id_param,
+        quantity_param
+    );
+
+end;
+$$;
+
+
+ALTER FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."admin_dashboard_counters"() RETURNS "jsonb"
     LANGUAGE "plpgsql"
     AS $$
@@ -201,7 +255,7 @@ begin
     end if;
 
     -- Verify the item_id matches
-    if actual_item_id != item_id_param then
+    if actual_item_id != item_id_param_client then
         raise exception 'Item ID mismatch. Expected: %, Got: %', 
             actual_item_id, item_id_param_client;
         return;
@@ -238,8 +292,8 @@ begin
     set status = $3  
     where id = reservation_id_client;
 
-    insert into borrowed_items_tb (reservation_id, item_id, quantity, status, user_id, date, time, reference_id, room_id)
-    values (reservation_id_client, item_id_param_client, reservation_quantity, status_client);
+    insert into borrowed_items_tb (user_id, item_id, date, time, reference_id, room_id)
+    values (user_id_client, item_id_param_client, date_client, time_client, reference_id_client, room_id_client);
 
 end;
 $_$;
@@ -342,7 +396,8 @@ CREATE TABLE IF NOT EXISTS "public"."borrowed_items_tb" (
     "date" "date" NOT NULL,
     "time" time without time zone NOT NULL,
     "reference_id" character varying NOT NULL,
-    "room_id" bigint NOT NULL
+    "room_id" bigint NOT NULL,
+    "quantity" numeric NOT NULL
 );
 
 
@@ -929,6 +984,12 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
+
+
+
+GRANT ALL ON FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) TO "anon";
+GRANT ALL ON FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) TO "service_role";
 
 
 

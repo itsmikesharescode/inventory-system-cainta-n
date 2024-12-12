@@ -40,6 +40,7 @@ export type Database = {
           date: string
           id: number
           item_id: number
+          quantity: number
           reference_id: string
           room_id: number
           time: string
@@ -50,6 +51,7 @@ export type Database = {
           date: string
           id?: number
           item_id: number
+          quantity: number
           reference_id: string
           room_id: number
           time: string
@@ -60,6 +62,7 @@ export type Database = {
           date?: string
           id?: number
           item_id?: number
+          quantity?: number
           reference_id?: string
           room_id?: number
           time?: string
@@ -336,6 +339,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_add_borrower: {
+        Args: {
+          user_id_param: string
+          item_id_param: number
+          date_param: string
+          time_param: string
+          reference_id_param: string
+          room_id_param: number
+          quantity_param: number
+        }
+        Returns: undefined
+      }
       admin_dashboard_counters: {
         Args: Record<PropertyKey, never>
         Returns: Json
