@@ -46,6 +46,7 @@
 		$formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
 		$formData.reference_id = tableState.getActiveRow()?.reference_id ?? '';
 		$formData.room_name = tableState.getActiveRow()?.room ?? '';
+		$formData.borrowed_date = tableState.getActiveRow()?.when ?? '';
 	});
 </script>
 
@@ -69,6 +70,7 @@
 		</Dialog.Header>
 
 		<form method="POST" action="?/moveToReturneeEvent" use:enhance>
+			<input type="hidden" name="borrowed_date" value={$formData.borrowed_date} />
 			<input type="hidden" name="user_id" value={tableState.getActiveRow()?.user_id} />
 			<input type="hidden" name="item_id" value={tableState.getActiveRow()?.item_id} />
 			<input type="hidden" name="item_name" value={tableState.getActiveRow()?.item} />

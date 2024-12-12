@@ -218,6 +218,7 @@ export type Database = {
       }
       returned_items_tb: {
         Row: {
+          borrowed_date: string
           created_at: string
           id: number
           item_name: string
@@ -228,6 +229,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          borrowed_date: string
           created_at?: string
           id?: number
           item_name: string
@@ -238,6 +240,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          borrowed_date?: string
           created_at?: string
           id?: number
           item_name?: string
@@ -366,6 +369,7 @@ export type Database = {
           reference_id_param: string
           room_name_param: string
           remarks_param: string
+          borrowed_date_param: string
         }
         Returns: undefined
       }

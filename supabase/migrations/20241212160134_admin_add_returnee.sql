@@ -5,7 +5,8 @@ create or replace function admin_add_returnee(
   quantity_param bigint,
   reference_id_param text,
   room_name_param text,
-  remarks_param text
+  remarks_param text,
+  borrowed_date_param text
 ) returns void as $$
 declare
     borrowed_item_id int8;
@@ -28,9 +29,9 @@ begin
 
     -- Insert into returned_items_tb
     insert into returned_items_tb (
-        user_id, item_name, quantity, reference_id, room_name, remarks
+        user_id, item_name, quantity, reference_id, room_name, remarks, borrowed_date
     ) values (
-        user_id_param, item_name_param, quantity_param, reference_id_param, room_name_param, remarks_param
+        user_id_param, item_name_param, quantity_param, reference_id_param, room_name_param, remarks_param, borrowed_date_param
     );
 
     -- Delete from borrowed_items_tb

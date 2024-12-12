@@ -7,7 +7,8 @@ export const moveToReturneeSchema = z.object({
 	quantity: z.number(),
 	reference_id: z.string(),
 	room_name: z.string(),
-	remarks: z.string().min(3, { message: 'Remarks must be at least 3 characters' })
+	remarks: z.string().min(3, { message: 'Remarks must be at least 3 characters' }),
+	borrowed_date: z.string()
 });
 
 export type MoveToReturneeSchema = typeof moveToReturneeSchema;

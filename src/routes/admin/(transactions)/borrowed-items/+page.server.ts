@@ -83,7 +83,8 @@ export const actions: Actions = {
 			quantity_param: form.data.quantity,
 			reference_id_param: form.data.reference_id,
 			room_name_param: form.data.room_name,
-			remarks_param: form.data.remarks
+			remarks_param: form.data.remarks,
+			borrowed_date_param: form.data.borrowed_date
 		});
 
 		if (error) {

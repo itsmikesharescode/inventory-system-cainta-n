@@ -126,7 +126,7 @@ $$;
 ALTER FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) OWNER TO "postgres";
 
 
-CREATE OR REPLACE FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text") RETURNS "void"
+CREATE OR REPLACE FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") RETURNS "void"
     LANGUAGE "plpgsql"
     AS $$
 declare
@@ -150,9 +150,9 @@ begin
 
     -- Insert into returned_items_tb
     insert into returned_items_tb (
-        user_id, item_name, quantity, reference_id, room_name, remarks
+        user_id, item_name, quantity, reference_id, room_name, remarks, borrowed_date
     ) values (
-        user_id_param, item_name_param, quantity_param, reference_id_param, room_name_param, remarks_param
+        user_id_param, item_name_param, quantity_param, reference_id_param, room_name_param, remarks_param, borrowed_date_param
     );
 
     -- Delete from borrowed_items_tb
@@ -163,7 +163,7 @@ end;
 $$;
 
 
-ALTER FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."admin_dashboard_counters"() RETURNS "jsonb"
@@ -558,7 +558,8 @@ CREATE TABLE IF NOT EXISTS "public"."returned_items_tb" (
     "quantity" numeric NOT NULL,
     "reference_id" character varying NOT NULL,
     "room_name" "text" NOT NULL,
-    "remarks" "text" NOT NULL
+    "remarks" "text" NOT NULL,
+    "borrowed_date" "text" NOT NULL
 );
 
 
@@ -1035,9 +1036,9 @@ GRANT ALL ON FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "ite
 
 
 
-GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text") TO "service_role";
+GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."admin_add_returnee"("user_id_param" "uuid", "item_id_param" bigint, "item_name_param" "text", "quantity_param" bigint, "reference_id_param" "text", "room_name_param" "text", "remarks_param" "text", "borrowed_date_param" "text") TO "service_role";
 
 
 

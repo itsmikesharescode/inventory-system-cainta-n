@@ -1,54 +1,48 @@
 <script lang="ts" module>
-  type TData = unknown;
+	type TData = unknown;
 </script>
 
 <script lang="ts" generics="TData">
-  import X from 'lucide-svelte/icons/x';
-  import type { Table } from '@tanstack/table-core';
-  import { TableViewOptions } from './index.js';
-  import Button from '$lib/components/ui/button/button.svelte';
-  import { Input } from '$lib/components/ui/input/index';
-  import type { ReturneePageTable } from '../data/schemas.js';
-  import AddReturnee from '../../add-returnee/add-returnee.svelte';
-  import type { Infer, SuperValidated } from 'sveltekit-superforms';
-  import type { AddReturneeSchema } from '../../add-returnee/schema.js';
+	import X from 'lucide-svelte/icons/x';
+	import type { Table } from '@tanstack/table-core';
+	import { TableViewOptions } from './index.js';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { Input } from '$lib/components/ui/input/index';
+	import type { ReturneePageTable } from '../data/schemas.js';
 
-  interface Props {
-    addReturneeForm: SuperValidated<Infer<AddReturneeSchema>>;
-    table: Table<ReturneePageTable>;
-  }
+	interface Props {
+		table: Table<ReturneePageTable>;
+	}
 
-  let { addReturneeForm, table }: Props = $props();
+	let { table }: Props = $props();
 
-  const isFiltered = $derived(table.getState().columnFilters.length > 0);
+	const isFiltered = $derived(table.getState().columnFilters.length > 0);
 </script>
 
 <div class="flex items-center justify-between gap-2">
-  <AddReturnee {addReturneeForm} />
+	<div class="flex items-center gap-2">
+		<div class="flex items-center space-x-2">
+			<Input
+				placeholder="Search by fullname"
+				value={(table.getColumn('fullname')?.getFilterValue() as string) ?? ''}
+				oninput={(e) => {
+					table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
+				}}
+				onchange={(e) => {
+					table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
+				}}
+				class="h-8 w-[150px] lg:w-[250px]"
+			/>
 
-  <div class="flex items-center gap-2">
-    <div class="flex items-center space-x-2">
-      <Input
-        placeholder="Search by fullname"
-        value={(table.getColumn('fullname')?.getFilterValue() as string) ?? ''}
-        oninput={(e) => {
-          table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
-        }}
-        onchange={(e) => {
-          table.getColumn('fullname')?.setFilterValue(e.currentTarget.value);
-        }}
-        class="h-8 w-[150px] lg:w-[250px]"
-      />
-
-      {#if isFiltered}
-        <Button variant="ghost" onclick={() => table.resetColumnFilters()} class="h-8 px-2 lg:px-3">
-          Clear
-          <X />
-        </Button>
-      {/if}
-    </div>
-    <div class="">
-      <TableViewOptions {table} />
-    </div>
-  </div>
+			{#if isFiltered}
+				<Button variant="ghost" onclick={() => table.resetColumnFilters()} class="h-8 px-2 lg:px-3">
+					Clear
+					<X />
+				</Button>
+			{/if}
+		</div>
+		<div class="">
+			<TableViewOptions {table} />
+		</div>
+	</div>
 </div>
