@@ -73,7 +73,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 
 CREATE OR REPLACE FUNCTION "public"."admin_add_borrower"("user_id_param" "uuid", "item_id_param" bigint, "date_param" "date", "time_param" time without time zone, "reference_id_param" character varying, "room_id_param" bigint, "quantity_param" bigint) RETURNS "void"
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 declare
     available_quantity numeric;
@@ -410,7 +410,6 @@ begin
   update public.teachers_tb
   set user_meta_data = new.raw_user_meta_data
   where user_id = new.id;
-
 
   update public.roles_tb
   set role = new.raw_user_meta_data ->> 'role'
@@ -777,6 +776,10 @@ CREATE POLICY "Allow delete if teacher and exist" ON "public"."reservations_tb" 
 
 
 
+CREATE POLICY "Allow insert if teacher" ON "public"."borrowed_items_tb" FOR INSERT TO "authenticated" WITH CHECK ("public"."is_teacher"());
+
+
+
 CREATE POLICY "Allow select for all" ON "public"."departments_tb" FOR SELECT TO "authenticated" USING (true);
 
 
@@ -786,6 +789,10 @@ CREATE POLICY "Allow select for all" ON "public"."rooms_tb" FOR SELECT TO "authe
 
 
 CREATE POLICY "Allow select if teacher" ON "public"."items_tb" FOR SELECT TO "authenticated" USING ("public"."is_teacher"());
+
+
+
+CREATE POLICY "Allow select if teacher and exist" ON "public"."borrowed_items_tb" FOR SELECT TO "authenticated" USING (("public"."is_teacher"() AND ("auth"."uid"() = "user_id")));
 
 
 
