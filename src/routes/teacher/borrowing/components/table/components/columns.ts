@@ -5,139 +5,139 @@ import { TableColumnHeader } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
 export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
-	{
-		accessorKey: 'reference_id',
-		id: 'reference_id',
-		header: ({ column }) => {
-			return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
-				column,
-				title: 'Reference ID'
-			});
-		},
-		cell: ({ row }) => {
-			const referenceIdSnippet = createRawSnippet<[string]>((getReferenceId) => {
-				return {
-					render: () => `<div class="w-full">${getReferenceId()}</div>`
-				};
-			});
+  {
+    accessorKey: 'reference_id',
+    id: 'reference_id',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
+        column,
+        title: 'Reference ID'
+      });
+    },
+    cell: ({ row }) => {
+      const referenceIdSnippet = createRawSnippet<[string]>((getReferenceId) => {
+        return {
+          render: () => `<div class="w-full">${getReferenceId()}</div>`
+        };
+      });
 
-			return renderSnippet(referenceIdSnippet, row.getValue('reference_id'));
-		},
-		enableSorting: true,
-		enableHiding: true
-	},
+      return renderSnippet(referenceIdSnippet, row.getValue('reference_id'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
 
-	{
-		accessorKey: 'item',
-		id: 'item',
-		header: ({ column }) => {
-			return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
-				column,
-				title: 'Item'
-			});
-		},
-		cell: ({ row }) => {
-			const itemSnippet = createRawSnippet<[string]>((getItem) => {
-				return {
-					render: () => `<div class="w-full">${getItem()}</div>`
-				};
-			});
+  {
+    accessorKey: 'item',
+    id: 'item',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
+        column,
+        title: 'Item'
+      });
+    },
+    cell: ({ row }) => {
+      const itemSnippet = createRawSnippet<[string]>((getItem) => {
+        return {
+          render: () => `<div class="w-full">${getItem()}</div>`
+        };
+      });
 
-			return renderSnippet(itemSnippet, row.getValue('item'));
-		},
-		enableSorting: true,
-		enableHiding: true
-	},
+      return renderSnippet(itemSnippet, row.getValue('item'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
 
-	{
-		accessorKey: 'quantity',
-		id: 'quantity',
-		header: ({ column }) => {
-			return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
-				column,
-				title: 'Quantity'
-			});
-		},
-		cell: ({ row }) => {
-			const quantitySnippet = createRawSnippet<[number]>((getQuantity) => {
-				return {
-					render: () => `<div class="w-full">${getQuantity()}</div>`
-				};
-			});
+  {
+    accessorKey: 'quantity',
+    id: 'quantity',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
+        column,
+        title: 'Quantity'
+      });
+    },
+    cell: ({ row }) => {
+      const quantitySnippet = createRawSnippet<[number]>((getQuantity) => {
+        return {
+          render: () => `<div class="w-full">${getQuantity()}</div>`
+        };
+      });
 
-			return renderSnippet(quantitySnippet, row.getValue('quantity'));
-		},
-		enableSorting: true,
-		enableHiding: true
-	},
+      return renderSnippet(quantitySnippet, row.getValue('quantity'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
 
-	{
-		accessorKey: 'room',
-		id: 'room',
-		header: ({ column }) => {
-			return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
-				column,
-				title: 'Room'
-			});
-		},
-		cell: ({ row }) => {
-			const roomSnippet = createRawSnippet<[string]>((getRoom) => {
-				return {
-					render: () => `<div class="w-full">${getRoom()}</div>`
-				};
-			});
+  {
+    accessorKey: 'room',
+    id: 'room',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
+        column,
+        title: 'Room'
+      });
+    },
+    cell: ({ row }) => {
+      const roomSnippet = createRawSnippet<[string]>((getRoom) => {
+        return {
+          render: () => `<div class="w-full">${getRoom()}</div>`
+        };
+      });
 
-			return renderSnippet(roomSnippet, row.getValue('room'));
-		},
-		enableSorting: true,
-		enableHiding: true
-	},
+      return renderSnippet(roomSnippet, row.getValue('room'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
 
-	{
-		accessorKey: 'returned_date_time',
-		id: 'returned_date_time',
-		header: ({ column }) => {
-			return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
-				column,
-				title: 'Returned Date & Time'
-			});
-		},
-		cell: ({ row }) => {
-			const returnedDateTimeSnippet = createRawSnippet<[string]>((getReturnedDateTime) => {
-				return {
-					render: () => `<div class="w-full">${getReturnedDateTime()}</div>`
-				};
-			});
+  {
+    accessorKey: 'returned_date_time',
+    id: 'returned_date_time',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
+        column,
+        title: 'Returned Date & Time'
+      });
+    },
+    cell: ({ row }) => {
+      const returnedDateTimeSnippet = createRawSnippet<[string]>((getReturnedDateTime) => {
+        return {
+          render: () => `<div class="w-full">${getReturnedDateTime()}</div>`
+        };
+      });
 
-			return renderSnippet(returnedDateTimeSnippet, row.getValue('returned_date_time'));
-		},
-		enableSorting: true,
-		enableHiding: true
-	},
+      return renderSnippet(returnedDateTimeSnippet, row.getValue('returned_date_time'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
 
-	{
-		accessorKey: 'created_at',
-		id: 'created_at',
-		header: ({ column }) => {
-			return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
-				column,
-				title: 'Created At'
-			});
-		},
-		cell: ({ row }) => {
-			const createdAtSnippet = createRawSnippet<[string]>((getCreatedAt) => {
-				return {
-					render: () => `<div class="w-full">${new Date(getCreatedAt()).toLocaleDateString()}</div>`
-				};
-			});
+  {
+    accessorKey: 'created_at',
+    id: 'created_at',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
+        column,
+        title: 'Created At'
+      });
+    },
+    cell: ({ row }) => {
+      const createdAtSnippet = createRawSnippet<[string]>((getCreatedAt) => {
+        return {
+          render: () => `<div class="w-full">${new Date(getCreatedAt()).toLocaleDateString()}</div>`
+        };
+      });
 
-			return renderSnippet(createdAtSnippet, row.getValue('created_at'));
-		},
-		enableSorting: true,
-		enableHiding: true
-	}
+      return renderSnippet(createdAtSnippet, row.getValue('created_at'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  }
 
-	/* {
+  /* {
 		id: 'actions',
 		cell: ({ row }) => renderComponent(TableRowActions<BorrowedItemsPageTable>, { row })
 	} */
