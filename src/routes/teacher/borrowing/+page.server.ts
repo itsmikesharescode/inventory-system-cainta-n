@@ -24,8 +24,8 @@ export const actions: Actions = {
 		const { error } = await supabase.rpc('admin_add_borrower', {
 			user_id_param: user?.id ?? '',
 			item_id_param: form.data.item_id,
-			date_param: form.data.date,
-			time_param: form.data.time,
+			date_param: form.data.returned_date,
+			time_param: form.data.returned_time,
 			reference_id_param: generateRefId(8),
 			room_id_param: form.data.room_id,
 			quantity_param: form.data.quantity

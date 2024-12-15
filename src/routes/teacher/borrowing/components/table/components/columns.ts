@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { BorrowedItemsPageTable } from '../data/schemas';
-import { TableColumnHeader, TableRowActions } from './index.js';
+import { TableColumnHeader } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
 export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
@@ -94,8 +94,8 @@ export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
 	},
 
 	{
-		accessorKey: 'returned_date',
-		id: 'returned_date',
+		accessorKey: 'returned_date_time',
+		id: 'returned_date_time',
 		header: ({ column }) => {
 			return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
 				column,
@@ -103,13 +103,13 @@ export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
 			});
 		},
 		cell: ({ row }) => {
-			const whenSnippet = createRawSnippet<[string]>((getWhen) => {
+			const returnedDateTimeSnippet = createRawSnippet<[string]>((getReturnedDateTime) => {
 				return {
-					render: () => `<div class="w-full">${getWhen()}</div>`
+					render: () => `<div class="w-full">${getReturnedDateTime()}</div>`
 				};
 			});
 
-			return renderSnippet(whenSnippet, row.getValue('when'));
+			return renderSnippet(returnedDateTimeSnippet, row.getValue('returned_date_time'));
 		},
 		enableSorting: true,
 		enableHiding: true
@@ -135,10 +135,10 @@ export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
 		},
 		enableSorting: true,
 		enableHiding: true
-	},
+	}
 
-	{
+	/* {
 		id: 'actions',
 		cell: ({ row }) => renderComponent(TableRowActions<BorrowedItemsPageTable>, { row })
-	}
+	} */
 ];

@@ -33,7 +33,7 @@
 				id: borrower.id,
 				reference_id: borrower.reference_id,
 				created_at: borrower.created_at,
-				returned_date: borrower.date + ' ' + convert24Hto12H(borrower.time),
+				returned_date_time: borrower.date + ' ' + convert24Hto12H(borrower.time),
 				user_id: borrower.user_id,
 				item_id: borrower.item_id,
 				date: borrower.date,

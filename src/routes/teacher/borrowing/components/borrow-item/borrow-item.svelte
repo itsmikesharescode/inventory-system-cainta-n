@@ -61,7 +61,7 @@
 			<Dialog.Title>Borrower Item</Dialog.Title>
 		</Dialog.Header>
 
-		<form method="POST" action="?/addBorrowerEvent" use:enhance>
+		<form method="POST" action="?/borrowItemEvent" use:enhance>
 			<section class="grid gap-4 md:grid-cols-2">
 				<div class="">
 					<Form.Field {form} name="item_id">
@@ -106,24 +106,24 @@
 				</div>
 
 				<div class="">
-					<Form.Field {form} name="date">
+					<Form.Field {form} name="returned_date">
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Returned Date</Form.Label>
-								<DatePicker bind:selected={$formData.date} />
-								<input type="hidden" {...props} bind:value={$formData.date} />
+								<DatePicker bind:selected={$formData.returned_date} />
+								<input type="hidden" {...props} bind:value={$formData.returned_date} />
 							{/snippet}
 						</Form.Control>
 						<Form.Description />
 						<Form.FieldErrors />
 					</Form.Field>
 
-					<Form.Field {form} name="time">
+					<Form.Field {form} name="returned_time">
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Returned Time</Form.Label>
-								<TimePicker bind:value={$formData.time} />
-								<input type="hidden" {...props} bind:value={$formData.time} />
+								<TimePicker bind:value={$formData.returned_time} />
+								<input type="hidden" {...props} bind:value={$formData.returned_time} />
 							{/snippet}
 						</Form.Control>
 						<Form.Description />

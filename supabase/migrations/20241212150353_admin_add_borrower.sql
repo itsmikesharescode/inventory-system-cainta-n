@@ -52,4 +52,4 @@ begin
     );
 
 end;
-$$ language plpgsql;
+$$ language  plpgsql security definer;

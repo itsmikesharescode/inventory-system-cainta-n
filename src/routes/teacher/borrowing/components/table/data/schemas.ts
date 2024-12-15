@@ -5,7 +5,7 @@ export const borrowerSchema = z.object({
 	id: z.number(),
 	created_at: z.string(),
 	reference_id: z.string(),
-	returned_date: z.string(),
+	returned_date_time: z.string(),
 	item_id: z.number(),
 	quantity: z.number(),
 	room_id: z.number(),
