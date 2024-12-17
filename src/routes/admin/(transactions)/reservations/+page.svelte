@@ -31,7 +31,7 @@
       addReservationForm={data.addReservationForm}
       data={reservations?.map((reservation) => ({
         room_id: reservation.rooms_tb?.id ?? 0,
-        room: reservation.rooms_tb?.name ?? '',
+        room: `${reservation.rooms_tb?.name} / ${reservation.rooms_tb?.number}`,
         id: reservation.id,
         reference_id: reservation.reference_id,
         status: reservation.status,
