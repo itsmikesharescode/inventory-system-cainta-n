@@ -6,6 +6,7 @@
   import { toast } from 'svelte-sonner';
   import { updatePasswordSchema } from './schema';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+  import { goto } from '$app/navigation';
 
   const { data } = $props();
 
@@ -17,6 +18,7 @@
       switch (status) {
         case 200:
           toast.success(data.msg);
+          await goto('/');
           break;
 
         case 401:
@@ -32,7 +34,12 @@
 <div class="flex h-full min-h-screen flex-col items-center justify-center gap-2.5">
   <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">Update Password</h1>
 
-  <form method="POST" action="?/loginEvent" use:enhance class="flex w-[290px] flex-col gap-2.5">
+  <form
+    method="POST"
+    action="?/updatePasswordEvent"
+    use:enhance
+    class="flex w-[290px] flex-col gap-2.5"
+  >
     <Form.Field {form} name="password">
       <Form.Control>
         {#snippet children({ props })}
