@@ -44,10 +44,7 @@ export const actions: Actions = {
 
     console.log(form.data, form.errors);
 
-    const {
-      data: { user },
-      error
-    } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: form.data.email,
       password: form.data.password,
       options: {
@@ -69,14 +66,16 @@ export const actions: Actions = {
     return { form, msg: 'Account created successfully.' };
   },
 
-  forgotPwdEvent: async ({ request, locals: { supabase } }) => {
+  forgotPwdEvent: async ({ request, locals: { supabase }, url }) => {
     const form = await superValidate(request, zod(forgotPwdSchema));
 
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(form.data.email);
+    const { error } = await supabase.auth.resetPasswordForEmail(form.data.email, {
+      redirectTo: `${url.pathname}/hello`
+    });
 
     if (error) return fail(401, { form, msg: error.message });
 

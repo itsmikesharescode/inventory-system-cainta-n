@@ -118,6 +118,24 @@
             </Accordion.Content>
           </Accordion.Item>
         </Accordion.Root>
+
+        <Accordion.Root type="single" class="">
+          <Accordion.Item value="transactions" class="border-none">
+            <Accordion.Trigger class="p-2">Entries</Accordion.Trigger>
+            <Accordion.Content class="border-l-2 px-2 pt-2 ">
+              <section class="flex flex-col gap-2">
+                <a
+                  onclick={() => (showMobileMenu = false)}
+                  href="/admin/departments"
+                  class="font-medium">Departments</a
+                >
+                <a onclick={() => (showMobileMenu = false)} href="/admin/rooms" class="font-medium"
+                  >Rooms</a
+                >
+              </section>
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion.Root>
         <a
           onclick={() => (showMobileMenu = false)}
           href="/admin/items"
