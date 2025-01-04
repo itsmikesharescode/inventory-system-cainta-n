@@ -1,19 +1,17 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
   import { updateItemSchema, type UpdateItemSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import Plus from 'lucide-svelte/icons/plus';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import SelectPicker from '$lib/components/general/select-picker.svelte';
   import { categoriesMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import { useTableState } from '../table/tableState.svelte';
+  import DepartmentPicker from '$lib/components/general/department-picker.svelte';
 
   interface Props {
     updateItemForm: SuperValidated<Infer<UpdateItemSchema>>;
@@ -57,6 +55,7 @@
       $formData.brand = tableState.getActiveRow()?.brand ?? '';
       $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
       $formData.description = tableState.getActiveRow()?.description ?? '';
+      $formData.department = tableState.getActiveRow()?.department ?? '';
     }
   });
 </script>
@@ -178,6 +177,18 @@
                   bind:value={$formData.quantity}
                   placeholder="Enter Quantity"
                 />
+              {/snippet}
+            </Form.Control>
+            <Form.Description />
+            <Form.FieldErrors />
+          </Form.Field>
+
+          <Form.Field {form} name="department">
+            <Form.Control>
+              {#snippet children({ props })}
+                <Form.Label>Department</Form.Label>
+                <DepartmentPicker bind:code={$formData.department} />
+                <input type="hidden" {...props} bind:value={$formData.department} />
               {/snippet}
             </Form.Control>
             <Form.Description />

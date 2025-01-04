@@ -519,7 +519,8 @@ CREATE TABLE IF NOT EXISTS "public"."items_tb" (
     "mr" "text" NOT NULL,
     "brand" "text" NOT NULL,
     "quantity" numeric NOT NULL,
-    "description" "text" NOT NULL
+    "description" "text" NOT NULL,
+    "department" character varying NOT NULL
 );
 
 
@@ -711,6 +712,11 @@ COMMENT ON TABLE "public"."users_tb" IS 'public copy of all users';
 
 ALTER TABLE ONLY "public"."borrowed_items_tb"
     ADD CONSTRAINT "borrowed_items_tb_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."departments_tb"
+    ADD CONSTRAINT "departments_tb_code_key" UNIQUE ("code");
 
 
 

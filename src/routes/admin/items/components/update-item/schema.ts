@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const updateItemSchema = z.object({
   id: z.number(),
   device_id: z.string().min(1, { message: 'Device ID is required' }),
+  department: z.string().min(1, { message: 'Department is required' }),
   model: z.string().min(1, { message: 'Model is required' }),
   category: z.string().min(1, { message: 'Category is required' }),
   type: z.string().min(1, { message: 'Type is required' }),
