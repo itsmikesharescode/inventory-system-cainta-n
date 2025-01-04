@@ -2,6 +2,7 @@
   import '../app.css';
   import { invalidate } from '$app/navigation';
   import { Toaster } from '$lib/components/ui/sonner/index';
+  import { onNavigate } from '$app/navigation';
 
   let { children, data } = $props();
 
@@ -15,6 +16,17 @@
     });
 
     return () => data.subscription.unsubscribe();
+  });
+
+  onNavigate((navigation) => {
+    if (!document.startViewTransition) return;
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
   });
 </script>
 
