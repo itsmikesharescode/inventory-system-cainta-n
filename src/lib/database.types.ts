@@ -92,6 +92,30 @@ export type Database = {
           },
         ]
       }
+      borrowed_logs_tb: {
+        Row: {
+          created_at: string
+          direction: string
+          id: number
+          item_id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          direction: string
+          id?: number
+          item_id: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          direction?: string
+          id?: number
+          item_id?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       departments_tb: {
         Row: {
           code: string

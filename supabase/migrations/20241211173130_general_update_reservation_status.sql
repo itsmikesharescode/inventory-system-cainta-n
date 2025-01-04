@@ -74,5 +74,7 @@ begin
     insert into borrowed_items_tb (user_id, item_id, date, time, reference_id, room_id, quantity)
     values (user_id_client, item_id_param_client, date_client, time_client, reference_id_client, room_id_client, quantity_client);
 
+    insert into borrowed_logs_tb (user_id, item_id, direction)
+    values(user_id_client, item_id_param_client, 'reservation-to-borrow');
 end;
 $$ language plpgsql;
