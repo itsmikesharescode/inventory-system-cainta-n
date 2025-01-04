@@ -50,7 +50,8 @@ begin
         room_id_param,
         quantity_param
     );
-
+    
+    -- Insert into borrowed_logs_tb for logging better than trigger
     insert into borrowed_logs_tb (user_id, item_id, direction)
     values(user_id_param, item_id_param, 'borrowed');
 
