@@ -35,7 +35,7 @@
 </script>
 
 <div class="flex h-[30dvh] flex-col gap-2 rounded-lg border-2 p-2">
-  <span class="text-sm font-semibold">Most borrowed items</span>
+  <span class="text-2xl font-semibold text-primary">Most borrowed items</span>
 
   <div class="flex flex-col gap-2 overflow-auto">
     {#each Object.entries(borrowedLogs?.reduce((acc: Record<string, number>, log) => {
@@ -64,7 +64,7 @@
 </div>
 
 <div class="flex h-[30dvh] flex-col gap-2 rounded-lg border-2 p-2">
-  <span class="text-sm font-semibold">Borrowed Logs</span>
+  <span class="text-2xl font-semibold text-primary">Borrowed Logs</span>
 
   <div class="flex flex-col gap-2 overflow-auto">
     {#each borrowedLogs ?? [] as log}

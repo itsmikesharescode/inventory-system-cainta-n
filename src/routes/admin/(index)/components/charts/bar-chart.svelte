@@ -34,7 +34,7 @@
         datasets: [
           {
             label: 'Reservations this month',
-            backgroundColor: '#000000',
+            backgroundColor: '#2563eb',
             data: reservationValues
           }
         ]
