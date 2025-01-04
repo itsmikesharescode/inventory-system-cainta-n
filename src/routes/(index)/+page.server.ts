@@ -34,11 +34,13 @@ export const actions: Actions = {
 
     if (!user) redirect(303, '/?error=no-session');
 
-    //speed run logging haha
-    await supabase.from('login_logs_tb').insert({
-      user_id: user.id,
-      direction: 'logged in'
-    });
+    if (user.user_metadata.role === 'teacher') {
+      //speed run logging haha
+      await supabase.from('login_logs_tb').insert({
+        user_id: user.id,
+        direction: 'logged in'
+      });
+    }
 
     return { form, msg: `Welcome back, ${user?.user_metadata.firstname}!` };
   },
