@@ -30,7 +30,14 @@
   });
 </script>
 
-<Toaster />
-<main class=" font-roboto">
-  {@render children()}
-</main>
+<svelte:boundary onerror={(e) => console.error(e)}>
+  <Toaster />
+  <main class=" font-roboto">
+    {@render children()}
+  </main>
+
+  {#snippet failed(error, reset)}
+    <p>Oops! try to reload</p>
+    <button onclick={reset}>Relog Page</button>
+  {/snippet}
+</svelte:boundary>
