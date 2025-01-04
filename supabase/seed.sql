@@ -856,11 +856,15 @@ CREATE POLICY "Allow delete if teacher and exist" ON "public"."reservations_tb" 
 
 
 
+CREATE POLICY "Allow insert if authenticated" ON "public"."login_logs_tb" FOR INSERT TO "authenticated" WITH CHECK (true);
+
+
+
 CREATE POLICY "Allow insert if teacher" ON "public"."borrowed_items_tb" FOR INSERT TO "authenticated" WITH CHECK ("public"."is_teacher"());
 
 
 
-CREATE POLICY "Allow select for all" ON "public"."departments_tb" FOR SELECT TO "authenticated" USING (true);
+CREATE POLICY "Allow select for all" ON "public"."departments_tb" FOR SELECT USING (true);
 
 
 
