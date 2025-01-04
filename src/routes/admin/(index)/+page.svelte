@@ -3,6 +3,7 @@
   import LineChart from './components/charts/line-chart.svelte';
   import Counter from './components/counter/counter.svelte';
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
+  import MostBorrowed from './components/charts/most-borrowed.svelte';
 
   const { data } = $props();
 </script>
@@ -15,13 +16,7 @@
     </section>
   {:then counts}
     <section class="grid gap-4 md:grid-cols-2">
-      <div class="h-[30dvh]">
-        <LineChart
-          pendings={counts?.pendings || []}
-          approved={counts?.approved || []}
-          rejected={counts?.rejected || []}
-        />
-      </div>
+      <MostBorrowed />
       <div class="h-[30dvh]">
         <BarChart reservations={counts?.reservations || []} />
       </div>

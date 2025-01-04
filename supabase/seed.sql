@@ -753,6 +753,11 @@ ALTER TABLE ONLY "public"."borrowed_items_tb"
 
 
 
+ALTER TABLE ONLY "public"."borrowed_logs_tb"
+    ADD CONSTRAINT "borrowed_logs_tb_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "public"."items_tb"("id") ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."reservations_tb"
     ADD CONSTRAINT "reservations_tb_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "public"."items_tb"("id") ON DELETE CASCADE;
 
