@@ -7,6 +7,7 @@
   import { toast } from 'svelte-sonner';
   import { type RegisterSchema, registerSchema } from './schema';
   import { type SuperValidated, type Infer } from 'sveltekit-superforms';
+  import DepartmentPicker from '$lib/components/general/department-picker.svelte';
   import { generateRefId } from '$lib';
 
   interface Props {
@@ -100,9 +101,11 @@
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Department</Form.Label>
-          <Input {...props} bind:value={$formData.department} placeholder="Enter department" />
+          <DepartmentPicker bind:code={$formData.department} />
+          <input type="hidden" {...props} bind:value={$formData.department} />
         {/snippet}
       </Form.Control>
+      <Form.Description />
       <Form.FieldErrors />
     </Form.Field>
 

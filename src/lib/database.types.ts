@@ -92,6 +92,38 @@ export type Database = {
           },
         ]
       }
+      borrowed_logs_tb: {
+        Row: {
+          created_at: string
+          direction: string
+          id: number
+          item_id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          direction: string
+          id?: number
+          item_id: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          direction?: string
+          id?: number
+          item_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "borrowed_logs_tb_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items_tb"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments_tb: {
         Row: {
           code: string
@@ -118,6 +150,7 @@ export type Database = {
           brand: string
           category: string
           created_at: string
+          department: string
           description: string
           device_id: string
           id: number
@@ -131,6 +164,7 @@ export type Database = {
           brand: string
           category: string
           created_at?: string
+          department: string
           description: string
           device_id: string
           id?: number
@@ -144,6 +178,7 @@ export type Database = {
           brand?: string
           category?: string
           created_at?: string
+          department?: string
           description?: string
           device_id?: string
           id?: number
@@ -152,6 +187,27 @@ export type Database = {
           quantity?: number
           status?: string
           type?: string
+        }
+        Relationships: []
+      }
+      login_logs_tb: {
+        Row: {
+          created_at: string
+          direction: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          direction: string
+          id?: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          direction?: string
+          id?: number
+          user_id?: string
         }
         Relationships: []
       }

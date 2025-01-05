@@ -5,6 +5,7 @@ export const itemsSchema = z.object({
   created_at: z.string(),
   device_id: z.string().min(1, { message: 'Device ID is required' }),
   model: z.string().min(1, { message: 'Model is required' }),
+  department: z.string().min(1, { message: 'Department is required' }),
   category: z.string().min(1, { message: 'Category is required' }),
   type: z.string().min(1, { message: 'Type is required' }),
   status: z.string().min(1, { message: 'Status is required' }),

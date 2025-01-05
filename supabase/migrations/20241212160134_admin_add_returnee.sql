@@ -38,5 +38,8 @@ begin
     delete from borrowed_items_tb
     where id = borrowed_item_id;
 
+    insert into borrowed_logs_tb (user_id, item_id, direction)
+    values(user_id_param, item_id_param, 'returned');
+
 end;
 $$ language plpgsql;

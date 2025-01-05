@@ -2,6 +2,7 @@
   import '../app.css';
   import { invalidate } from '$app/navigation';
   import { Toaster } from '$lib/components/ui/sonner/index';
+  import { onNavigate } from '$app/navigation';
 
   let { children, data } = $props();
 
@@ -16,9 +17,27 @@
 
     return () => data.subscription.unsubscribe();
   });
+
+  onNavigate((navigation) => {
+    if (!document.startViewTransition) return;
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
+  });
 </script>
 
-<Toaster />
-<main class=" font-roboto">
-  {@render children()}
-</main>
+<svelte:boundary onerror={(e) => console.error(e)}>
+  <Toaster />
+  <main class=" font-roboto">
+    {@render children()}
+  </main>
+
+  {#snippet failed(error, reset)}
+    <p>Oops! try to reload</p>
+    <button onclick={reset}>Relog Page</button>
+  {/snippet}
+</svelte:boundary>

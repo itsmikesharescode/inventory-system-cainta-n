@@ -60,7 +60,6 @@
 </script>
 
 <Dialog.Root
-  controlledOpen
   onOpenChange={(open) => {
     tableState.setShowDelete(open);
   }}

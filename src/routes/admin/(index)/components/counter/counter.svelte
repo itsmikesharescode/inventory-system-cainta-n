@@ -11,7 +11,7 @@
 
 <Card.Root>
   <Card.Header>
-    <Card.Title class="text-3xl">{title}</Card.Title>
+    <Card.Title class="text-3xl text-primary">{title}</Card.Title>
   </Card.Header>
   <Card.Content>
     <span class="text-4xl font-bold">{count}</span>

@@ -30,24 +30,26 @@
     {/snippet}
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-fit" align="end">
-    <DropdownMenu.Item
-      onclick={() => {
-        tableState.setActiveRow(row.original);
-        tableState.setShowUpdateStatus(true);
-      }}
-    >
-      <NotebookPen />
-      Update Status
-    </DropdownMenu.Item>
-    <DropdownMenu.Item
-      onclick={() => {
-        tableState.setActiveRow(row.original);
-        tableState.setShowUpdate(true);
-      }}
-    >
-      <NotebookPen />
-      Modify
-    </DropdownMenu.Item>
+    {#if row.original.status !== 'approved'}
+      <DropdownMenu.Item
+        onclick={() => {
+          tableState.setActiveRow(row.original);
+          tableState.setShowUpdateStatus(true);
+        }}
+      >
+        <NotebookPen />
+        Update Status
+      </DropdownMenu.Item>
+      <DropdownMenu.Item
+        onclick={() => {
+          tableState.setActiveRow(row.original);
+          tableState.setShowUpdate(true);
+        }}
+      >
+        <NotebookPen />
+        Modify
+      </DropdownMenu.Item>
+    {/if}
     <DropdownMenu.Item
       onclick={() => {
         tableState.setActiveRow(row.original);

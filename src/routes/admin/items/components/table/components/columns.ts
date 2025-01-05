@@ -50,6 +50,28 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
   },
 
   {
+    accessorKey: 'department',
+    id: 'department',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
+        column,
+        title: 'Department'
+      });
+    },
+    cell: ({ row }) => {
+      const departmentSnippet = createRawSnippet<[string]>((getDepartment) => {
+        return {
+          render: () => `<div class="w-full">${getDepartment()}</div>`
+        };
+      });
+
+      return renderSnippet(departmentSnippet, row.getValue('department'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
     accessorKey: 'category',
     id: 'category',
     header: ({ column }) => {

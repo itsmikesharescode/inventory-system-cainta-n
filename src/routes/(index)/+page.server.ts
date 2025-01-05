@@ -4,7 +4,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { loginSchema } from './components/login/schema';
 import { registerSchema } from './components/register/schema';
 import { forgotPwdSchema } from './components/forgot-password/schema';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
   return {
@@ -32,6 +32,16 @@ export const actions: Actions = {
 
     if (error) return fail(401, { form, msg: error.message });
 
+    if (!user) redirect(303, '/?error=no-session');
+
+    if (user.user_metadata.role === 'teacher') {
+      //speed run logging haha
+      await supabase.from('login_logs_tb').insert({
+        user_id: user.id,
+        direction: 'logged in'
+      });
+    }
+
     return { form, msg: `Welcome back, ${user?.user_metadata.firstname}!` };
   },
 
@@ -42,9 +52,10 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    console.log(form.data, form.errors);
-
-    const { error } = await supabase.auth.signUp({
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.signUp({
       email: form.data.email,
       password: form.data.password,
       options: {
@@ -61,8 +72,14 @@ export const actions: Actions = {
       }
     });
 
-    if (error) return fail(401, { form, msg: error.message });
+    if (!user) redirect(303, '/?error=something-went-wrong');
 
+    if (error) return fail(401, { form, msg: error.message });
+    //speed run logging haha
+    await supabase.from('login_logs_tb').insert({
+      user_id: user.id,
+      direction: 'registered'
+    });
     return { form, msg: 'Account created successfully.' };
   },
 

@@ -5,21 +5,30 @@
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import Badge from '../ui/badge/badge.svelte';
   import Button from '../ui/button/button.svelte';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { invalidateAll } from '$app/navigation';
   import { toast } from 'svelte-sonner';
 
   let loader = $state(false);
   const handleLogout = async () => {
-    if (!$page.data.supabase) return invalidateAll();
+    if (!page.data.supabase || !page.data.user) return invalidateAll();
     loader = true;
-    const { error } = await $page.data.supabase.auth.signOut();
+
+    if (page.data.user.user_metadata.role === 'teacher') {
+      //speed run logging haha
+      await page.data.supabase.from('login_logs_tb').insert({
+        user_id: page.data.user.id,
+        direction: 'logged out'
+      });
+    }
+
+    const { error } = await page.data.supabase.auth.signOut();
     if (error) return toast.error('Failed to logout');
     invalidateAll();
     loader = false;
   };
 
-  const user = $derived($page.data.user);
+  const user = $derived(page.data.user);
 </script>
 
 <Popover.Root>
