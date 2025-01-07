@@ -6,12 +6,13 @@
   import UpdateReservation from './components/update-reservation/update-reservation.svelte';
   import DeleteReservation from './components/delete-reservation/delete-reservation.svelte';
   import { convert24Hto12H } from '$lib';
+  import { fly } from 'svelte/transition';
   const { data } = $props();
 
   initTableState();
 </script>
 
-<main class="container mt-10 flex flex-col gap-5">
+<main class="container mt-10 flex flex-col gap-5" in:fly={{ x: 1000, duration: 300, delay: 100 }}>
   <span class="text-4xl font-semibold">Reservations</span>
   {#await data.getReservations}
     <section class="flex flex-col gap-2.5">

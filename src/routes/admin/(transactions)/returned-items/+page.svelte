@@ -4,12 +4,13 @@
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
   import DeleteReturnee from './components/delete-returnee/delete-returnee.svelte';
+  import { fly } from 'svelte/transition';
   const { data } = $props();
 
   initTableState();
 </script>
 
-<main class="container mt-10 flex flex-col gap-5">
+<main class="container mt-10 flex flex-col gap-5" in:fly={{ x: -1000, duration: 300, delay: 100 }}>
   <span class="text-4xl font-semibold">Returnees</span>
   {#await data.getReturnees}
     <section class="flex flex-col gap-2.5">

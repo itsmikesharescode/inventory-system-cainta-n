@@ -5,12 +5,13 @@
   import { initTableState } from './components/table/tableState.svelte';
   import UpdateAccount from './components/update-account/update-account.svelte';
   import DeleteAccount from './components/delete-account/delete-account.svelte';
+  import { fly } from 'svelte/transition';
   const { data } = $props();
 
   initTableState();
 </script>
 
-<main class="container mt-10 flex flex-col gap-5">
+<main class="container mt-10 flex flex-col gap-5" in:fly={{ x: -1000, duration: 300, delay: 100 }}>
   <span class="text-4xl font-semibold">Accounts</span>
   {#await data.getTeachers}
     <section class="flex flex-col gap-2.5">

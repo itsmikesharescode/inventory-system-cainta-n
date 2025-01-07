@@ -5,4 +5,6 @@
 
 <AdminNav />
 
-{@render children()}
+<div class="overflow-hidden">
+  {@render children()}
+</div>

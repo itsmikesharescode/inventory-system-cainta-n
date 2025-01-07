@@ -5,10 +5,11 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import MostBorrowed from './components/charts/most-borrowed.svelte';
   import LoginLogs from './components/charts/login-logs.svelte';
+  import { fly } from 'svelte/transition';
   const { data } = $props();
 </script>
 
-<main class="container mt-5 flex flex-col gap-10">
+<main class="container mt-5 flex flex-col gap-10" in:fly={{ x: -1000, duration: 300, delay: 100 }}>
   {#await data.dashboardCounters}
     <section class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Skeleton class="h-[18dvh] rounded-lg" />
