@@ -141,6 +141,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      entries_categories_tb: {
+        Row: {
+          created_at: string;
+          id: number;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          name?: string;
+        };
+        Relationships: [];
+      };
       items_tb: {
         Row: {
           brand: string;
