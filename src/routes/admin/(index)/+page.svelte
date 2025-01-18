@@ -6,7 +6,18 @@
   import MostBorrowed from './components/charts/most-borrowed.svelte';
   import LoginLogs from './components/charts/login-logs.svelte';
   import { fly } from 'svelte/transition';
+  import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
   const { data } = $props();
+
+  const breadRunes = useBreadCrumpRunes();
+
+  breadRunes.setBread([
+    {
+      name: 'Dashboard',
+      url: '/admin',
+      childLinks: null
+    }
+  ]);
 </script>
 
 <main class="container mt-5 flex flex-col gap-10" in:fly={{ x: -1000, duration: 300, delay: 100 }}>

@@ -9,6 +9,21 @@
   import { convert24Hto12H } from '$lib';
   import { fly } from 'svelte/transition';
   const { data } = $props();
+  import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
+  const breadRunes = useBreadCrumpRunes();
+
+  breadRunes.setBread([
+    {
+      name: 'Dashboard',
+      url: '/admin',
+      childLinks: [
+        {
+          name: 'Borrowers',
+          url: '/admin/borrowed-items'
+        }
+      ]
+    }
+  ]);
 
   initTableState();
 </script>

@@ -6,6 +6,21 @@
   import DeleteReturnee from './components/delete-returnee/delete-returnee.svelte';
   import { fly } from 'svelte/transition';
   const { data } = $props();
+  import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
+  const breadRunes = useBreadCrumpRunes();
+
+  breadRunes.setBread([
+    {
+      name: 'Dashboard',
+      url: '/admin',
+      childLinks: [
+        {
+          name: 'Returnees',
+          url: '/admin/returned-items'
+        }
+      ]
+    }
+  ]);
 
   initTableState();
 </script>

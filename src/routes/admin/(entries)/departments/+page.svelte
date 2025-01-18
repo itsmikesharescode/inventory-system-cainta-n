@@ -7,6 +7,21 @@
   import DeleteDepartment from './components/delete-department/delete-department.svelte';
   import { fly } from 'svelte/transition';
   const { data } = $props();
+  import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
+  const breadRunes = useBreadCrumpRunes();
+
+  breadRunes.setBread([
+    {
+      name: 'Dashboard',
+      url: '/admin',
+      childLinks: [
+        {
+          name: 'Departments',
+          url: '/admin/departments'
+        }
+      ]
+    }
+  ]);
 
   initTableState();
 </script>
