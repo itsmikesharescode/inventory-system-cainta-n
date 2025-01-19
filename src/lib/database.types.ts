@@ -356,33 +356,33 @@ export type Database = {
           borrowed_date: string;
           created_at: string;
           id: number;
-          item_name: string;
+          item_id: number;
           quantity: number;
           reference_id: string;
           remarks: string;
-          room_name: string;
+          room_id: number;
           user_id: string;
         };
         Insert: {
           borrowed_date: string;
           created_at?: string;
           id?: number;
-          item_name: string;
+          item_id: number;
           quantity: number;
           reference_id: string;
           remarks: string;
-          room_name: string;
+          room_id: number;
           user_id: string;
         };
         Update: {
           borrowed_date?: string;
           created_at?: string;
           id?: number;
-          item_name?: string;
+          item_id?: number;
           quantity?: number;
           reference_id?: string;
           remarks?: string;
-          room_name?: string;
+          room_id?: number;
           user_id?: string;
         };
         Relationships: [
@@ -392,6 +392,20 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'teachers_tb';
             referencedColumns: ['user_id'];
+          },
+          {
+            foreignKeyName: 'transaction_returned_items_tb_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'items_tb';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'transaction_returned_items_tb_room_id_fkey';
+            columns: ['room_id'];
+            isOneToOne: false;
+            referencedRelation: 'entries_rooms_tb';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -434,10 +448,9 @@ export type Database = {
         Args: {
           user_id_param: string;
           item_id_param: number;
-          item_name_param: string;
+          room_id_param: number;
           quantity_param: number;
           reference_id_param: string;
-          room_name_param: string;
           remarks_param: string;
           borrowed_date_param: string;
         };

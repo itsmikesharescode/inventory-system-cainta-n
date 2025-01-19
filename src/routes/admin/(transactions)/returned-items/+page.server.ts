@@ -3,12 +3,23 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { fail } from '@sveltejs/kit';
 import { deleteReturneeSchema } from './components/delete-returnee/schema';
-import streamReturnedItemUser from '$lib/db-calls/streamReturnedItemUser';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+  const getReturnees = async () => {
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('transaction_returned_items_tb')
+      .select('*, teachers_tb(*), items_tb(*), entries_rooms_tb(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   return {
     deleteReturneeForm: await superValidate(zod(deleteReturneeSchema)),
-    getReturnees: streamReturnedItemUser(supabase)
+    returnees: getReturnees()
   };
 };
 
@@ -20,7 +31,10 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('returned_items_tb').delete().eq('id', form.data.id);
+    const { error } = await supabase
+      .from('transaction_returned_items_tb')
+      .delete()
+      .eq('id', form.data.id);
 
     if (error) return fail(401, { form, msg: error.message });
 

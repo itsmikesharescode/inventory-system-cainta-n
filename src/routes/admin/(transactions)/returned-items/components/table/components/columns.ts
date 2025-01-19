@@ -95,6 +95,28 @@ export const columns: ColumnDef<ReturneePageTable, unknown>[] = [
   },
 
   {
+    accessorKey: 'quantity',
+    id: 'quantity',
+    header: ({ column }) => {
+      return renderComponent(TableColumnHeader<ReturneePageTable, unknown>, {
+        column,
+        title: 'Quantity'
+      });
+    },
+    cell: ({ row }) => {
+      const quantitySnippet = createRawSnippet<[number]>((getQuantity) => {
+        return {
+          render: () => `<div class="w-full">${getQuantity()}</div>`
+        };
+      });
+
+      return renderSnippet(quantitySnippet, row.getValue('quantity'));
+    },
+    enableSorting: true,
+    enableHiding: true
+  },
+
+  {
     accessorKey: 'date_borrowed',
     id: 'date_borrowed',
     header: ({ column }) => {

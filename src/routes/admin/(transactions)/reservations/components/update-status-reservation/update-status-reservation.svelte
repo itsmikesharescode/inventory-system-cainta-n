@@ -6,7 +6,6 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
-  import TeacherPicker from '$lib/components/general/custom-pickers/teacher-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
   import SelectPicker from '$lib/components/general/select-picker.svelte';
 

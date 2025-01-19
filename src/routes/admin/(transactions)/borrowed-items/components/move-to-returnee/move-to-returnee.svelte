@@ -4,7 +4,6 @@
   import { moveToReturneeSchema, type MoveToReturneeSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
-  import { Input } from '$lib/components/ui/input/index.js';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
   import { useTableState } from '../table/tableState.svelte';
@@ -41,17 +40,18 @@
   const { form: formData, enhance, submitting, reset } = form;
 
   $effect(() => {
-    $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
-    $formData.item_name = tableState.getActiveRow()?.item ?? '';
-    $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
-    $formData.reference_id = tableState.getActiveRow()?.reference_id ?? '';
-    $formData.room_name = tableState.getActiveRow()?.room ?? '';
-    $formData.borrowed_date = tableState.getActiveRow()?.when ?? '';
+    if (tableState.getShowMoveToReturnee()) {
+      $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
+      $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
+      $formData.room_id = tableState.getActiveRow()?.room_id ?? 0;
+      $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
+      $formData.reference_id = tableState.getActiveRow()?.reference_id ?? '';
+      $formData.borrowed_date = tableState.getActiveRow()?.when ?? '';
+    }
   });
 </script>
 
 <Dialog.Root
-  controlledOpen
   onOpenChange={(open) => {
     tableState.setShowMoveToReturnee(open);
   }}
@@ -70,13 +70,12 @@
     </Dialog.Header>
 
     <form method="POST" action="?/moveToReturneeEvent" use:enhance>
-      <input type="hidden" name="borrowed_date" value={$formData.borrowed_date} />
       <input type="hidden" name="user_id" value={tableState.getActiveRow()?.user_id} />
       <input type="hidden" name="item_id" value={tableState.getActiveRow()?.item_id} />
-      <input type="hidden" name="item_name" value={tableState.getActiveRow()?.item} />
+      <input type="hidden" name="room_id" value={tableState.getActiveRow()?.room_id} />
+      <input type="hidden" name="borrowed_date" value={$formData.borrowed_date} />
       <input type="hidden" name="quantity" value={tableState.getActiveRow()?.quantity} />
       <input type="hidden" name="reference_id" value={tableState.getActiveRow()?.reference_id} />
-      <input type="hidden" name="room_name" value={tableState.getActiveRow()?.room} />
       <Form.Field {form} name="remarks">
         <Form.Control>
           {#snippet children({ props })}
