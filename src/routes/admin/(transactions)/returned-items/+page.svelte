@@ -4,6 +4,7 @@
   import { columns } from './components/table/components/columns';
   import { initTableState } from './components/table/tableState.svelte';
   import DeleteReturnee from './components/delete-returnee/delete-returnee.svelte';
+  import DisposeReturnee from './components/dispose-returnee/dispose-returnee.svelte';
   import { fly } from 'svelte/transition';
   import * as Resizable from '$lib/components/ui/resizable/index.js';
   import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
@@ -57,6 +58,7 @@
               user_id: item.user_id,
               teacher_id: item.teachers_tb?.user_id,
               room_id: item.room_id,
+              item_id: item.item_id,
               item_name: item.items_tb?.model,
               quantity: item.quantity,
               reference_id: item.reference_id,
@@ -90,4 +92,5 @@
   </Resizable.Pane>
 </Resizable.PaneGroup>
 
+<DisposeReturnee disposeReturneeForm={data.disposeReturneeForm} />
 <DeleteReturnee deleteReturneeForm={data.deleteReturneeForm} />

@@ -75,7 +75,7 @@
     if (!page.data.supabase) return null;
     const { data, error } = await page.data.supabase
       .from('items_tb')
-      .select('*')
+      .select('*, entries_categories_tb(*)')
       .order('created_at', { ascending: false });
 
     if (error) return null;

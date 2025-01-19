@@ -4,11 +4,8 @@
 
 <script lang="ts" generics="TData">
   import Ellipsis from 'lucide-svelte/icons/ellipsis';
-  import FileMinus from 'lucide-svelte/icons/file-minus';
   import Delete from 'lucide-svelte/icons/delete';
-  import NotebookPen from 'lucide-svelte/icons/notebook-pen';
-  import Pen from 'lucide-svelte/icons/pen';
-  import Check from 'lucide-svelte/icons/check';
+  import DatabaseBackup from 'lucide-svelte/icons/database-backup';
   import type { Row } from '@tanstack/table-core';
   import { type ReturneePageTable } from '../data/schemas';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
@@ -30,6 +27,15 @@
     {/snippet}
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-fit" align="end">
+    <DropdownMenu.Item
+      onclick={() => {
+        tableState.setActiveRow(row.original);
+        tableState.setShowDispose(true);
+      }}
+    >
+      <DatabaseBackup />
+      Dispose
+    </DropdownMenu.Item>
     <DropdownMenu.Item
       onclick={() => {
         tableState.setActiveRow(row.original);

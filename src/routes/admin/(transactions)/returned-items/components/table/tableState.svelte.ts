@@ -12,14 +12,14 @@ class TableState {
     return this.#activeRow;
   }
 
-  #showUpdate = $state(false);
+  #showDispose = $state(false);
 
-  setShowUpdate(show: boolean) {
-    this.#showUpdate = show;
+  setShowDispose(show: boolean) {
+    this.#showDispose = show;
   }
 
-  getShowUpdate() {
-    return this.#showUpdate;
+  getShowDispose() {
+    return this.#showDispose;
   }
 
   #showDelete = $state(false);

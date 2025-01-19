@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { fail } from '@sveltejs/kit';
 import { deleteReturneeSchema } from './components/delete-returnee/schema';
+import { disposeReturneeSchema } from './components/dispose-returnee/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   const getReturnees = async () => {
@@ -18,12 +19,23 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
   };
 
   return {
+    disposeReturneeForm: await superValidate(zod(disposeReturneeSchema)),
     deleteReturneeForm: await superValidate(zod(deleteReturneeSchema)),
     returnees: getReturnees()
   };
 };
 
 export const actions: Actions = {
+  disposeReturneeEvent: async ({ request }) => {
+    const form = await superValidate(request, zod(disposeReturneeSchema));
+
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+
+    console.log(form.data);
+  },
+
   deleteReturneeEvent: async ({ request, locals: { supabase } }) => {
     const form = await superValidate(request, zod(deleteReturneeSchema));
 

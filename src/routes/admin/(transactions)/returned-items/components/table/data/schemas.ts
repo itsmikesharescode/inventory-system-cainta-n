@@ -6,6 +6,7 @@ export const returneeSchema = z.object({
   user_id: z.string(),
   teacher_id: z.string(),
   room_id: z.number(),
+  item_id: z.number(),
   item_name: z.string(),
   quantity: z.number(),
   reference_id: z.string(),
