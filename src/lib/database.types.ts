@@ -1,5 +1,4 @@
 import type { UserMetaData } from './types';
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -125,47 +124,59 @@ export type Database = {
       items_tb: {
         Row: {
           brand: string;
-          category: string;
+          category_id: number;
           created_at: string;
-          department: string;
+          department_id: number;
           description: string;
           device_id: string;
           id: number;
           model: string;
-          mr: string;
           quantity: number;
           status: string;
           type: string;
         };
         Insert: {
           brand: string;
-          category: string;
+          category_id: number;
           created_at?: string;
-          department: string;
+          department_id: number;
           description: string;
           device_id: string;
           id?: number;
           model: string;
-          mr: string;
           quantity: number;
           status: string;
           type: string;
         };
         Update: {
           brand?: string;
-          category?: string;
+          category_id?: number;
           created_at?: string;
-          department?: string;
+          department_id?: number;
           description?: string;
           device_id?: string;
           id?: number;
           model?: string;
-          mr?: string;
           quantity?: number;
           status?: string;
           type?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'items_tb_category_id_fkey';
+            columns: ['category_id'];
+            isOneToOne: false;
+            referencedRelation: 'entries_categories_tb';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'items_tb_department_id_fkey';
+            columns: ['department_id'];
+            isOneToOne: false;
+            referencedRelation: 'entries_departments_tb';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       login_logs_tb: {
         Row: {

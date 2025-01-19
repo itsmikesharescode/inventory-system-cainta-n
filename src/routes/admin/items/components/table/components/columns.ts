@@ -138,28 +138,6 @@ export const columns: ColumnDef<ItemsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'mr',
-    id: 'mr',
-    header: ({ column }) => {
-      return renderComponent(TableColumnHeader<ItemsPageTable, unknown>, {
-        column,
-        title: 'MR'
-      });
-    },
-    cell: ({ row }) => {
-      const mrSnippet = createRawSnippet<[boolean]>((getMR) => {
-        return {
-          render: () => `<div class="w-full">${getMR()}</div>`
-        };
-      });
-
-      return renderSnippet(mrSnippet, row.getValue('mr'));
-    },
-    enableSorting: true,
-    enableHiding: true
-  },
-
-  {
     accessorKey: 'brand',
     id: 'brand',
     header: ({ column }) => {

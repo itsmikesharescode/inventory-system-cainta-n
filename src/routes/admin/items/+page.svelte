@@ -28,7 +28,7 @@
 
 <main class="container mt-10 flex flex-col gap-5" in:fly={{ x: -1000, duration: 300, delay: 100 }}>
   <span class="text-4xl font-semibold">Items</span>
-  {#await data.getItems}
+  {#await data.items}
     <section class="flex flex-col gap-2.5">
       <div class="flex items-center justify-between gap-2.5">
         <Skeleton class="h-[40px] w-[100px] rounded-lg" />
@@ -41,7 +41,25 @@
       <Skeleton class="h-[40px] w-full rounded-lg" />
     </section>
   {:then items}
-    <Table addItemForm={data.addItemForm} data={items ?? []} {columns} />
+    <Table
+      addItemForm={data.addItemForm}
+      data={items?.map((item) => ({
+        id: item.id,
+        created_at: item.created_at,
+        device_id: item.device_id,
+        department_id: item.department_id,
+        category_id: item.category_id,
+        category: item.entries_categories_tb?.name,
+        department: item.entries_departments_tb?.code,
+        model: item.model,
+        type: item.type,
+        status: item.status,
+        brand: item.brand,
+        quantity: item.quantity,
+        description: item.description
+      })) ?? []}
+      {columns}
+    />
   {/await}
 </main>
 

@@ -6,27 +6,19 @@
   import * as Popover from '$lib/components/ui/popover/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { cn } from '$lib/utils.js';
-  import { page } from '$app/stores';
-  import streamDepartment from '$lib/db-calls/streamDepartment';
+  import type { Database } from '$lib/database.types';
 
   interface Props {
-    code: string;
-    disabled?: boolean;
+    department_id: number;
+    departments: Database['public']['Tables']['entries_departments_tb']['Row'][];
   }
 
-  let { code = $bindable(), disabled = false }: Props = $props();
-
-  let departments = $state<Awaited<ReturnType<typeof streamDepartment>> | null>(null);
-
-  const getDepartments = async () => {
-    if (!$page.data.supabase) return;
-    departments = await streamDepartment($page.data.supabase);
-  };
+  let { department_id = $bindable(), departments }: Props = $props();
 
   let open = $state(false);
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(departments?.find((f) => f.code === String(code)));
+  const selectedValue = $derived(departments?.find((f) => f.id === department_id));
 
   function closeAndFocusTrigger() {
     open = false;
@@ -34,16 +26,6 @@
       triggerRef.focus();
     });
   }
-
-  $effect(() => {
-    tick().then(async () => {
-      await getDepartments();
-    });
-
-    return () => {
-      departments = null;
-    };
-  });
 
   const checkSelected = () => {
     if (selectedValue) {
@@ -54,7 +36,7 @@
 </script>
 
 <Popover.Root bind:open>
-  <Popover.Trigger {disabled} bind:ref={triggerRef}>
+  <Popover.Trigger bind:ref={triggerRef}>
     {#snippet child({ props })}
       <Button
         variant="outline"
@@ -70,7 +52,7 @@
   </Popover.Trigger>
   <Popover.Content class="w-[300px] p-0">
     <Command.Root>
-      <Command.Input {disabled} placeholder="Search department..." />
+      <Command.Input placeholder="Search department..." />
       <Command.List>
         <Command.Empty>No department found.</Command.Empty>
         <Command.Group>
@@ -78,12 +60,12 @@
             <Command.Item
               value={`${department.name}`}
               onSelect={() => {
-                code = String(department.code);
+                department_id = department.id;
                 closeAndFocusTrigger();
               }}
             >
               <Check
-                class={cn('mr-2 size-4', code !== String(department.code) && 'text-transparent')}
+                class={cn('mr-2 size-4', department_id !== department.id && 'text-transparent')}
               />
               <section class="flex flex-col">
                 <span class="text-sm font-medium">

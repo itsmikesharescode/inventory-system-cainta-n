@@ -9,18 +9,16 @@
   import type { Database } from '$lib/database.types';
 
   interface Props {
-    item_id: number;
-    items: (Database['public']['Tables']['items_tb']['Row'] & {
-      entries_categories_tb?: Database['public']['Tables']['entries_categories_tb']['Row'] | null;
-    })[];
+    category_id: number;
+    categories: Database['public']['Tables']['entries_categories_tb']['Row'][];
   }
 
-  let { item_id = $bindable(), items }: Props = $props();
+  let { category_id = $bindable(), categories }: Props = $props();
 
   let open = $state(false);
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(items?.find((f) => f.id.toString() === String(item_id)));
+  const selectedValue = $derived(categories?.find((f) => f.id === category_id));
 
   function closeAndFocusTrigger() {
     open = false;
@@ -31,9 +29,9 @@
 
   const checkSelected = () => {
     if (selectedValue) {
-      return `${selectedValue?.model}`;
+      return selectedValue.name;
     }
-    return 'Select an item';
+    return 'Select a category';
   };
 </script>
 
@@ -42,7 +40,7 @@
     {#snippet child({ props })}
       <Button
         variant="outline"
-        class="w-full justify-between {item_id ? '' : 'text-muted-foreground'}"
+        class="w-full justify-between {selectedValue ? '' : 'text-muted-foreground'}"
         {...props}
         role="combobox"
         aria-expanded={open}
@@ -54,33 +52,23 @@
   </Popover.Trigger>
   <Popover.Content class="w-[300px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search item model..." />
+      <Command.Input placeholder="Search department..." />
       <Command.List>
-        <Command.Empty>No items found.</Command.Empty>
+        <Command.Empty>No category found.</Command.Empty>
         <Command.Group>
-          {#each items ?? [] as item}
+          {#each categories ?? [] as category}
             <Command.Item
-              value={item.model}
+              value={`${category.name}`}
               onSelect={() => {
-                item_id = item.id;
+                category_id = category.id;
                 closeAndFocusTrigger();
               }}
             >
-              <Check
-                class={cn(
-                  'mr-2 size-4',
-                  String(item_id) !== item.id.toString() && 'text-transparent'
-                )}
-              />
-              <section class="flex flex-col">
-                <span>{item.model}</span>
-                <span class="text-xs text-muted-foreground">
-                  {item.brand}/{item.quantity}
-                </span>
-                <span class="text-xs text-muted-foreground">
-                  {item.entries_categories_tb?.name}
-                </span>
-              </section>
+              <Check class={cn('mr-2 size-4', category_id !== category.id && 'text-transparent')} />
+
+              <span class="text-sm font-medium">
+                {category.name}
+              </span>
             </Command.Item>
           {/each}
         </Command.Group>

@@ -125,7 +125,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Item</Form.Label>
-                <ItemPicker bind:item_id={$formData.item_id} {items} />
+                <ItemPicker bind:item_id={$formData.item_id} items={items ?? []} />
                 <input type="hidden" {...props} bind:value={$formData.item_id} />
               {/snippet}
             </Form.Control>

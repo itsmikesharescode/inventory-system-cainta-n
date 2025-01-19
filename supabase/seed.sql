@@ -555,14 +555,13 @@ CREATE TABLE IF NOT EXISTS "public"."items_tb" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "device_id" "text" NOT NULL,
     "model" "text" NOT NULL,
-    "category" "text" NOT NULL,
     "type" "text" NOT NULL,
     "status" "text" NOT NULL,
-    "mr" "text" NOT NULL,
     "brand" "text" NOT NULL,
     "quantity" numeric NOT NULL,
     "description" "text" NOT NULL,
-    "department" character varying NOT NULL
+    "department_id" bigint NOT NULL,
+    "category_id" bigint NOT NULL
 );
 
 
@@ -819,6 +818,16 @@ ALTER TABLE ONLY "public"."transaction_borrowed_items_tb"
 
 ALTER TABLE ONLY "public"."borrowed_logs_tb"
     ADD CONSTRAINT "borrowed_logs_tb_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "public"."items_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."items_tb"
+    ADD CONSTRAINT "items_tb_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "public"."entries_categories_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."items_tb"
+    ADD CONSTRAINT "items_tb_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."entries_departments_tb"("id") ON DELETE CASCADE;
 
 
 

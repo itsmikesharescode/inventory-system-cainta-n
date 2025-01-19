@@ -3,16 +3,28 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addItemSchema } from './components/add-item/schema';
 import { fail } from '@sveltejs/kit';
-import streamItems from '$lib/db-calls/streamItems';
 import { updateItemSchema } from './components/update-item/schema';
 import { deleteItemSchema } from './components/delete-item/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+  const getItems = async () => {
+    if (!supabase) return;
+
+    const { data, error } = await supabase
+      .from('items_tb')
+      .select('*, entries_categories_tb(*), entries_departments_tb(*)')
+      .order('id', { ascending: false });
+
+    if (error) return;
+
+    return data;
+  };
+
   return {
     addItemForm: await superValidate(zod(addItemSchema)),
     updateItemForm: await superValidate(zod(updateItemSchema)),
     deleteItemForm: await superValidate(zod(deleteItemSchema)),
-    getItems: streamItems(supabase)
+    items: getItems()
   };
 };
 
@@ -24,7 +36,15 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase.from('items_tb').insert({
-      ...form.data
+      device_id: form.data.device_id,
+      model: form.data.model ?? 'N/A',
+      type: form.data.type,
+      status: form.data.status,
+      brand: form.data.brand,
+      quantity: form.data.quantity,
+      description: form.data.description,
+      department_id: form.data.department_id,
+      category_id: form.data.category_id
     });
 
     if (error) return fail(401, { form, msg: error.message });
@@ -40,7 +60,14 @@ export const actions: Actions = {
     const { error } = await supabase
       .from('items_tb')
       .update({
-        ...form.data
+        device_id: form.data.device_id,
+        model: form.data.model ?? 'N/A',
+        type: form.data.type,
+        status: form.data.status,
+        brand: form.data.brand,
+        description: form.data.description,
+        department_id: form.data.department_id,
+        category_id: form.data.category_id
       })
       .eq('id', form.data.id);
 
