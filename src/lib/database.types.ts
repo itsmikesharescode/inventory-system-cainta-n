@@ -76,7 +76,7 @@ export type Database = {
             foreignKeyName: 'borrowed_items_tb_room_id_fkey';
             columns: ['room_id'];
             isOneToOne: false;
-            referencedRelation: 'rooms_tb';
+            referencedRelation: 'entries_rooms_tb';
             referencedColumns: ['id'];
           },
           {
@@ -120,7 +120,25 @@ export type Database = {
           }
         ];
       };
-      departments_tb: {
+      entries_categories_tb: {
+        Row: {
+          created_at: string;
+          id: number;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      entries_departments_tb: {
         Row: {
           code: string;
           created_at: string;
@@ -141,21 +159,24 @@ export type Database = {
         };
         Relationships: [];
       };
-      entries_categories_tb: {
+      entries_rooms_tb: {
         Row: {
           created_at: string;
           id: number;
           name: string;
+          number: number;
         };
         Insert: {
           created_at?: string;
           id?: number;
           name: string;
+          number: number;
         };
         Update: {
           created_at?: string;
           id?: number;
           name?: string;
+          number?: number;
         };
         Relationships: [];
       };
@@ -274,7 +295,7 @@ export type Database = {
             foreignKeyName: 'reservations_tb_room_id_fkey';
             columns: ['room_id'];
             isOneToOne: false;
-            referencedRelation: 'rooms_tb';
+            referencedRelation: 'entries_rooms_tb';
             referencedColumns: ['id'];
           },
           {
@@ -345,27 +366,6 @@ export type Database = {
           created_at?: string;
           role?: string;
           user_id?: string;
-        };
-        Relationships: [];
-      };
-      rooms_tb: {
-        Row: {
-          created_at: string;
-          id: number;
-          name: string;
-          number: number;
-        };
-        Insert: {
-          created_at?: string;
-          id?: number;
-          name: string;
-          number: number;
-        };
-        Update: {
-          created_at?: string;
-          id?: number;
-          name?: string;
-          number?: number;
         };
         Relationships: [];
       };

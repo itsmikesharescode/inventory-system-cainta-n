@@ -3,16 +3,27 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addDepartmentSchema } from './components/add-department/schema';
 import { fail } from '@sveltejs/kit';
-import streamDepartments from '$lib/db-calls/streamDepartments';
 import { updateDepartmentSchema } from './components/update-department/schema';
 import { deleteDepartmentSchema } from './components/delete-department/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+  const getDepartments = async () => {
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('entries_departments_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   return {
     addDepartmentForm: await superValidate(zod(addDepartmentSchema)),
     updateDepartmentForm: await superValidate(zod(updateDepartmentSchema)),
     deleteDepartmentForm: await superValidate(zod(deleteDepartmentSchema)),
-    getDepartments: streamDepartments(supabase)
+    getDepartments: getDepartments()
   };
 };
 
@@ -23,7 +34,7 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('departments_tb').insert({
+    const { error } = await supabase.from('entries_departments_tb').insert({
       name: form.data.name,
       code: form.data.code
     });
@@ -41,7 +52,7 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase
-      .from('departments_tb')
+      .from('entries_departments_tb')
       .update({
         name: form.data.name,
         code: form.data.code
@@ -60,7 +71,7 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('departments_tb').delete().eq('id', form.data.id);
+    const { error } = await supabase.from('entries_departments_tb').delete().eq('id', form.data.id);
 
     if (error) {
       return fail(401, { form, msg: error.message });
