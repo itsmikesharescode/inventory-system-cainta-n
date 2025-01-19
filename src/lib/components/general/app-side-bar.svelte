@@ -62,7 +62,7 @@
 <script lang="ts">
   import * as Collapsible from '$lib/components/ui/collapsible';
   import * as Sidebar from '$lib/components/ui/sidebar';
-  import GalleryVerticalEnd from 'lucide-svelte/icons/gallery-vertical-end';
+  import Profile from '$lib/components/general/profile.svelte';
   import Minus from 'lucide-svelte/icons/minus';
   import Plus from 'lucide-svelte/icons/plus';
   import { page } from '$app/state';
@@ -77,14 +77,10 @@
       <Sidebar.MenuItem>
         <Sidebar.MenuButton size="lg">
           {#snippet child({ props })}
-            <a href="##" {...props}>
-              <div
-                class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
-              >
-                <GalleryVerticalEnd class="size-4" />
-              </div>
+            <a href="/admin" {...props}>
+              <img src="/favicon.png" alt="logo" class="size-10" />
               <div class="flex flex-col gap-0.5 leading-none">
-                <span class="font-semibold">Documentation</span>
+                <span class="font-semibold">OCC Inventory System</span>
                 <span class="">v1.0.0</span>
               </div>
             </a>
@@ -152,5 +148,9 @@
       </Sidebar.Menu>
     </Sidebar.Group>
   </Sidebar.Content>
+
+  <Sidebar.Footer>
+    <Profile />
+  </Sidebar.Footer>
   <Sidebar.Rail />
 </Sidebar.Root>
