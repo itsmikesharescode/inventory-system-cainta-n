@@ -9,7 +9,7 @@ export const updateAccountSchema = z
     middlename: z.string().min(1, { message: 'Middle name is required' }),
     lastname: z.string().min(1, { message: 'Last name is required' }),
     teacher_id: z.string().min(1, { message: 'Teacher ID is required' }),
-    department: z.string().min(1, { message: 'Department is required' }),
+    department_id: z.number(),
     password: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters long' })

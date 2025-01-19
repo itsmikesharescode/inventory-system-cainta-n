@@ -10,7 +10,7 @@ export const accountSchema = z.object({
   lastname: z.string(),
   email: z.string(),
   phone: z.string(),
-  department: z.string()
+  department_id: z.number()
 });
 
 export type AccountsPageTable = z.output<typeof accountSchema>;

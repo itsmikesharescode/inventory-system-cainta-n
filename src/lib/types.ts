@@ -10,7 +10,7 @@ export type UserMetaData = {
   phone: string;
   lastname: string;
   firstname: string;
-  department: string;
+  department_id: number;
   middlename: string;
   teacher_id: string;
 };

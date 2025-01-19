@@ -1,20 +1,16 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
   import { updateAccountSchema, type UpdateAccountSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
   import { useTableState } from '../table/tableState.svelte';
-  import DepartmentPicker from '$lib/components/general/department-picker.svelte';
+  import DepartmentPicker from '$lib/components/general/custom-pickers/department-picker.svelte';
+  import { page } from '$app/state';
+
   interface Props {
     updateAccountForm: SuperValidated<Infer<UpdateAccountSchema>>;
   }
@@ -44,11 +40,28 @@
 
   const { form: formData, enhance, submitting, reset } = form;
 
+  let departments = $state<Awaited<ReturnType<typeof getDepartments>>>(null);
+  const getDepartments = async () => {
+    if (!page.data.supabase) return null;
+
+    const { data, error } = await page.data.supabase
+      .from('entries_departments_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   $effect(() => {
     if (tableState.getShowUpdate()) {
+      getDepartments().then((deps) => {
+        departments = deps;
+      });
+
       $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
       $formData.teacher_id = tableState.getActiveRow()?.teacher_id ?? '';
-      $formData.department = tableState.getActiveRow()?.department ?? '';
+      $formData.department_id = tableState.getActiveRow()?.department_id ?? 0;
       $formData.email = tableState.getActiveRow()?.email ?? '';
       $formData.phone = tableState.getActiveRow()?.phone ?? '';
       $formData.firstname = tableState.getActiveRow()?.firstname ?? '';
@@ -58,7 +71,7 @@
       return () => {
         $formData.user_id = '';
         $formData.teacher_id = '';
-        $formData.department = '';
+        $formData.department_id = 0;
         $formData.email = '';
         $formData.phone = '';
         $formData.firstname = '';
@@ -73,7 +86,6 @@
 </script>
 
 <Dialog.Root
-  controlledOpen
   onOpenChange={(open) => {
     tableState.setShowUpdate(open);
   }}
@@ -165,12 +177,15 @@
         </div>
 
         <div class="">
-          <Form.Field {form} name="department">
+          <Form.Field {form} name="department_id">
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Department</Form.Label>
-                <DepartmentPicker bind:code={$formData.department} />
-                <input type="hidden" {...props} bind:value={$formData.department} />
+                <DepartmentPicker
+                  bind:department_id={$formData.department_id}
+                  departments={departments ?? []}
+                />
+                <input type="hidden" {...props} bind:value={$formData.department_id} />
               {/snippet}
             </Form.Control>
             <Form.Description />

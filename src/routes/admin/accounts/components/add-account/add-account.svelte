@@ -7,13 +7,11 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
-  import DepartmentPicker from '$lib/components/general/department-picker.svelte';
+  import DepartmentPicker from '$lib/components/general/custom-pickers/department-picker.svelte';
+  import { page } from '$app/state';
 
   interface Props {
     addAccountForm: SuperValidated<Infer<AddAccountSchema>>;
@@ -44,9 +42,26 @@
 
   const { form: formData, enhance, submitting, reset } = form;
 
+  let departments = $state<Awaited<ReturnType<typeof getDepartments>>>(null);
+  const getDepartments = async () => {
+    if (!page.data.supabase) return null;
+
+    const { data, error } = await page.data.supabase
+      .from('entries_departments_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   $effect(() => {
     if (open) {
       $formData.teacher_id = generateRefId(12);
+
+      getDepartments().then((deps) => {
+        departments = deps;
+      });
 
       return () => {
         reset();
@@ -142,12 +157,15 @@
         </div>
 
         <div class="">
-          <Form.Field {form} name="department">
+          <Form.Field {form} name="department_id">
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Department</Form.Label>
-                <DepartmentPicker bind:code={$formData.department} />
-                <input type="hidden" {...props} bind:value={$formData.department} />
+                <DepartmentPicker
+                  bind:department_id={$formData.department_id}
+                  departments={departments ?? []}
+                />
+                <input type="hidden" {...props} bind:value={$formData.department_id} />
               {/snippet}
             </Form.Control>
             <Form.Description />

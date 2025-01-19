@@ -1,26 +1,19 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
   import { updateReservationSchema, type UpdateReservationSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import Plus from 'lucide-svelte/icons/plus';
-  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import SelectPicker from '$lib/components/general/select-picker.svelte';
-  import { categoriesMeta, timeMeta, typeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-  import { generateRefId } from '$lib';
   import { toast } from 'svelte-sonner';
-  import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
-  import ItemPicker from '$lib/components/general/item-picker.svelte';
-  import ComboPicker from '$lib/components/general/combo-picker.svelte';
+  import ItemPicker from '$lib/components/general/custom-pickers/item-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
   import { TimePicker } from '$lib/components/general/time-picker/index';
   import { convert24Hto12H } from '$lib';
-  import RoomPicker from '$lib/components/general/room-picker.svelte';
+  import RoomPicker from '$lib/components/general/custom-pickers/room-picker.svelte';
+
   interface Props {
     updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
   }

@@ -274,6 +274,53 @@ $$;
 
 ALTER FUNCTION "public"."admin_dashboard_counts"() OWNER TO "postgres";
 
+SET default_tablespace = '';
+
+SET default_table_access_method = "heap";
+
+
+CREATE TABLE IF NOT EXISTS "public"."items_tb" (
+    "id" bigint NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "device_id" "text" NOT NULL,
+    "model" "text" NOT NULL,
+    "type" "text" NOT NULL,
+    "status" "text" NOT NULL,
+    "brand" "text" NOT NULL,
+    "quantity" numeric NOT NULL,
+    "description" "text" NOT NULL,
+    "department_id" bigint NOT NULL,
+    "category_id" bigint NOT NULL
+);
+
+
+ALTER TABLE "public"."items_tb" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."items_tb" IS 'list of items';
+
+
+
+CREATE OR REPLACE FUNCTION "public"."fulltext_search"("search_term" "text") RETURNS SETOF "public"."items_tb"
+    LANGUAGE "plpgsql"
+    AS $$
+begin
+    return query
+    select *
+    from items_tb
+    where to_tsvector('english',
+        coalesce(model, '') || ' ' ||
+        coalesce(type, '') || ' ' ||
+        coalesce(status, '') || ' ' ||
+        coalesce(brand, '') || ' ' ||
+        coalesce(description, '')
+    ) @@ to_tsquery('english', search_term);
+end;
+$$;
+
+
+ALTER FUNCTION "public"."fulltext_search"("search_term" "text") OWNER TO "postgres";
+
 
 CREATE OR REPLACE FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) RETURNS "void"
     LANGUAGE "plpgsql"
@@ -432,10 +479,6 @@ $$;
 
 ALTER FUNCTION "public"."on_auth_user_updated"() OWNER TO "postgres";
 
-SET default_tablespace = '';
-
-SET default_table_access_method = "heap";
-
 
 CREATE TABLE IF NOT EXISTS "public"."transaction_borrowed_items_tb" (
     "id" bigint NOT NULL,
@@ -547,28 +590,6 @@ ALTER TABLE "public"."entries_rooms_tb" OWNER TO "postgres";
 
 
 COMMENT ON TABLE "public"."entries_rooms_tb" IS 'list of room';
-
-
-
-CREATE TABLE IF NOT EXISTS "public"."items_tb" (
-    "id" bigint NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "device_id" "text" NOT NULL,
-    "model" "text" NOT NULL,
-    "type" "text" NOT NULL,
-    "status" "text" NOT NULL,
-    "brand" "text" NOT NULL,
-    "quantity" numeric NOT NULL,
-    "description" "text" NOT NULL,
-    "department_id" bigint NOT NULL,
-    "category_id" bigint NOT NULL
-);
-
-
-ALTER TABLE "public"."items_tb" OWNER TO "postgres";
-
-
-COMMENT ON TABLE "public"."items_tb" IS 'list of items';
 
 
 
@@ -808,6 +829,10 @@ ALTER TABLE ONLY "public"."teachers_tb"
 
 ALTER TABLE ONLY "public"."users_tb"
     ADD CONSTRAINT "users_tb_pkey" PRIMARY KEY ("user_id");
+
+
+
+CREATE INDEX "items_tb_fts_idx" ON "public"."items_tb" USING "gin" ("to_tsvector"('"english"'::"regconfig", ((((((((COALESCE("model", ''::"text") || ' '::"text") || COALESCE("type", ''::"text")) || ' '::"text") || COALESCE("status", ''::"text")) || ' '::"text") || COALESCE("brand", ''::"text")) || ' '::"text") || COALESCE("description", ''::"text"))));
 
 
 
@@ -1228,6 +1253,18 @@ GRANT ALL ON FUNCTION "public"."admin_dashboard_counts"() TO "service_role";
 
 
 
+GRANT ALL ON TABLE "public"."items_tb" TO "anon";
+GRANT ALL ON TABLE "public"."items_tb" TO "authenticated";
+GRANT ALL ON TABLE "public"."items_tb" TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."fulltext_search"("search_term" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."fulltext_search"("search_term" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."fulltext_search"("search_term" "text") TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) TO "anon";
 GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."general_update_reservation_status"("reservation_id_client" bigint, "item_id_param_client" bigint, "status_client" character varying, "user_id_client" "uuid", "date_client" "date", "time_client" time without time zone, "reference_id_client" character varying, "room_id_client" bigint, "quantity_client" bigint) TO "service_role";
@@ -1318,12 +1355,6 @@ GRANT ALL ON SEQUENCE "public"."entries_categories_tb_id_seq" TO "service_role";
 GRANT ALL ON TABLE "public"."entries_rooms_tb" TO "anon";
 GRANT ALL ON TABLE "public"."entries_rooms_tb" TO "authenticated";
 GRANT ALL ON TABLE "public"."entries_rooms_tb" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."items_tb" TO "anon";
-GRANT ALL ON TABLE "public"."items_tb" TO "authenticated";
-GRANT ALL ON TABLE "public"."items_tb" TO "service_role";
 
 
 

@@ -3,16 +3,27 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addAccountSchema } from './components/add-account/schema';
 import { fail } from '@sveltejs/kit';
-import streamTeachers from '$lib/db-calls/streamTeachers';
 import { updateAccountSchema } from './components/update-account/schema';
 import { deleteAccountSchema } from './components/delete-account/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+  const getAccounts = async () => {
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('teachers_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   return {
     addAccountForm: await superValidate(zod(addAccountSchema)),
     updateAccountForm: await superValidate(zod(updateAccountSchema)),
     deleteAccountForm: await superValidate(zod(deleteAccountSchema)),
-    getTeachers: streamTeachers(supabase)
+    getTeachers: getAccounts()
   };
 };
 
@@ -35,7 +46,7 @@ export const actions: Actions = {
         middlename: form.data.middlename,
         lastname: form.data.lastname,
         phone: form.data.phone,
-        department: form.data.department
+        department_id: form.data.department_id
       }
     });
 
@@ -59,7 +70,7 @@ export const actions: Actions = {
         middlename: form.data.middlename,
         lastname: form.data.lastname,
         phone: form.data.phone,
-        department: form.data.department
+        department_id: form.data.department_id
       }
     });
 

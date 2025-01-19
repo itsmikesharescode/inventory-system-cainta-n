@@ -52,7 +52,7 @@
         lastname: teacher.user_meta_data.lastname,
         email: teacher.user_meta_data.email,
         phone: teacher.user_meta_data.phone,
-        department: teacher.user_meta_data.department
+        department_id: teacher.user_meta_data.department_id
       })) ?? []}
       {columns}
     />

@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { AccountsPageTable } from '../data/schemas';
-import { TableColumnHeader, TableRowActions } from './index.js';
+import { TableColumnHeader, TableRowActions, DisplayDepartment } from './index.js';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/render-helpers.js';
 
 export const columns: ColumnDef<AccountsPageTable, unknown>[] = [
@@ -94,23 +94,15 @@ export const columns: ColumnDef<AccountsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'department',
-    id: 'department',
+    accessorKey: 'department_id',
+    id: 'department_id',
     header: ({ column }) => {
       return renderComponent(TableColumnHeader<AccountsPageTable, unknown>, {
         column,
         title: 'Department'
       });
     },
-    cell: ({ row }) => {
-      const departmentSnippet = createRawSnippet<[string]>((getDepartment) => {
-        return {
-          render: () => `<div class="w-full">${getDepartment()}</div>`
-        };
-      });
-
-      return renderSnippet(departmentSnippet, row.getValue('department'));
-    },
+    cell: ({ row }) => renderComponent(DisplayDepartment<AccountsPageTable>, { row }),
     enableSorting: true,
     enableHiding: true
   },

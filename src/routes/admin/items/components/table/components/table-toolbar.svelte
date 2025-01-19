@@ -12,6 +12,8 @@
   import AddItem from '../../add-item/add-item.svelte';
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
   import type { AddItemSchema } from '../../add-item/schema.js';
+  import { Debounced } from 'runed';
+  import { goto } from '$app/navigation';
 
   interface Props {
     addItemForm: SuperValidated<Infer<AddItemSchema>>;
@@ -20,14 +22,23 @@
 
   let { addItemForm, table }: Props = $props();
 
-  const isFiltered = $derived(table.getState().columnFilters.length > 0);
+  let searchTerm = $state('');
+  const debounced = new Debounced(() => searchTerm, 500);
+
+  $effect(() => {
+    if (debounced.current) {
+      goto(`/admin/items?search=${debounced.current.split(' ').join('-')}`);
+    }
+  });
 </script>
 
 <div class="flex items-center justify-between gap-2">
   <AddItem {addItemForm} />
 
   <div class="flex items-center gap-2">
-    <div class="flex items-center space-x-2">
+    <Input bind:value={searchTerm} placeholder="Search anything here..." />
+
+    <!-- <div class="flex items-center space-x-2">
       <Input
         placeholder="Search by device ID"
         value={(table.getColumn('device_id')?.getFilterValue() as string) ?? ''}
@@ -46,7 +57,7 @@
           <X />
         </Button>
       {/if}
-    </div>
+    </div> -->
     <div class="">
       <TableViewOptions {table} />
     </div>
