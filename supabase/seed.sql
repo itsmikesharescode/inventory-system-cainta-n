@@ -274,47 +274,56 @@ $$;
 
 ALTER FUNCTION "public"."admin_dashboard_counts"() OWNER TO "postgres";
 
-SET default_tablespace = '';
 
-SET default_table_access_method = "heap";
-
-
-CREATE TABLE IF NOT EXISTS "public"."items_tb" (
-    "id" bigint NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "device_id" "text" NOT NULL,
-    "model" "text" NOT NULL,
-    "type" "text" NOT NULL,
-    "status" "text" NOT NULL,
-    "brand" "text" NOT NULL,
-    "quantity" numeric NOT NULL,
-    "description" "text" NOT NULL,
-    "department_id" bigint NOT NULL,
-    "category_id" bigint NOT NULL
-);
-
-
-ALTER TABLE "public"."items_tb" OWNER TO "postgres";
-
-
-COMMENT ON TABLE "public"."items_tb" IS 'list of items';
-
-
-
-CREATE OR REPLACE FUNCTION "public"."fulltext_search"("search_term" "text") RETURNS SETOF "public"."items_tb"
+CREATE OR REPLACE FUNCTION "public"."fulltext_search"("search_term" "text") RETURNS "jsonb"
     LANGUAGE "plpgsql"
     AS $$
 begin
-    return query
-    select *
-    from items_tb
-    where to_tsvector('english',
-        coalesce(model, '') || ' ' ||
-        coalesce(type, '') || ' ' ||
-        coalesce(status, '') || ' ' ||
-        coalesce(brand, '') || ' ' ||
-        coalesce(description, '')
-    ) @@ to_tsquery('english', search_term);
+    return (
+        select 
+            jsonb_agg(
+                jsonb_build_object(
+                    'id', i.id,
+                    'created_at', i.created_at,
+                    'device_id', i.device_id,
+                    'model', i.model,
+                    'type', i.type,
+                    'status', i.status,
+                    'brand', i.brand,
+                    'quantity', i.quantity,
+                    'description', i.description,
+                    'department_id', i.department_id,
+                    'category_id', i.category_id,
+                    'entries_categories_tb', jsonb_build_object(
+                        'id', c.id,
+                        'created_at', c.created_at,
+                        'name', c.name
+                    ),
+                    'entries_departments_tb', jsonb_build_object(
+                        'id', d.id,
+                        'created_at', d.created_at,
+                        'name', d.name,
+                        'code', d.code
+                    )
+                )
+            )
+        from items_tb i
+        left join entries_categories_tb c on i.category_id = c.id
+        left join entries_departments_tb d on i.department_id = d.id
+        where to_tsvector('english',
+            coalesce(i.device_id, '') || ' ' ||
+            coalesce(i.model, '') || ' ' ||
+            coalesce(i.type, '') || ' ' ||
+            coalesce(i.status, '') || ' ' ||
+            coalesce(i.brand, '') || ' ' ||
+            coalesce(i.description, '') || ' ' ||
+            coalesce(i.department_id::text, '') || ' ' ||
+            coalesce(i.category_id::text, '') || ' ' ||
+            coalesce(c.name, '') || ' ' ||
+            coalesce(d.name, '') || ' ' ||
+            coalesce(d.code, '')
+        ) @@ to_tsquery('english', search_term || ':*')
+    );
 end;
 $$;
 
@@ -479,6 +488,10 @@ $$;
 
 ALTER FUNCTION "public"."on_auth_user_updated"() OWNER TO "postgres";
 
+SET default_tablespace = '';
+
+SET default_table_access_method = "heap";
+
 
 CREATE TABLE IF NOT EXISTS "public"."transaction_borrowed_items_tb" (
     "id" bigint NOT NULL,
@@ -590,6 +603,28 @@ ALTER TABLE "public"."entries_rooms_tb" OWNER TO "postgres";
 
 
 COMMENT ON TABLE "public"."entries_rooms_tb" IS 'list of room';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."items_tb" (
+    "id" bigint NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "device_id" "text" NOT NULL,
+    "model" "text" NOT NULL,
+    "type" "text" NOT NULL,
+    "status" "text" NOT NULL,
+    "brand" "text" NOT NULL,
+    "quantity" numeric NOT NULL,
+    "description" "text" NOT NULL,
+    "department_id" bigint NOT NULL,
+    "category_id" bigint NOT NULL
+);
+
+
+ALTER TABLE "public"."items_tb" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."items_tb" IS 'list of items';
 
 
 
@@ -1253,12 +1288,6 @@ GRANT ALL ON FUNCTION "public"."admin_dashboard_counts"() TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."items_tb" TO "anon";
-GRANT ALL ON TABLE "public"."items_tb" TO "authenticated";
-GRANT ALL ON TABLE "public"."items_tb" TO "service_role";
-
-
-
 GRANT ALL ON FUNCTION "public"."fulltext_search"("search_term" "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."fulltext_search"("search_term" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."fulltext_search"("search_term" "text") TO "service_role";
@@ -1355,6 +1384,12 @@ GRANT ALL ON SEQUENCE "public"."entries_categories_tb_id_seq" TO "service_role";
 GRANT ALL ON TABLE "public"."entries_rooms_tb" TO "anon";
 GRANT ALL ON TABLE "public"."entries_rooms_tb" TO "authenticated";
 GRANT ALL ON TABLE "public"."entries_rooms_tb" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."items_tb" TO "anon";
+GRANT ALL ON TABLE "public"."items_tb" TO "authenticated";
+GRANT ALL ON TABLE "public"."items_tb" TO "service_role";
 
 
 

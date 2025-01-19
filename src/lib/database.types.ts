@@ -480,19 +480,7 @@ export type Database = {
         Args: {
           search_term: string;
         };
-        Returns: {
-          brand: string;
-          category_id: number;
-          created_at: string;
-          department_id: number;
-          description: string;
-          device_id: string;
-          id: number;
-          model: string;
-          quantity: number;
-          status: string;
-          type: string;
-        }[];
+        Returns: Json;
       };
       general_update_reservation_status: {
         Args: {

@@ -23,7 +23,7 @@
   let { addItemForm, table }: Props = $props();
 
   let searchTerm = $state('');
-  const debounced = new Debounced(() => searchTerm, 500);
+  const debounced = new Debounced(() => searchTerm, 1000);
 
   $effect(() => {
     if (debounced.current) {

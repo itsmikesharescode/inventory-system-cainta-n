@@ -10,6 +10,8 @@
   import { page } from '$app/state';
   import type { PostgrestSingleResponse } from '@supabase/supabase-js';
   import type { Database } from '$lib/database.types';
+  import Undo2 from 'lucide-svelte/icons/undo-2';
+
   const { data } = $props();
 
   const breadRunes = useBreadCrumpRunes();
@@ -26,14 +28,20 @@
       ]
     }
   ]);
+
   initTableState();
+
+  type SearchResults = (Database['public']['Tables']['items_tb']['Row'] & {
+    entries_categories_tb?: Database['public']['Tables']['entries_categories_tb']['Row'] | null;
+    entries_departments_tb?: Database['public']['Tables']['entries_departments_tb']['Row'] | null;
+  })[];
 
   const getSearchItems = async () => {
     if (!page.data.supabase) return null;
 
     const { data, error } = (await page.data.supabase.rpc('fulltext_search', {
       search_term: page.url.searchParams.get('search') ?? ''
-    })) as PostgrestSingleResponse<Database['public']['Tables']['items_tb']['Row'][]>;
+    })) as PostgrestSingleResponse<SearchResults>;
 
     if (error) return null;
 
@@ -45,7 +53,18 @@
 
 <main class="container mt-10 flex flex-col gap-5" in:fly={{ x: -1000, duration: 300, delay: 100 }}>
   <span class="text-4xl font-semibold">Items</span>
-
+  {#if triggerSearch}
+    <div class="flex items-center gap-2.5">
+      <a
+        href="/admin/items"
+        class="flex items-center gap-1 underline transition-all duration-300 hover:text-primary"
+      >
+        <Undo2 class="size-4" />
+        <span class="text-sm italic">Go back</span>
+      </a>
+      <span class="text-sm italic text-muted-foreground">Search results for: {triggerSearch}</span>
+    </div>
+  {/if}
   {#if triggerSearch}
     {#await getSearchItems()}
       <section class="flex flex-col gap-2.5">
@@ -68,8 +87,8 @@
           device_id: item.device_id,
           department_id: item.department_id,
           category_id: item.category_id,
-          category: '',
-          department: '',
+          category: item.entries_categories_tb?.name ?? '',
+          department: item.entries_departments_tb?.code ?? '',
           model: item.model,
           type: item.type,
           status: item.status,
@@ -81,7 +100,6 @@
       />
     {/await}
   {:else}
-    <span>ASDASDSDASd</span>
     {#await data.items}
       <section class="flex flex-col gap-2.5">
         <div class="flex items-center justify-between gap-2.5">
