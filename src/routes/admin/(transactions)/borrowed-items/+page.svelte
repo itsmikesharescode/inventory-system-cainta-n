@@ -46,8 +46,8 @@
     <Table
       addBorrowerForm={data.addBorrowerForm}
       data={borrowers?.map((borrower) => ({
-        room_id: borrower.rooms_tb?.id ?? 0,
-        room: `${borrower.rooms_tb?.name} / ${borrower.rooms_tb?.number}`,
+        room_id: borrower.entries_rooms_tb?.id ?? 0,
+        room: `${borrower.entries_rooms_tb?.name} / ${borrower.entries_rooms_tb?.number}`,
         quantity: borrower.quantity ?? 0,
         id: borrower.id,
         reference_id: borrower.reference_id,

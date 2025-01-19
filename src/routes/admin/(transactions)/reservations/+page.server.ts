@@ -3,19 +3,30 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addReservationSchema } from './components/add-reservation/schema';
 import { fail } from '@sveltejs/kit';
-import streamReservationsUsersItems from '$lib/db-calls/streamReservationsUsersItems';
 import { updateReservationSchema } from './components/update-reservation/schema';
 import { deleteReservationSchema } from './components/delete-reservation/schema';
 import { updateStatusReservationSchema } from './components/update-status-reservation/schema';
 import { generateRefId } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+  const getReservations = async () => {
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('transaction_reservations_tb')
+      .select('*, teachers_tb(*), items_tb(*), entries_rooms_tb(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   return {
     addReservationForm: await superValidate(zod(addReservationSchema)),
     updateReservationForm: await superValidate(zod(updateReservationSchema)),
     deleteReservationForm: await superValidate(zod(deleteReservationSchema)),
     updateStatusReservationForm: await superValidate(zod(updateStatusReservationSchema)),
-    getReservations: streamReservationsUsersItems(supabase)
+    getReservations: getReservations()
   };
 };
 
@@ -27,7 +38,7 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('reservations_tb').insert({
+    const { error } = await supabase.from('transaction_reservations_tb').insert({
       reference_id: generateRefId(8),
       user_id: form.data.user_id,
       item_id: form.data.item_id,
@@ -51,7 +62,7 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase
-      .from('reservations_tb')
+      .from('transaction_reservations_tb')
       .update({
         user_id: form.data.user_id,
         item_id: form.data.item_id,
@@ -75,7 +86,10 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('reservations_tb').delete().eq('id', form.data.id);
+    const { error } = await supabase
+      .from('transaction_reservations_tb')
+      .delete()
+      .eq('id', form.data.id);
 
     if (error) {
       return fail(401, { form, msg: error.message });

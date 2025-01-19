@@ -6,27 +6,19 @@
   import * as Popover from '$lib/components/ui/popover/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { cn } from '$lib/utils.js';
-  import { page } from '$app/stores';
   import type { Database } from '$lib/database.types';
-  import streamRooms from '$lib/db-calls/streamRooms';
+
   interface Props {
-    room_id: number;
+    user_id: string;
+    teachers: Database['public']['Tables']['teachers_tb']['Row'][] | null;
   }
 
-  let { room_id = $bindable() }: Props = $props();
-
-  let rooms = $state<Database['public']['Tables']['rooms_tb']['Row'][] | null>(null);
-
-  const getRooms = async () => {
-    if (!$page.data.supabase) return;
-    rooms = await streamRooms($page.data.supabase);
-  };
+  let { user_id = $bindable(), teachers }: Props = $props();
 
   let open = $state(false);
-  let value = $state(String());
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(rooms?.find((f) => f.id.toString() === String(room_id)));
+  const selectedValue = $derived(teachers?.find((f) => f.user_id === user_id)?.user_meta_data);
 
   function closeAndFocusTrigger() {
     open = false;
@@ -35,17 +27,11 @@
     });
   }
 
-  $effect(() => {
-    tick().then(async () => {
-      await getRooms();
-    });
-  });
-
   const checkSelected = () => {
     if (selectedValue) {
-      return `${selectedValue?.name}`;
+      return `${selectedValue?.lastname}, ${selectedValue?.firstname} ${selectedValue?.middlename}`;
     }
-    return 'Select a room';
+    return 'Select a teacher';
   };
 </script>
 
@@ -54,7 +40,7 @@
     {#snippet child({ props })}
       <Button
         variant="outline"
-        class="w-full justify-between {room_id ? '' : 'text-muted-foreground'}"
+        class="w-full justify-between {user_id ? '' : 'text-muted-foreground'}"
         {...props}
         role="combobox"
         aria-expanded={open}
@@ -66,29 +52,25 @@
   </Popover.Trigger>
   <Popover.Content class="w-[300px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search item model..." />
+      <Command.Input placeholder="Search teacher fullname..." />
       <Command.List>
-        <Command.Empty>No rooms found.</Command.Empty>
-        <Command.Group>
-          {#each rooms ?? [] as room}
+        <Command.Empty>No teachers found.</Command.Empty>
+        <Command.Group class="">
+          {#each teachers ?? [] as teacher}
             <Command.Item
-              value={room.name}
+              value={teacher.user_id}
               onSelect={() => {
-                value = room.id.toString();
-                room_id = room.id;
+                user_id = teacher.user_id;
                 closeAndFocusTrigger();
               }}
             >
-              <Check
-                class={cn(
-                  'mr-2 size-4',
-                  String(room_id) !== room.id.toString() && 'text-transparent'
-                )}
-              />
+              <Check class={cn('mr-2 size-4', user_id !== teacher.user_id && 'text-transparent')} />
               <section class="flex flex-col">
-                <span>{room.name}</span>
+                <span>
+                  {`${teacher.user_meta_data.lastname}, ${teacher.user_meta_data.firstname} ${teacher.user_meta_data.middlename}`}
+                </span>
                 <span class="text-xs text-muted-foreground">
-                  {room.number}
+                  {teacher.user_meta_data.teacher_id}
                 </span>
               </section>
             </Command.Item>

@@ -1,23 +1,21 @@
 <script lang="ts">
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
   import { updateReservationSchema, type UpdateReservationSchema } from './schema';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import Plus from 'lucide-svelte/icons/plus';
-  import { timeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
-  import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
-  import ItemPicker from '$lib/components/general/item-picker.svelte';
-  import ComboPicker from '$lib/components/general/combo-picker.svelte';
+  import TeacherPicker from '$lib/components/general/custom-pickers/teacher-picker.svelte';
+  import ItemPicker from '$lib/components/general/custom-pickers/item-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
   import { TimePicker } from '$lib/components/general/time-picker/index';
   import { convert24Hto12H } from '$lib';
-  import RoomPicker from '$lib/components/general/room-picker.svelte';
+  import RoomPicker from '$lib/components/general/custom-pickers/room-picker.svelte';
+  import { page } from '$app/state';
+
   interface Props {
     updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
   }
@@ -48,8 +46,41 @@
 
   const { form: formData, enhance, submitting, reset } = form;
 
+  let teachers = $state<Awaited<ReturnType<typeof getTeachers>>>(null);
+  let rooms = $state<Awaited<ReturnType<typeof getRooms>>>(null);
+  let items = $state<Awaited<ReturnType<typeof getItems>>>(null);
+
+  const getTeachers = async () => {
+    if (!page.data.supabase) return null;
+    const { data, error } = await page.data.supabase.from('teachers_tb').select('*');
+    if (error) return null;
+    return data;
+  };
+
+  const getRooms = async () => {
+    if (!page.data.supabase) return null;
+    const { data, error } = await page.data.supabase.from('entries_rooms_tb').select('*');
+    if (error) return null;
+    return data;
+  };
+
+  const getItems = async () => {
+    if (!page.data.supabase) return null;
+    const { data, error } = await page.data.supabase.from('items_tb').select('*');
+    if (error) return null;
+    return data;
+  };
+
   $effect(() => {
     if (tableState.getShowUpdate()) {
+      Promise.all([getTeachers(), getRooms(), getItems()]).then(
+        ([teachersData, roomsData, itemsData]) => {
+          teachers = teachersData;
+          rooms = roomsData;
+          items = itemsData;
+        }
+      );
+
       $formData.id = tableState.getActiveRow()?.id ?? 0;
       $formData.user_id = tableState.getActiveRow()?.user_id ?? '';
       $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
@@ -72,7 +103,6 @@
 </script>
 
 <Dialog.Root
-  controlledOpen
   onOpenChange={(open) => tableState.setShowUpdate(open)}
   open={tableState.getShowUpdate()}
 >
@@ -89,7 +119,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Teacher</Form.Label>
-                <TeacherPicker bind:user_id={$formData.user_id} />
+                <TeacherPicker bind:user_id={$formData.user_id} {teachers} />
                 <input type="hidden" {...props} bind:value={$formData.user_id} />
               {/snippet}
             </Form.Control>
@@ -101,7 +131,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Item</Form.Label>
-                <ItemPicker bind:item_id={$formData.item_id} />
+                <ItemPicker bind:item_id={$formData.item_id} {items} />
                 <input type="hidden" {...props} bind:value={$formData.item_id} />
               {/snippet}
             </Form.Control>
@@ -131,7 +161,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Room</Form.Label>
-                <RoomPicker bind:room_id={$formData.room_id} />
+                <RoomPicker bind:room_id={$formData.room_id} {rooms} />
                 <input type="hidden" {...props} bind:value={$formData.room_id} />
               {/snippet}
             </Form.Control>

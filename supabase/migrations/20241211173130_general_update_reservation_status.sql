@@ -18,7 +18,7 @@ declare
 begin
     -- Get the reservation details and verify item_id matches
     select r.quantity, r.item_id, r.status into reservation_quantity, actual_item_id, current_status
-    from reservations_tb r
+    from transaction_reservations_tb r
     where r.id = reservation_id_client;
 
     -- Check if reservation exists
@@ -67,11 +67,11 @@ begin
     end if;
 
     
-    update reservations_tb
+    update transaction_reservations_tb
     set status = $3  
     where id = reservation_id_client;
 
-    insert into borrowed_items_tb (user_id, item_id, date, time, reference_id, room_id, quantity)
+    insert into transaction_borrowed_items_tb (user_id, item_id, date, time, reference_id, room_id, quantity)
     values (user_id_client, item_id_param_client, date_client, time_client, reference_id_client, room_id_client, quantity_client);
 
     -- Insert into borrowed_logs_tb for logging better than trigger

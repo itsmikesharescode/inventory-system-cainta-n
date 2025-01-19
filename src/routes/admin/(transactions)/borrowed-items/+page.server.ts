@@ -3,19 +3,29 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { addBorrowerSchema } from './components/add-borrower/schema';
 import { fail } from '@sveltejs/kit';
-import streamBorrowersUsersItems from '$lib/db-calls/streamBorrowersUsersItems';
 import { updateBorrowerSchema } from './components/update-borrower/schema';
 import { deleteBorrowerSchema } from './components/delete-borrower/schema';
 import { generateRefId } from '$lib';
 import { moveToReturneeSchema } from './components/move-to-returnee/schema';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+  const getBorrowers = async () => {
+    if (!supabase) return null;
+    const { data, error } = await supabase
+      .from('transaction_borrowed_items_tb')
+      .select('*, teachers_tb(*), items_tb(*), entries_rooms_tb(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   return {
     addBorrowerForm: await superValidate(zod(addBorrowerSchema)),
     updateBorrowerForm: await superValidate(zod(updateBorrowerSchema)),
     deleteBorrowerForm: await superValidate(zod(deleteBorrowerSchema)),
     moveToReturneeForm: await superValidate(zod(moveToReturneeSchema)),
-    getBorrowers: streamBorrowersUsersItems(supabase)
+    getBorrowers: getBorrowers()
   };
 };
 
@@ -52,7 +62,7 @@ export const actions: Actions = {
     }
 
     const { error } = await supabase
-      .from('borrowed_items_tb')
+      .from('transaction_borrowed_items_tb')
       .update({
         user_id: form.data.user_id,
         item_id: form.data.item_id,
@@ -101,7 +111,10 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('borrowed_items_tb').delete().eq('id', form.data.id);
+    const { error } = await supabase
+      .from('transaction_borrowed_items_tb')
+      .delete()
+      .eq('id', form.data.id);
 
     if (error) {
       return fail(401, { form, msg: error.message });

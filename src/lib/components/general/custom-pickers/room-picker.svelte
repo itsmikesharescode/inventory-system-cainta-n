@@ -6,28 +6,19 @@
   import * as Popover from '$lib/components/ui/popover/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { cn } from '$lib/utils.js';
-  import { page } from '$app/stores';
   import type { Database } from '$lib/database.types';
-  import streamItems from '$lib/db-calls/streamItems';
 
   interface Props {
-    item_id: number;
+    room_id: number;
+    rooms: Database['public']['Tables']['entries_rooms_tb']['Row'][] | null;
   }
 
-  let { item_id = $bindable() }: Props = $props();
-
-  let items = $state<Database['public']['Tables']['items_tb']['Row'][] | null>(null);
-
-  const getItems = async () => {
-    if (!$page.data.supabase) return;
-    items = await streamItems($page.data.supabase);
-  };
+  let { room_id = $bindable(), rooms }: Props = $props();
 
   let open = $state(false);
-  let value = $state(String());
   let triggerRef = $state<HTMLButtonElement>(null!);
 
-  const selectedValue = $derived(items?.find((f) => f.id.toString() === String(item_id)));
+  const selectedValue = $derived(rooms?.find((f) => f.id.toString() === String(room_id)));
 
   function closeAndFocusTrigger() {
     open = false;
@@ -36,19 +27,11 @@
     });
   }
 
-  $effect(() => {
-    getItems();
-
-    return () => {
-      items = null;
-    };
-  });
-
   const checkSelected = () => {
     if (selectedValue) {
-      return `${selectedValue?.model}`;
+      return `${selectedValue?.name}`;
     }
-    return 'Select an item';
+    return 'Select a room';
   };
 </script>
 
@@ -57,7 +40,7 @@
     {#snippet child({ props })}
       <Button
         variant="outline"
-        class="w-full justify-between {item_id ? '' : 'text-muted-foreground'}"
+        class="w-full justify-between {room_id ? '' : 'text-muted-foreground'}"
         {...props}
         role="combobox"
         aria-expanded={open}
@@ -71,27 +54,26 @@
     <Command.Root>
       <Command.Input placeholder="Search item model..." />
       <Command.List>
-        <Command.Empty>No items found.</Command.Empty>
+        <Command.Empty>No rooms found.</Command.Empty>
         <Command.Group>
-          {#each items ?? [] as item}
+          {#each rooms ?? [] as room}
             <Command.Item
-              value={item.model}
+              value={room.name}
               onSelect={() => {
-                value = item.id.toString();
-                item_id = item.id;
+                room_id = room.id;
                 closeAndFocusTrigger();
               }}
             >
               <Check
                 class={cn(
                   'mr-2 size-4',
-                  String(item_id) !== item.id.toString() && 'text-transparent'
+                  String(room_id) !== room.id.toString() && 'text-transparent'
                 )}
               />
               <section class="flex flex-col">
-                <span>{item.model}</span>
+                <span>{room.name}</span>
                 <span class="text-xs text-muted-foreground">
-                  {item.brand}/{item.quantity}
+                  {room.number}
                 </span>
               </section>
             </Command.Item>

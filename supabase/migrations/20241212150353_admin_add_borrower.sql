@@ -33,7 +33,7 @@ begin
     where id = item_id_param;
 
     -- Insert the new borrowed item record
-    insert into borrowed_items_tb (
+    insert into transaction_borrowed_items_tb (
         user_id,
         item_id,
         date,
