@@ -534,6 +534,19 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      dispose_returnee: {
+        Args: {
+          id_input: number;
+          user_id_input: string;
+          item_id_input: number;
+          room_id_input: number;
+          reference_id_input: string;
+          quantity_input: number;
+          remarks_input: string;
+          borrowed_date_input: string;
+        };
+        Returns: undefined;
+      };
       fulltext_search: {
         Args: {
           search_term: string;

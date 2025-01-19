@@ -9,6 +9,7 @@
   import * as Resizable from '$lib/components/ui/resizable/index.js';
   import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+  import DisposeData from './components/dispose-data/dispose-data.svelte';
 
   const { data } = $props();
 
@@ -81,12 +82,10 @@
     </ScrollArea>
   </Resizable.Pane>
   <Resizable.Handle withHandle />
-  <Resizable.Pane defaultSize={15} class="flex flex-col">
+  <Resizable.Pane defaultSize={50} class="flex flex-col bg-secondary/50">
     <ScrollArea class="">
       <div class="flex flex-col gap-5">
-        {#each Array(30)}
-          <div class="h-[20dvh] bg-red-500">wew</div>
-        {/each}
+        <DisposeData />
       </div>
     </ScrollArea>
   </Resizable.Pane>
