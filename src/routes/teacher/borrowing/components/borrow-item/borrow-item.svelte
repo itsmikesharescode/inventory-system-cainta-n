@@ -7,15 +7,14 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import Plus from 'lucide-svelte/icons/plus';
-  import { timeMeta } from '$lib';
   import LoaderCircle from 'lucide-svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
-  import TeacherPicker from '$lib/components/general/teacher-picker.svelte';
-  import ItemPicker from '$lib/components/general/item-picker.svelte';
-  import ComboPicker from '$lib/components/general/combo-picker.svelte';
+  import ItemPicker from '$lib/components/general/custom-pickers/item-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
+  import RoomPicker from '$lib/components/general/custom-pickers/room-picker.svelte';
   import { TimePicker } from '$lib/components/general/time-picker/index.js';
-  import RoomPicker from '$lib/components/general/room-picker.svelte';
+  import { page } from '$app/state';
+
   interface Props {
     borrowItemForm: SuperValidated<Infer<BorrowItemSchema>>;
   }
@@ -45,8 +44,42 @@
 
   const { form: formData, enhance, submitting, reset } = form;
 
+  let rooms = $state<Awaited<ReturnType<typeof getRooms>>>(null);
+  let items = $state<Awaited<ReturnType<typeof getItems>>>(null);
+
+  const getRooms = async () => {
+    if (!page.data.supabase) return null;
+
+    const { data, error } = await page.data.supabase
+      .from('entries_rooms_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+
+    return data;
+  };
+
+  const getItems = async () => {
+    if (!page.data.supabase) return null;
+
+    const { data, error } = await page.data.supabase
+      .from('items_tb')
+      .select('*, entries_departments_tb(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+
+    return data;
+  };
+
   $effect(() => {
     if (open) {
+      Promise.all([getRooms(), getItems()]).then(([roomsData, itemsData]) => {
+        rooms = roomsData;
+        items = itemsData;
+      });
+
       return () => {
         reset();
       };
@@ -68,7 +101,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Item</Form.Label>
-                <ItemPicker bind:item_id={$formData.item_id} />
+                <ItemPicker bind:item_id={$formData.item_id} items={items ?? []} />
                 <input type="hidden" {...props} bind:value={$formData.item_id} />
               {/snippet}
             </Form.Control>
@@ -96,7 +129,7 @@
             <Form.Control>
               {#snippet children({ props })}
                 <Form.Label>Room</Form.Label>
-                <RoomPicker bind:room_id={$formData.room_id} />
+                <RoomPicker bind:room_id={$formData.room_id} rooms={rooms ?? []} />
                 <input type="hidden" {...props} bind:value={$formData.room_id} />
               {/snippet}
             </Form.Control>

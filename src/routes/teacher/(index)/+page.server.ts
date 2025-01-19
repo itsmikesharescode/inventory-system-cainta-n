@@ -5,15 +5,27 @@ import { addReservationSchema } from './components/add-reservation/schema';
 import { fail } from '@sveltejs/kit';
 import { updateReservationSchema } from './components/update-reservation/schema';
 import { deleteReservationSchema } from './components/delete-reservation/schema';
-import streamReservationsItems from '$lib/db-calls/streamReservationsItems';
 import { generateRefId } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
+  const getReservations = async () => {
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('transaction_reservations_tb')
+      .select('*, items_tb(*), entries_rooms_tb(*)')
+      .eq('user_id', user?.id ?? '');
+
+    if (error) return null;
+
+    return data;
+  };
+
   return {
     addReservationForm: await superValidate(zod(addReservationSchema)),
     updateReservationForm: await superValidate(zod(updateReservationSchema)),
     deleteReservationForm: await superValidate(zod(deleteReservationSchema)),
-    getReservations: streamReservationsItems(supabase, user?.id ?? '')
+    getReservations: getReservations()
   };
 };
 
@@ -25,7 +37,7 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('reservations_tb').insert({
+    const { error } = await supabase.from('transaction_reservations_tb').insert({
       reference_id: generateRefId(8),
       user_id: user?.id ?? '',
       item_id: form.data.item_id,
@@ -48,7 +60,7 @@ export const actions: Actions = {
       return fail(400, { form });
     }
     const { error } = await supabase
-      .from('reservations_tb')
+      .from('transaction_reservations_tb')
       .update({
         item_id: form.data.item_id,
         quantity: form.data.quantity,
@@ -71,7 +83,10 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { error } = await supabase.from('reservations_tb').delete().eq('id', form.data.id);
+    const { error } = await supabase
+      .from('transaction_reservations_tb')
+      .delete()
+      .eq('id', form.data.id);
 
     if (error) {
       return fail(401, { form, msg: error.message });

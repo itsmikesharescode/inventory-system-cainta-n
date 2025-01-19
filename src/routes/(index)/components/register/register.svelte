@@ -7,8 +7,9 @@
   import { toast } from 'svelte-sonner';
   import { type RegisterSchema, registerSchema } from './schema';
   import { type SuperValidated, type Infer } from 'sveltekit-superforms';
-  import DepartmentPicker from '$lib/components/general/department-picker.svelte';
+  import DepartmentPicker from '$lib/components/general/custom-pickers/department-picker.svelte';
   import { generateRefId } from '$lib';
+  import { page } from '$app/state';
 
   interface Props {
     registerForm: SuperValidated<Infer<RegisterSchema>>;
@@ -35,7 +36,24 @@
 
   const { form: formData, enhance, submitting } = form;
 
+  let departments = $state<Awaited<ReturnType<typeof getDepartments>>>(null);
+  const getDepartments = async () => {
+    if (!page.data.supabase) return null;
+
+    const { data, error } = await page.data.supabase
+      .from('entries_departments_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+    return data;
+  };
+
   $effect(() => {
+    getDepartments().then((deps) => {
+      departments = deps;
+    });
+
     $formData.teacherId = generateRefId(12);
     return () => {
       $formData.teacherId = '';
@@ -97,12 +115,15 @@
       <Form.FieldErrors />
     </Form.Field>
 
-    <Form.Field {form} name="department">
+    <Form.Field {form} name="department_id">
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Department</Form.Label>
-          <DepartmentPicker bind:code={$formData.department} />
-          <input type="hidden" {...props} bind:value={$formData.department} />
+          <DepartmentPicker
+            bind:department_id={$formData.department_id}
+            departments={departments ?? []}
+          />
+          <input type="hidden" {...props} bind:value={$formData.department_id} />
         {/snippet}
       </Form.Control>
       <Form.Description />

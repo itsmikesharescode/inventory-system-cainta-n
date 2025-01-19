@@ -80,7 +80,7 @@
 
     const { data, error } = await page.data.supabase
       .from('items_tb')
-      .select('*')
+      .select('*, entries_departments_tb(*)')
       .order('created_at', { ascending: false });
 
     if (error) return null;

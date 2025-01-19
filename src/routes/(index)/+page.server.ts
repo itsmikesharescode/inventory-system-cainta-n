@@ -67,7 +67,7 @@ export const actions: Actions = {
           lastname: form.data.lastName,
           teacher_id: form.data.teacherId,
           phone: form.data.phone,
-          department: form.data.department
+          department_id: form.data.department_id
         }
       }
     });

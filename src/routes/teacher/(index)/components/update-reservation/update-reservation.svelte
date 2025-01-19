@@ -9,10 +9,11 @@
   import { toast } from 'svelte-sonner';
   import ItemPicker from '$lib/components/general/custom-pickers/item-picker.svelte';
   import DatePicker from '$lib/components/general/date-picker.svelte';
+  import RoomPicker from '$lib/components/general/custom-pickers/room-picker.svelte';
   import { useTableState } from '../table/tableState.svelte';
   import { TimePicker } from '$lib/components/general/time-picker/index';
   import { convert24Hto12H } from '$lib';
-  import RoomPicker from '$lib/components/general/custom-pickers/room-picker.svelte';
+  import { page } from '$app/state';
 
   interface Props {
     updateReservationForm: SuperValidated<Infer<UpdateReservationSchema>>;
@@ -44,8 +45,42 @@
 
   const { form: formData, enhance, submitting, reset } = form;
 
+  let rooms = $state<Awaited<ReturnType<typeof getRooms>>>(null);
+  let items = $state<Awaited<ReturnType<typeof getItems>>>(null);
+
+  const getRooms = async () => {
+    if (!page.data.supabase) return null;
+
+    const { data, error } = await page.data.supabase
+      .from('entries_rooms_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+
+    return data;
+  };
+
+  const getItems = async () => {
+    if (!page.data.supabase) return null;
+
+    const { data, error } = await page.data.supabase
+      .from('items_tb')
+      .select('*, entries_departments_tb(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+
+    return data;
+  };
+
   $effect(() => {
     if (tableState.getShowUpdate()) {
+      Promise.all([getRooms(), getItems()]).then(([roomsData, itemsData]) => {
+        rooms = roomsData;
+        items = itemsData;
+      });
+
       $formData.id = tableState.getActiveRow()?.id ?? 0;
       $formData.item_id = tableState.getActiveRow()?.item_id ?? 0;
       $formData.quantity = tableState.getActiveRow()?.quantity ?? 0;
@@ -66,7 +101,6 @@
 </script>
 
 <Dialog.Root
-  controlledOpen
   onOpenChange={(open) => tableState.setShowUpdate(open)}
   open={tableState.getShowUpdate()}
 >
@@ -82,7 +116,7 @@
           <Form.Control>
             {#snippet children({ props })}
               <Form.Label>Item</Form.Label>
-              <ItemPicker bind:item_id={$formData.item_id} />
+              <ItemPicker bind:item_id={$formData.item_id} items={items ?? []} />
               <input type="hidden" {...props} bind:value={$formData.item_id} />
             {/snippet}
           </Form.Control>
@@ -110,7 +144,7 @@
           <Form.Control>
             {#snippet children({ props })}
               <Form.Label>Room</Form.Label>
-              <RoomPicker bind:room_id={$formData.room_id} />
+              <RoomPicker bind:room_id={$formData.room_id} {rooms} />
               <input type="hidden" {...props} bind:value={$formData.room_id} />
             {/snippet}
           </Form.Control>

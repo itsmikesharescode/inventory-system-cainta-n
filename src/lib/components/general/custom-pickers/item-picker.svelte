@@ -11,7 +11,7 @@
   interface Props {
     item_id: number;
     items: (Database['public']['Tables']['items_tb']['Row'] & {
-      entries_categories_tb?: Database['public']['Tables']['entries_categories_tb']['Row'] | null;
+      entries_departments_tb?: Database['public']['Tables']['entries_departments_tb']['Row'] | null;
     })[];
   }
 
@@ -78,7 +78,7 @@
                   {item.brand}/{item.quantity}
                 </span>
                 <span class="text-xs text-muted-foreground">
-                  {item.entries_categories_tb?.name}
+                  {item.entries_departments_tb?.code}
                 </span>
               </section>
             </Command.Item>

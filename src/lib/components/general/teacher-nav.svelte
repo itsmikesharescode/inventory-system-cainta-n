@@ -1,11 +1,8 @@
 <script lang="ts">
   import * as Menubar from '$lib/components/ui/menubar/index.js';
-  import ChevronDown from 'lucide-svelte/icons/chevron-down';
   import Menu from 'lucide-svelte/icons/menu';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
-  import * as Accordion from '$lib/components/ui/accordion/index.js';
   import { MediaQuery } from 'runed';
-  import Profile from './profile.svelte';
 
   const screen = new MediaQuery('(min-width: 768px)');
 
@@ -35,8 +32,6 @@
           Account
         </a>
       </div>
-
-      <Profile />
     </section>
   </Menubar.Root>
 {:else}
@@ -61,9 +56,7 @@
         >
       </section>
 
-      <section class="absolute bottom-5">
-        <Profile />
-      </section>
+      <section class="absolute bottom-5"></section>
     </Sheet.Content>
   </Sheet.Root>
 {/if}

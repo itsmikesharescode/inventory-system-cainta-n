@@ -3,13 +3,26 @@ import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import { borrowItemSchema } from './components/borrow-item/schema';
 import { fail } from '@sveltejs/kit';
-import streamBorrowersUsersItems from '$lib/db-calls/streamBorrowersUsersItems';
 import { generateRefId } from '$lib';
 
 export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
+  const getBorrowers = async () => {
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('transaction_borrowed_items_tb')
+      .select('*, items_tb(*), entries_rooms_tb(*)')
+      .eq('user_id', user?.id ?? '')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+
+    return data;
+  };
+
   return {
     borrowItemForm: await superValidate(zod(borrowItemSchema)),
-    getBorrowers: streamBorrowersUsersItems(supabase, user?.id)
+    getBorrowers: getBorrowers()
   };
 };
 
