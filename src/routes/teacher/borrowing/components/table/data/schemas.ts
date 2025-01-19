@@ -9,7 +9,7 @@ export const borrowerSchema = z.object({
   item_id: z.number(),
   quantity: z.number(),
   room_id: z.number(),
-  room: z.string(),
+  room_name: z.string(),
   date: z.string(),
   time: z.string(),
   item: z.string(),

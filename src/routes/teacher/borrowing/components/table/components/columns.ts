@@ -72,8 +72,8 @@ export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
   },
 
   {
-    accessorKey: 'room',
-    id: 'room',
+    accessorKey: 'room_name',
+    id: 'room_name',
     header: ({ column }) => {
       return renderComponent(TableColumnHeader<BorrowedItemsPageTable, unknown>, {
         column,
@@ -87,7 +87,7 @@ export const columns: ColumnDef<BorrowedItemsPageTable, unknown>[] = [
         };
       });
 
-      return renderSnippet(roomSnippet, row.getValue('room'));
+      return renderSnippet(roomSnippet, row.getValue('room_name'));
     },
     enableSorting: true,
     enableHiding: true

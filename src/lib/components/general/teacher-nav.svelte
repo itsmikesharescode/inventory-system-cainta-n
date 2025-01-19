@@ -3,6 +3,7 @@
   import Menu from 'lucide-svelte/icons/menu';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
   import { MediaQuery } from 'runed';
+  import Profile from './profile.svelte';
 
   const screen = new MediaQuery('(min-width: 768px)');
 
@@ -10,7 +11,7 @@
 </script>
 
 {#if screen.matches}
-  <Menubar.Root class="rounded-none border-none bg-white">
+  <Menubar.Root class="rounded-none border-none p-10">
     <section class="container flex items-center justify-between gap-2.5 rounded-none border-none">
       <div class="flex items-center gap-2.5">
         <a
@@ -32,6 +33,8 @@
           Account
         </a>
       </div>
+
+      <Profile isTeacher={true} />
     </section>
   </Menubar.Root>
 {:else}
@@ -56,7 +59,9 @@
         >
       </section>
 
-      <section class="absolute bottom-5"></section>
+      <section class="absolute bottom-5">
+        <Profile isTeacher />
+      </section>
     </Sheet.Content>
   </Sheet.Root>
 {/if}
