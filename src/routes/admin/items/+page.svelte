@@ -6,8 +6,23 @@
   import UpdateItem from './components/update-item/update-item.svelte';
   import DeleteItem from './components/delete-item/delete-item.svelte';
   import { fly } from 'svelte/transition';
+  import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
   const { data } = $props();
 
+  const breadRunes = useBreadCrumpRunes();
+
+  breadRunes.setBread([
+    {
+      name: 'Dashboard',
+      url: '/admin',
+      childLinks: [
+        {
+          name: 'Items',
+          url: '/admin/items'
+        }
+      ]
+    }
+  ]);
   initTableState();
 </script>
 

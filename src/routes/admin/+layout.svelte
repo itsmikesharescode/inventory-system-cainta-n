@@ -13,14 +13,16 @@
 
 <Sidebar.Provider>
   <AppSideBar />
-  <Sidebar.Inset>
+  <Sidebar.Inset class="min-w-0 overflow-auto">
     <header class="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 border-b bg-white px-4">
       <Sidebar.Trigger class="-ml-1" />
       <Separator orientation="vertical" class="mr-2 h-4" />
       <BreadCrump />
     </header>
-    <div class="flex flex-1 flex-col gap-4 overflow-hidden p-4">
-      {@render children()}
+    <div class="min-w-0 overflow-auto">
+      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+        {@render children()}
+      </div>
     </div>
   </Sidebar.Inset>
 </Sidebar.Provider>

@@ -16,8 +16,8 @@
       url: '/admin',
       childLinks: [
         {
-          name: 'Rooms',
-          url: '/admin/rooms'
+          name: 'Categories',
+          url: '/admin/categories'
         }
       ]
     }

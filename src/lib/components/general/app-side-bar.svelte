@@ -57,23 +57,6 @@
       }
     ]
   };
-
-  const openViaVisited = $derived(() => {
-    if (
-      page.url.pathname === '/admin/reservations' ||
-      page.url.pathname === '/admin/borrowed-items' ||
-      page.url.pathname === '/admin/returned-items'
-    ) {
-      return 1;
-    } else if (
-      page.url.pathname === '/admin/departments' ||
-      page.url.pathname === '/admin/rooms' ||
-      page.url.pathname === '/admin/categories'
-    ) {
-      return 2;
-    }
-    return 0;
-  });
 </script>
 
 <script lang="ts">

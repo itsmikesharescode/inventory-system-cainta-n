@@ -35,12 +35,7 @@
     {@render children?.()}
   </div>
 {:else if sidebar.isMobile}
-  <Sheet.Root
-    controlledOpen
-    open={sidebar.openMobile}
-    onOpenChange={sidebar.setOpenMobile}
-    {...restProps}
-  >
+  <Sheet.Root open={sidebar.openMobile} onOpenChange={sidebar.setOpenMobile} {...restProps}>
     <Sheet.Content
       data-sidebar="sidebar"
       data-mobile="true"
@@ -48,7 +43,7 @@
       style="--sidebar-width: {SIDEBAR_WIDTH_MOBILE};"
       {side}
     >
-      <div class="flex h-full w-full flex-col">
+      <div class="flex h-full w-full flex-col bg-background">
         {@render children?.()}
       </div>
     </Sheet.Content>

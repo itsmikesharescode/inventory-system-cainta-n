@@ -6,8 +6,22 @@
   import UpdateAccount from './components/update-account/update-account.svelte';
   import DeleteAccount from './components/delete-account/delete-account.svelte';
   import { fly } from 'svelte/transition';
+  import { useBreadCrumpRunes } from '$lib/components/general/bread-crump/state.svelte';
   const { data } = $props();
+  const breadRunes = useBreadCrumpRunes();
 
+  breadRunes.setBread([
+    {
+      name: 'Dashboard',
+      url: '/admin',
+      childLinks: [
+        {
+          name: 'Accounts',
+          url: '/admin/accounts'
+        }
+      ]
+    }
+  ]);
   initTableState();
 </script>
 
