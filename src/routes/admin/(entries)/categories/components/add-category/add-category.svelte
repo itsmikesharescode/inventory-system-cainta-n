@@ -52,7 +52,7 @@
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Category Name</Form.Label>
-            <Input {...props} bind:value={$formData.name} placeholder="Enter Name" />
+            <Input {...props} bind:value={$formData.name} placeholder="Enter Category Name" />
           {/snippet}
         </Form.Control>
         <Form.Description />

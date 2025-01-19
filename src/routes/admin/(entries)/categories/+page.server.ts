@@ -6,11 +6,25 @@ import { addCategorySchema } from './components/add-category/schema';
 import { updateCategorySchema } from './components/update-category/schema';
 import { deleteCategorySchema } from './components/delete-category/schema';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals: { supabase } }) => {
+  const getCategories = async () => {
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('entries_categories_tb')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return null;
+
+    return data;
+  };
+
   return {
     addCategoryForm: await superValidate(zod(addCategorySchema)),
     updateCategoryForm: await superValidate(zod(updateCategorySchema)),
-    deleteCategoryForm: await superValidate(zod(deleteCategorySchema))
+    deleteCategoryForm: await superValidate(zod(deleteCategorySchema)),
+    categories: getCategories()
   };
 };
 

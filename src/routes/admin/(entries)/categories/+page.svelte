@@ -28,7 +28,7 @@
 
 <main class="container mt-10 flex flex-col gap-5" in:fly={{ x: -1000, duration: 300, delay: 100 }}>
   <span class="text-4xl font-semibold">Categories</span>
-  {#await null}
+  {#await data.categories}
     <section class="flex flex-col gap-2.5">
       <div class="flex items-center justify-between gap-2.5">
         <Skeleton class="h-[40px] w-[100px] rounded-lg" />
