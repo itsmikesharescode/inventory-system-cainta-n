@@ -63,7 +63,7 @@
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   {:else}
-    <!-- <Sidebar.Menu>
+    <Sidebar.Menu>
       <Sidebar.MenuItem>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
@@ -108,6 +108,6 @@
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </Sidebar.MenuItem>
-    </Sidebar.Menu> -->
+    </Sidebar.Menu>
   {/if}
 {/if}

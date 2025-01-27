@@ -32,7 +32,7 @@
 
 <svelte:boundary onerror={(e) => console.error(e)}>
   <Toaster />
-  <main class=" font-roboto">
+  <main class="font-roboto overflow-hidden">
     {@render children()}
   </main>
 
