@@ -13,17 +13,17 @@
     "lint": "prettier --check . && eslint ."
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.5",
+    "@eslint/compat": "^1.2.6",
     "@internationalized/date": "^3.7.0",
     "@sveltejs/adapter-auto": "^3.3.1",
-    "@sveltejs/adapter-vercel": "^5.5.3",
-    "@sveltejs/kit": "^2.16.1",
+    "@sveltejs/adapter-vercel": "^5.6.1",
+    "@sveltejs/kit": "^2.17.1",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "autoprefixer": "^10.4.20",
-    "bits-ui": "^1.0.0-next.78",
+    "bits-ui": "^1.0.0-next.90",
     "clsx": "^2.1.1",
     "embla-carousel-svelte": "^8.5.2",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.46.1",
     "formsnap": "^2.0.0",
@@ -34,7 +34,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "svelte": "^5.19.3",
+    "svelte": "^5.19.9",
     "svelte-check": "^4.1.4",
     "svelte-sonner": "^0.3.28",
     "sveltekit-superforms": "^2.23.1",
@@ -43,9 +43,9 @@
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.21.0",
+    "typescript-eslint": "^8.23.0",
     "vaul-svelte": "^1.0.0-next.3",
-    "vite": "^6.0.11",
+    "vite": "^6.1.0",
     "zod": "^3.24.1"
   },
   "dependencies": {
@@ -57,7 +57,7 @@
     "@tanstack/table-core": "^8.20.5",
     "chart.js": "^4.4.7",
     "runed": "^0.16.3",
-    "supabase": "^2.6.8",
+    "supabase": "^2.9.6",
     "xlsx": "^0.18.5"
   }
 }
