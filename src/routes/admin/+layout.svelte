@@ -5,6 +5,7 @@
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
   import BreadCrump from '$lib/components/general/bread-crump/bread-crump.svelte';
   import { initBreadCrumpState } from '$lib/components/general/bread-crump/state.svelte';
+
   const { children } = $props();
 
   initBreadCrumpState();
