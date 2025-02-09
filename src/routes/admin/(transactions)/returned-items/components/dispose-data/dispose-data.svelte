@@ -5,7 +5,7 @@
   import type { Database } from '$lib/database.types';
   import { page } from '$app/state';
 
-  const disposes = page.data.disposes as Promise<
+  const disposes = $derived(page.data.disposes) as Promise<
     | (Database['public']['Tables']['transaction_dispose_tb']['Row'] & {
         teachers_tb?: Database['public']['Tables']['teachers_tb']['Row'] | null;
         items_tb?: Database['public']['Tables']['items_tb']['Row'] | null;
