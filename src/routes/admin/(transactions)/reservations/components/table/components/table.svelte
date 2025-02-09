@@ -109,7 +109,7 @@
 </script>
 
 <div class="space-y-4">
-  <TableToolbar {addReservationForm} {table} />
+  <TableToolbar {addReservationForm} {table} {data} />
 
   <TablePagination {table} />
 

@@ -24,24 +24,24 @@
   interface Props {
     addReservationForm: SuperValidated<Infer<AddReservationSchema>>;
     table: Table<ReservationsPageTable>;
+    data: ReservationsPageTable[];
   }
 
-  let { addReservationForm, table }: Props = $props();
+  let { addReservationForm, table, data }: Props = $props();
 
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
 
   const downloadRecord = async () => {
-    const reservations = await page.data.getReservations;
-    if (!reservations) return;
+    if (!data) return;
     const worksheet = XLSX.utils.json_to_sheet(
-      reservations.map((reservation) => {
+      data.map((reservation) => {
         return {
-          'Teacher ID': reservation.teachers_tb?.user_meta_data.teacher_id,
+          'Teacher ID': reservation.teacher_id,
           'Reference ID': reservation.reference_id,
-          'Full Name': `${reservation.teachers_tb?.user_meta_data.lastname}, ${reservation.teachers_tb?.user_meta_data.firstName}, ${reservation.teachers_tb?.user_meta_data.middlename}`,
+          'Full Name': reservation.fullname,
           Item: reservation.items_tb?.model,
           Quantity: reservation.items_tb?.quantity,
-          Room: `${reservation.rooms_tb?.name}/ ${reservation.room_id}`,
+          Room: `${reservation.room}/ ${reservation.room_id}`,
           'Date & Time': reservation.date + ' ' + convert24Hto12H(reservation.time),
           'Created At': new Date(reservation.created_at),
           Status: reservation.status
@@ -118,27 +118,23 @@
         {@render span({ title: 'Status', class: 'border-r-0' })}
       </div>
 
-      {#await page.data.getReservations}
-        <span>Fetching data...</span>
-      {:then reservations}
-        {#each reservations ?? [] as reservation}
-          <div class="grid grid-cols-8 border-b-2">
-            {@render span({
-              title: reservation.teachers_tb?.user_meta_data.teacher_id,
-              class: 'border-l-2'
-            })}
-            {@render span({ title: reservation.reference_id })}
-            {@render span({
-              title: `${reservation.teachers_tb?.user_meta_data.lastname}, ${reservation.teachers_tb?.user_meta_data.firstName}, ${reservation.teachers_tb?.user_meta_data.middlename}`
-            })}
-            {@render span({ title: reservation.items_tb?.model })}
-            {@render span({ title: reservation.items_tb?.quantity })}
-            {@render span({ title: `${reservation.rooms_tb?.name}/ ${reservation.room_id}` })}
-            {@render span({ title: reservation.date + ' ' + convert24Hto12H(reservation.time) })}
-            {@render span({ title: reservation.status, class: 'border-r-2' })}
-          </div>
-        {/each}
-      {/await}
+      {#each data ?? [] as reservation}
+        <div class="grid grid-cols-8 border-b-2">
+          {@render span({
+            title: reservation.teacher_id,
+            class: 'border-l-2'
+          })}
+          {@render span({ title: reservation.reference_id })}
+          {@render span({
+            title: reservation.fullname
+          })}
+          {@render span({ title: reservation.item })}
+          {@render span({ title: String(reservation.items_tb?.quantity) })}
+          {@render span({ title: `${reservation.room}/ ${reservation.room_id}` })}
+          {@render span({ title: reservation.date + ' ' + convert24Hto12H(reservation.time) })}
+          {@render span({ title: reservation.status, class: 'border-r-2' })}
+        </div>
+      {/each}
     </section>
   {/snippet}
 </TemplateOne>

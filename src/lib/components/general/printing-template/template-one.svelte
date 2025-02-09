@@ -2,7 +2,6 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import Printer from 'lucide-svelte/icons/printer';
-  import { cn } from '$lib/utils';
   import { tick, type Snippet } from 'svelte';
   import type { ClassNameValue } from 'tailwind-merge';
 
@@ -49,7 +48,7 @@
             <span class="text-base font-medium">Republic of the Philippines</span>
             <span class="text-xl font-semibold">ONE CAINTA COLLEGE</span>
             <span class="text-sm"
-              >ROTC HUnters Road, Brgy. San Juan Cainta, Rizal Telephone No. 12-123-1234</span
+              >ROTC HUnters Road, Brgy. San Juan Cainta, Rizal Telephone No. 08-879-0410</span
             >
           </div>
         </div>

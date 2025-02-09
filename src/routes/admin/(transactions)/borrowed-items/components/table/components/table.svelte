@@ -110,7 +110,7 @@
 </script>
 
 <div class="space-y-4">
-  <TableToolbar {addBorrowerForm} {table} />
+  <TableToolbar {addBorrowerForm} {table} {data} />
 
   <TablePagination {table} />
 
