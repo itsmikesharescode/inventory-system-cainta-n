@@ -13,31 +13,35 @@
   import type { Infer, SuperValidated } from 'sveltekit-superforms';
   import type { AddBorrowerSchema } from '../../add-borrower/schema.js';
   import ArrowDownToLine from 'lucide-svelte/icons/arrow-down-to-line';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import * as XLSX from 'xlsx';
   import { convert24Hto12H } from '$lib';
+  import TemplateOne from '$lib/components/general/printing-template/template-one.svelte';
+  import { cn } from '$lib/utils.js';
+  import type { ClassNameValue } from 'tailwind-merge';
+  import Printer from 'lucide-svelte/icons/printer';
 
   interface Props {
     addBorrowerForm: SuperValidated<Infer<AddBorrowerSchema>>;
     table: Table<BorrowedItemsPageTable>;
+    data: BorrowedItemsPageTable[];
   }
 
-  let { addBorrowerForm, table }: Props = $props();
+  let { addBorrowerForm, table, data }: Props = $props();
 
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
 
   const downloadRecord = async () => {
-    const borrowers = await $page.data.getBorrowers;
-    if (!borrowers) return;
+    if (!data) return;
     const worksheet = XLSX.utils.json_to_sheet(
-      borrowers.map((borrower) => {
+      data.map((borrower) => {
         return {
-          'Teacher ID': borrower.teachers_tb?.user_meta_data.teacher_id,
+          'Teacher ID': borrower.teacher_id,
           'Reference ID': borrower.reference_id,
-          'Full Name': `${borrower.teachers_tb?.user_meta_data.lastname}, ${borrower.teachers_tb?.user_meta_data.firstName}, ${borrower.teachers_tb?.user_meta_data.middlename}`,
+          'Full Name': borrower.fullname,
           Item: borrower.items_tb?.model,
           Quantity: borrower.items_tb?.quantity,
-          Room: `${borrower.rooms_tb?.name}/ ${borrower.room_id}`,
+          Room: `${borrower.room}/ ${borrower.room_id}`,
           'Date & Time': borrower.date + ' ' + convert24Hto12H(borrower.time),
           'Created At': new Date(borrower.created_at)
         };
@@ -47,12 +51,17 @@
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     XLSX.writeFile(workbook, `borrowers_record.xlsx`);
   };
+
+  let openPrinter = $state(false);
 </script>
 
 <div class="flex items-center justify-between gap-2">
   <AddBorrower {addBorrowerForm} />
 
   <div class="flex items-center gap-2">
+    <Button size="sm" variant="outline" onclick={() => (openPrinter = true)}>
+      <Printer /> Print
+    </Button>
     <Button size="sm" variant="outline" onclick={downloadRecord}>
       <ArrowDownToLine />
       <span>Download Records</span>
@@ -82,3 +91,47 @@
     </div>
   </div>
 </div>
+
+{#snippet span({ title, class: className }: { title: string; class?: ClassNameValue })}
+  <span
+    class={cn(
+      'flex items-center justify-center border-r-2 px-2 py-1 text-center text-xs  font-semibold',
+      className
+    )}
+  >
+    {title}
+  </span>
+{/snippet}
+
+<TemplateOne bind:open={openPrinter}>
+  {#snippet children()}
+    <section>
+      <div class="grid grid-cols-7 border-2">
+        {@render span({ title: 'Teacher ID' })}
+        {@render span({ title: 'Reference ID' })}
+        {@render span({ title: 'Fullname' })}
+        {@render span({ title: 'Item' })}
+        {@render span({ title: 'Quantity' })}
+        {@render span({ title: 'Room' })}
+        {@render span({ title: 'Date & Time' })}
+      </div>
+
+      {#each data ?? [] as borrower}
+        <div class="grid grid-cols-7 border-b-2">
+          {@render span({
+            title: borrower.teacher_id,
+            class: 'border-l-2'
+          })}
+          {@render span({ title: borrower.reference_id })}
+          {@render span({
+            title: borrower.fullname
+          })}
+          {@render span({ title: borrower.item })}
+          {@render span({ title: String(borrower.items_tb?.quantity) })}
+          {@render span({ title: `${borrower.room} / ${borrower.room_id}` })}
+          {@render span({ title: `${borrower.date + ' ' + convert24Hto12H(borrower.time)}` })}
+        </div>
+      {/each}
+    </section>
+  {/snippet}
+</TemplateOne>

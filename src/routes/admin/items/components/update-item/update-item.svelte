@@ -188,7 +188,14 @@
               {#snippet children({ props })}
                 <Form.Label>Quantity</Form.Label>
                 <Input
-                  disabled
+                  onchange={() => {
+                    const initialQuantity = tableState.getActiveRow()?.quantity;
+                    if (initialQuantity) {
+                      if (initialQuantity > $formData.quantity) {
+                        $formData.quantity = initialQuantity;
+                      }
+                    }
+                  }}
                   type="number"
                   {...props}
                   bind:value={$formData.quantity}

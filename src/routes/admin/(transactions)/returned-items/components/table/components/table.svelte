@@ -106,7 +106,7 @@
 </script>
 
 <div class="space-y-4">
-  <TableToolbar {table} />
+  <TableToolbar {table} {data} />
 
   <TablePagination {table} />
 
