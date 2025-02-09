@@ -2,10 +2,13 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import Printer from 'lucide-svelte/icons/printer';
+  import { cn } from '$lib/utils';
   import { tick, type Snippet } from 'svelte';
+  import type { ClassNameValue } from 'tailwind-merge';
 
   interface Props {
     children: Snippet;
+    span?: Snippet<[{ title: string; class: ClassNameValue }]>;
     open: boolean;
   }
 

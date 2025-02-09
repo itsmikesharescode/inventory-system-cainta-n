@@ -31,7 +31,6 @@
         .getAllColumns()
         .filter((col) => typeof col.accessorFn !== 'undefined' && col.getCanHide()) as column}
         <DropdownMenu.CheckboxItem
-          controlledChecked
           checked={column.getIsVisible()}
           onCheckedChange={(v) => column.toggleVisibility(!!v)}
           class="capitalize"
