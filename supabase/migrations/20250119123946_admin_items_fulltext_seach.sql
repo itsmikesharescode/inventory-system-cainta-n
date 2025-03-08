@@ -50,7 +50,9 @@ begin
 end;
 $$ language plpgsql;
 
--- Update the index to include all searchable columns
+-- The index creation is moved to seed.sql which runs after tables are created
+-- Commented out to avoid the error
+/*
 create index if not exists items_tb_fts_idx on items_tb using gin (
     to_tsvector('english',
         coalesce(device_id, '') || ' ' ||
@@ -63,3 +65,4 @@ create index if not exists items_tb_fts_idx on items_tb using gin (
         coalesce(category_id::text, '')
     )
 );
+*/

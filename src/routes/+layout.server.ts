@@ -6,12 +6,12 @@ export const load: LayoutServerLoad = async ({
 }) => {
   const { session } = await safeGetSession();
 
-  /* const { data, error } = await supabaseAdmin.auth.admin.updateUserById(
-    '96cd6d83-a568-4206-b975-f0f48616811a',
+  /*  const { data, error } = await supabaseAdmin.auth.admin.updateUserById(
+    'ce5bcd88-f878-4fff-a5ca-b09ee68d7741',
     {
       user_metadata: {
         role: 'admin',
-        email: 'admin@gmail.com',
+        email: 'localadmin@gmail.com',
         firstname: 'Admin',
         middlename: '',
         lastname: 'Super'
